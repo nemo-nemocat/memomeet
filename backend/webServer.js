@@ -7,7 +7,7 @@ const mysqlDB = require("./mysql-db");
 const app = express();
 mysqlDB.connect();
 
-//session store
+//session store - 다시 실행해도 세션 유지
 var options = {
     host: 'localhost',
     port: 3306,
@@ -28,13 +28,14 @@ app.set('views', './views');
 app.use(bodyParser.urlencoded({ extended: false }));
  
 app.get('/', function (req, res) {
-    res.send('<a href="/login">login</a>');
+    //console.log(req.session.isLogined);
+    res.send('<a href="/login">login</a><br><a href="/group">group</a>');
 });
 app.get('/login', function(req, res){
     res.render('login');
 });
-app.get('/signin', function(req, res){
-    res.render('signin');
+app.get('/signup', function(req, res){
+    res.render('signup');
 });
 
 //login 요청
@@ -52,7 +53,6 @@ app.post('/login', function(req, res) {
 
       var user = results[0];
       if(user.pw === pw) {
-        console.log(results[0].name);
         req.session.userID = results[0].id;
         req.session.isLogined = true;
         req.session.save();
@@ -73,7 +73,7 @@ app.post('/logout', function(req, res){
 );
 
 //회원가입 요청
-app.post('/signin', function(req, res){
+app.post('/signup', function(req, res){
     var id = req.body.userid;
     var pw = req.body.password;
     var name = req.body.username;
@@ -81,12 +81,26 @@ app.post('/signin', function(req, res){
     var sql = 'INSERT INTO USER(id, pw, name, email) VALUE(?, ?, ?, ?)';
     mysqlDB.query(sql, [id, pw, name, email], function(err, results){
         if(err){
-          return res.send({code:3, msg:"auth fail: 'id already exists'"});
+          return res.send({code:3, msg:"auth fail: id already exists"});
         }
         else return res.send({code:0, msg:"request success"});
     });
 });
+
+//그룹 생성 페이지 요청 - 로그인 후 이용 가능
+app.get('/group', function(req, res){
+  console.log(req.session.isLogined);
+  if(req.session.isLogined !== true){
+    return res.send({code:11, msg:"group fail: try after login"});
+  }
+  else {
+    res.redirect("/group/create");
+    //return res.send({code:0, msg:"request success"});
+  }
+});
+
+
  
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+  console.log('tetetExample app listening on port 3000!');
 });
