@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -35,6 +35,35 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
+  
+  const [userid, setUserid] = useState('');
+  const [pw, setPw] = useState('');
+
+  const handleClick = () => {
+    if (userid === '' || pw === '') {
+        alert("아이디와 비밀번호를 모두 입력하세요");
+    }
+    else {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({ "userid": userid, "password": pw });
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch("/login", requestOptions)
+            .then(res => res.json())
+            .then(data => {console.log(data);})
+            .catch(error => console.log('error', error))
+
+
+    }
+};
 
   return (
     <Container component="main" maxWidth="xs">
@@ -57,6 +86,8 @@ export default function SignIn() {
             name="id"
             autoComplete="id"
             autoFocus
+            value={userid}
+            onChange={({ target: { value } }) => setUserid(value)}
           />
           <TextField
             variant="outlined"
@@ -67,18 +98,19 @@ export default function SignIn() {
             label="비밀번호 입력"
             type="password"
             id="password"
-            autoComplete="password"
+            autoComplete="current-password"
+            value={pw}
+            onChange={({ target: { value } }) => setPw(value)}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="로그인 상태 유지"
           />
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"
-            className={classes.submit}
+            onClick={handleClick}
           >
             로그인
           </Button>
