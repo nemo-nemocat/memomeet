@@ -13,19 +13,6 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Memo-meet
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -38,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: '100%',
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -80,7 +67,7 @@ export default function SignIn() {
             label="비밀번호 입력"
             type="password"
             id="password"
-            autoComplete="current-password"
+            autoComplete="password"
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -98,10 +85,10 @@ export default function SignIn() {
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
-                비밀번호 찾기
+                {"비밀번호 찾기"}
               </Link>
             </Grid>
-            <Grid item>
+            <Grid item xs>
               <Link href="/Signup" variant="body2">
                 {"회원가입"}
               </Link>
@@ -109,9 +96,6 @@ export default function SignIn() {
           </Grid>
         </form>
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }
