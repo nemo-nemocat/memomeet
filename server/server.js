@@ -29,10 +29,10 @@ app.use(session({
 
 //login 요청
 app.post('/login', function(req, res) {
-  var id = req.body.userid;
-  var pw = req.body.password;
+  var id = req.body.user_id;
+  var pw = req.body.user_pw;
   console.log(req.body);
-  var sql = 'SELECT * FROM user WHERE id=?';
+  var sql = 'SELECT * FROM USERLIST WHERE user_id=?';
   mysqlDB.query(sql, [id], function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
 
@@ -41,11 +41,11 @@ app.post('/login', function(req, res) {
     }
 
     var user = results[0];
-    if(user.pw === pw) {
-      req.session.userID = results[0].id;
+    if(user.user_pw === pw) {
+      req.session.userID = results[0].user_id;
       req.session.isLogined = true;
       req.session.save();
-      return res.send({code:0, msg:"request success", name:user.name});
+      return res.send({code:0, msg:"request success", name:user.user_name});
     }
     else{
       return res.send({code:2, msg:"auth fail:wrong password"});
@@ -55,7 +55,7 @@ app.post('/login', function(req, res) {
 );
 
 //logout 요청
-app.post('/logout', function(req, res){
+app.get('/logout', function(req, res){
   req.session.destroy();
   return res.send({code:0, msg:"request success"});
 }
@@ -63,11 +63,11 @@ app.post('/logout', function(req, res){
 
 //회원가입 요청
 app.post('/signup', function(req, res){
-  var id = req.body.userid;
-  var pw = req.body.password;
-  var name = req.body.username;
-  var email = req.body.email;
-  var sql = 'INSERT INTO USER(id, pw, name, email) VALUE(?, ?, ?, ?)';
+  var id = req.body.user_id;
+  var pw = req.body.user_pw;
+  var name = req.body.user_name;
+  var email = req.body.user_email;
+  var sql = 'INSERT INTO USERLIST(user_id, user_pw, user_name, user_email) VALUE(?, ?, ?, ?)';
   mysqlDB.query(sql, [id, pw, name, email], function(err, results){
       if(err){
         return res.send({code:3, msg:"auth fail: id already exists"});
@@ -76,25 +76,29 @@ app.post('/signup', function(req, res){
   });
 });
 
-//그룹 만들기 - 로그인 상태 전제
+//그룹 만들기
 app.post('/group-create', function(req,res){
   var group_name = req.body.group_name;
   var group_pw = req.body.group_pw;
   var group_id = shortid.generate();  //유니크 키 값 생성
-  var member = req.session.userID+',';
-  var sql = 'INSERT INTO GROUPLIST(group_id, group_pw, group_name, member) VALUE(?, ?, ?, ?)';
-  mysqlDB.query(sql, [group_id, group_pw, group_name, member], function(err, results){
+  var user_id = req.session.userID;
+  var sql = 'INSERT INTO GROUPLIST(group_id, group_pw, group_name) VALUE(?, ?, ?)';
+  mysqlDB.query(sql, [group_id, group_pw, group_name], function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
-      return res.send({code:0, msg:"request success"});
+      sql = 'INSERT INTO MEMBERLIST(group_id, user_id)';
+      mysqlDB.query(sql, [group_id, user_id], function(err, results){
+        if(err) return res.send({code:11, msg:`${err}`});
+        else return res.send({code:0, msg:"request success"});
+      });
     }
   });
 });
 
 //사용자가 속한 그룹 리스트 출력
-app.post('/group-show', function(req, res){
-  var userID = `%${req.session.userID},%`;
-  var sql = "SELECT * FROM GROUPLIST WHERE MEMBER LIKE ?";
+app.get('/group-show', function(req, res){
+  var userID = req.session.userID;
+  var sql = "SELECT * FROM GROUPLIST WHERE GROUP_ID IN (SELECT GROUP_ID FROM MEMBERLIST WHERE USER_ID=?)";
   mysqlDB.query(sql, userID, function(err, results){
     if(err)  return res.send({code:11, msg:`${err}`});
     else{
@@ -124,6 +128,7 @@ app.post('/group-search', function(req, res){
 app.post('/group-enter', function(req, res){
   var group_id = req.body.group_id;
   var group_pw = req.body.group_pw;
+  var user_id = req.session.userID;
   var sql = 'SELECT * FROM GROUPLIST WHERE GROUP_ID=? AND GROUP_PW=?';
   mysqlDB.query(sql, [group_id, group_pw], function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
@@ -132,10 +137,8 @@ app.post('/group-enter', function(req, res){
         return res.send({code:22, msg:"group fail: group_pw incorrect"});
       }
       else{
-        var member = results[0].member;
-        var updateMember = member + req.session.userID + ', ';
-        sql = 'UPDATE GROUPLIST SET MEMBER=? WHERE GROUP_ID=?';
-        mysqlDB.query(sql, [updateMember, group_id], function(err,results){
+        sql = 'INSERT INTO MEMBERLIST(group_id, user_id) VALUE(?, ?)';
+        mysqlDB.query(sql, [group_id, user_id], function(err,results){
           if(err) return res.send({code:11, msg:`${err}`});
           else{
             return res.send({code:0, msg:"request success"});
@@ -146,35 +149,60 @@ app.post('/group-enter', function(req, res){
   });
 });
 
-//그룹 삭제
-app.post('/group-delete', function(req, res){
+//그룹 나가기
+app.post('/group-out', function(req, res){
   var group_id = req.body.group_id;
-  var userID = req.session.userID;
-  var sql = 'SELECT * FROM GROUPLIST WHERE GROUP_ID = ?';
+  var user_id = req.session.userID;
+  var sql = 'DELETE FROM MEMBERLIST WHERE GROUP_ID=? AND USER_ID=?';
+  mysqlDB.query(sql, [group_id, user_id], function(err, results){
+    if(err) return res.send({code:11, msg:`${err}`});
+    else{
+      return res.send({code:0, msg:"request success"});
+      }
+  });
+});
+
+//그룹 멤버 출력
+app.post('/group-memberlist', function(req, res){
+  var group_id = req.body.group_id;
+  var sql = 'SELECT USER_NAME FROM USERLIST WHERE USER_ID IN (SELECT USER_ID FROM MEMBERLIST WHERE GROUP_ID=?)';
+  mysqlDB.query(sql, group_id, function(err, results){
+    if(err) return res.send({code:11, msq:`${err}`});
+    else {
+      if(!results[0]) return res.send({code:21, msg:"group fail: group_id not exist"});
+      return res.send({code:0, msg:"request success", members: results});
+    }
+  });
+});
+
+//회의 예약 하기
+app.post('/forwardmeet-create', function(req,res){
+  var group_id = req.body.group_id;
+  var meet_title = req.body.meet_title;
+  var meet_day = req.body.meet_day;
+  var meet_time = req.body.meet_time;
+  var sql = 'INSERT INTO FORWARDMEET VALUE(?, ?, ?, ?)';
+  mysqlDB.query(sql, [group_id, meet_title, meet_day, meet_time], function(err, results){
+    if(err) return res.send({code:11, msg:`${err}`});
+    else{
+      return res.send({code:0, msg:"request success"});
+      }
+  });
+});
+
+//예약 회의 목록
+app.get('/forwardmeet-list', function(req,res){
+  //var group_id = req.body.group_id;
+  var group_id = "test_group";
+  var sql = 'SELECT * FROM FORWARDMEET WHERE GROUP_ID=?';
   mysqlDB.query(sql, group_id, function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
-      if(!results[0]){
-        return res.send({code:21, msg:"group fail: group_id not exist"});
+      if(!results[0]) return res.send({code:31, msg:"forwardmeet not exists"});
+      else return res.send({code:0, msg:"request success", lists:results});
       }
-      else{
-        var member = results[0].member;
-        var updateMember = member.replace(`${userID}, `,"");
-        console.log(updateMember);
-        sql = 'UPDATE GROUPLIST SET MEMBER=? WHERE GROUP_ID=?';
-        mysqlDB.query(sql, [updateMember, group_id], function(err,results){
-          if(err) return res.send({code:11, msg:`${err}`});
-          else{
-            return res.send({code:0, msg:"request success"});
-          } 
-        });
-      }
-    }
   });
 });
-
-
-
 
 
 app.listen(port, function () {
