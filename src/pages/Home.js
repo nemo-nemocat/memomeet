@@ -109,9 +109,10 @@ export default function SignIn() {
             fullWidth
             variant="contained"
             color="primary"
-            onClick={handleClick}
-          >
-            로그인
+            onClick={handleClick}>
+              <Link href="/Main" variant="body2">
+                {"로그인"}
+              </Link>
           </Button>
           <Grid container>
             <Grid item xs>
