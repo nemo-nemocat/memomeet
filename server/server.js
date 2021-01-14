@@ -28,7 +28,7 @@ app.use(session({
 }));
 
 //login 요청
-app.post('/login', function(req, res) {
+app.post('/auth-login', function(req, res) {
   var id = req.body.user_id;
   var pw = req.body.user_pw;
   console.log(req.body);
@@ -45,7 +45,7 @@ app.post('/login', function(req, res) {
       req.session.userID = results[0].user_id;
       req.session.isLogined = true;
       req.session.save();
-      return res.send({code:0, msg:"request success", name:user.user_name});
+      return res.send({code:0, msg:"request success", user_id:user.user_id, user_name:user.user_name});
     }
     else{
       return res.send({code:2, msg:"auth fail:wrong password"});
@@ -55,14 +55,14 @@ app.post('/login', function(req, res) {
 );
 
 //logout 요청
-app.get('/logout', function(req, res){
+app.get('/auth-logout', function(req, res){
   req.session.destroy();
   return res.send({code:0, msg:"request success"});
 }
 );
 
 //회원가입 요청
-app.post('/signup', function(req, res){
+app.post('/auth-signup', function(req, res){
   var id = req.body.user_id;
   var pw = req.body.user_pw;
   var name = req.body.user_name;
