@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import logo from '../memomeet_logo.png';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -19,16 +15,17 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.primary.main,
-  },
   form: {
     width: '100%',
     marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(3, 2, 2),
+  },
+  logo:{
+    marginTop: 80,
+    width: 150,
+    height: 200,
   },
 }));
 
@@ -46,7 +43,7 @@ export default function SignIn() {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
-        var raw = JSON.stringify({ "userid": userid, "password": pw });
+        var raw = JSON.stringify({ "user_id": userid, "user_pw": pw });
 
         var requestOptions = {
             method: 'POST',
@@ -55,9 +52,16 @@ export default function SignIn() {
             redirect: 'follow'
         };
 
-        fetch("/login", requestOptions)
+        fetch("/auth-login", requestOptions)
             .then(res => res.json())
-            .then(data => {console.log(data);})
+            .then(result => {
+              console.log(result);
+              if(result.code !== 0) alert("아이디 혹은 비밀번호가 틀렸습니다");
+              else{
+                alert(`${result.user_name}님 환영합니다!`);
+                window.location.href=`/main?user_id=${result.user_id}`;
+              }
+            })
             .catch(error => console.log('error', error))
 
 
@@ -67,12 +71,11 @@ export default function SignIn() {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      <img src={logo} className={classes.logo}/>
+
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          로그인
+        <Typography component="h1" variant="h6">
+          WELCOME TO MEMOMEET
         </Typography>
         <form className={classes.form} noValidate>
           <TextField
@@ -101,30 +104,21 @@ export default function SignIn() {
             value={pw}
             onChange={({ target: { value } }) => setPw(value)}
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="로그인 상태 유지"
-          />
           <Button
-            fullWidth
-            variant="contained"
-            color="primary"
+            variant= "contained"
+            color= "secondary"
+            size="large"
+            className={classes.submit}
             onClick={handleClick}
           >
-            로그인
+            <Typography component="h1" variant="button">
+              LOGIN
+            </Typography>
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                {"비밀번호 찾기"}
-              </Link>
-            </Grid>
-            <Grid item xs>
-              <Link href="/Signup" variant="body2">
-                {"회원가입"}
-              </Link>
-            </Grid>
-          </Grid>
+          <br/>
+          <Link href="/Signup" variant="body2" color="secondary">
+             {"회원가입"}
+          </Link>
         </form>
       </div>
     </Container>
