@@ -165,12 +165,18 @@ app.post('/group-out', function(req, res){
 //그룹 멤버 출력
 app.post('/group-memberlist', function(req, res){
   var group_id = req.body.group_id;
-  var sql = 'SELECT USER_NAME FROM USERLIST WHERE USER_ID IN (SELECT USER_ID FROM MEMBERLIST WHERE GROUP_ID=?)';
+  var sql = 'SELECT user_name FROM USERLIST WHERE USER_ID IN (SELECT USER_ID FROM MEMBERLIST WHERE GROUP_ID=?)';
   mysqlDB.query(sql, group_id, function(err, results){
     if(err) return res.send({code:11, msq:`${err}`});
     else {
       if(!results[0]) return res.send({code:21, msg:"group fail: group_id not exist"});
-      return res.send({code:0, msg:"request success", members: results});
+      else{
+        var members="";
+        results.map(result=>(
+          members += result.user_name + " "
+        ));
+      }
+      return res.send({code:0, msg:"request success", members: members});
     }
   });
 });
