@@ -52,7 +52,7 @@ function checkPw(pw) {
 
 function checkEmail(email) {
   var exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
-  if (exptext.test(email) == false) {
+  if (exptext.test(email) === false) {
       return true;
   }
   return false;
@@ -111,10 +111,10 @@ export default function SignUp() {
             .then(response => response.json())
             .then(result => {
                 console.log(result);
-                if(result.code==0){
+                if(result.code===0){
                 alert("회원가입 성공");
                 window.location.href = "/";}
-                else if(result.code==3){
+                else if(result.code===3){
                     alert("이미 존재하는 아이디입니다.")
                 }
             })
@@ -127,7 +127,9 @@ export default function SignUp() {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <img src={logo} className={classes.logo}/>
+      <a href="/" >
+        <img src={logo} className={classes.logo} alt="logo"/>
+      </a>
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />

@@ -59,7 +59,7 @@ export default function SignIn() {
               if(result.code !== 0) alert("아이디 혹은 비밀번호가 틀렸습니다");
               else{
                 alert(`${result.user_name}님 환영합니다!`);
-                window.location.href=`/main?user_id=${result.user_id}`;
+                window.location.href=`/main2?user_id=${result.user_id}`;  //수정 해야함!
               }
             })
             .catch(error => console.log('error', error))
@@ -71,7 +71,7 @@ export default function SignIn() {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <img src={logo} className={classes.logo}/>
+      <img src={logo} className={classes.logo} alt="logo"/>
 
       <div className={classes.paper}>
         <Typography component="h1" variant="h6">
