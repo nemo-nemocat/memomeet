@@ -35,6 +35,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//url parsing function
+function get_query(){
+  var url = document.location.href;
+  var qs = url.substring(url.indexOf('?') + 1).split('&');
+  for(var i = 0, result = {}; i < qs.length; i++){
+      qs[i] = qs[i].split('=');
+      result[qs[i][0]] = decodeURIComponent(qs[i][1]);
+  }
+  return result;
+}
+
 export default function InteractiveList() {
   const classes = useStyles();
   const [groups, setGroups] = useState([]);
@@ -66,6 +77,13 @@ export default function InteractiveList() {
     document.getElementById("exit_icon").src=`${exit_white}`;
   }
 
+  const handleClick2 = () => {
+    var urlData = get_query();
+    var user_id=urlData.user_id;
+    var user_name=urlData.user_name;
+    window.open(`http://localhost:3003/meeting?meet=13245&user_id=${user_id}&user_name=${user_name}`,'Lets MeMoMeet');
+  };
+
   return (
     <div className={classes.sideBar}>
           <Typography variant="h5" className={classes.title}>
@@ -86,6 +104,16 @@ export default function InteractiveList() {
                 </Button>
               ))}
             </List>
+            <Button
+                  variant= "contained"
+                  color= "secondary"
+                  size="large"
+                  onClick={handleClick2}
+                >
+                <Typography component="h1" variant="button">
+                  MEETING
+                </Typography>
+                </Button> 
           </div>
     </div>
   );

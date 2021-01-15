@@ -30,8 +30,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "nodemon ./server/server.js",
-    "dev": "concurrently \"npm run server\" \"yarn start\""
+    "webServer": "nodemon ./server/webServer.js",
+    "meetingServer": "cd server && nodemon meetingServer.js",
+    "dev": "concurrently  \"yarn start\" \"npm run webServer\" \"npm run meetingServer\" \"peerjs --port 3001\""
   },
   "eslintConfig": {
     "extends": [
@@ -50,6 +51,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "http://localhost:3001"
+  }
 }

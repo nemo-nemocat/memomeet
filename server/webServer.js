@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
-const port = 3001;
+const AppPort = 3002;
 const cors = require('cors');
 const mysqlDB = require("./mysql-db");  //db 연결
 const session = require('express-session'); //session 생성
@@ -211,6 +211,6 @@ app.get('/forwardmeet-list', function(req,res){
 });
 
 
-app.listen(port, function () {
-  console.log(`Example app listening on port ${port}!`);
+app.listen(AppPort, function () {
+  console.log(`Example app listening on port ${AppPort}!`);
 });
