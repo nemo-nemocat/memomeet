@@ -59,7 +59,9 @@ export default function SignIn() {
               if(result.code !== 0) alert("아이디 혹은 비밀번호가 틀렸습니다");
               else{
                 alert(`${result.user_name}님 환영합니다!`);
-                window.location.href=`/main2?user_id=${result.user_id}&user_name=${result.user_name}`;  //수정 해야함!
+                localStorage.setItem("user_id", result.user_id);
+                localStorage.setItem("user_name", result.user_name);
+                window.location.href='/main2';  //수정 해야함!
               }
             })
             .catch(error => console.log('error', error))
