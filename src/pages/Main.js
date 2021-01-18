@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { Tab, Tabs, Typography, Box, Avatar, Container, Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle }from '@material-ui/core';
-import { Nav, Navbar, NavDropdown } from 'react-bootstrap'
+import { Tab, Tabs, Typography, Box, Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle }from '@material-ui/core';
+import Navigation from '../components/Navigation';
+import Group from '../components/Group';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -77,19 +78,7 @@ export default function Main() {
 
   return (
     <div>
-        <div className={classes.bar}>
-            <Navbar collapseOnSelect expand="lg" variant="dark">
-            <Navbar.Brand href="/Main" >Memo-meet</Navbar.Brand>
-            <Navbar.Collapse id="responsive-navbar-nav">
-                <Nav className="mr-auto">
-                    <Avatar className={classes.Avatar}>H</Avatar>
-                    <NavDropdown title="이용자 이름"  >
-                        <NavDropdown.Item href="/">로그아웃</NavDropdown.Item>
-                    </NavDropdown> 
-                </Nav>
-            </Navbar.Collapse>
-            </Navbar>
-        </div>
+      <Navigation />
         <div className={classes.root}>
         <Tabs
             orientation="vertical"
@@ -129,10 +118,10 @@ export default function Main() {
                 </div>
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                    Group1
+                    <Group />
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-                    Group
+                    <Group />
                 </TabPanel>
                 <TabPanel value={value} index={3}>
                     <div>
