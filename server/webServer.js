@@ -31,7 +31,6 @@ app.use(session({
 app.post('/auth-login', function(req, res) {
   var id = req.body.user_id;
   var pw = req.body.user_pw;
-  console.log(req.body);
   var sql = 'SELECT * FROM USERLIST WHERE user_id=?';
   mysqlDB.query(sql, [id], function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
@@ -63,6 +62,7 @@ app.get('/auth-logout', function(req, res){
 
 //회원가입 요청
 app.post('/auth-signup', function(req, res){
+  console.log(req.body.user_id);
   var id = req.body.user_id;
   var pw = req.body.user_pw;
   var name = req.body.user_name;
@@ -86,9 +86,9 @@ app.post('/group-create', function(req,res){
   mysqlDB.query(sql, [group_id, group_pw, group_name], function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
-      sql = 'INSERT INTO MEMBERLIST(group_id, user_id)';
+      sql = 'INSERT INTO MEMBERLIST(group_id, user_id) VALUE(?, ?)';
       mysqlDB.query(sql, [group_id, user_id], function(err, results){
-        if(err) return res.send({code:11, msg:`${err}`});
+        if(err) return res.send({code:12, msg:`${err}`});
         else return res.send({code:0, msg:"request success"});
       });
     }
@@ -118,7 +118,7 @@ app.post('/group-search', function(req, res){
         return res.send({code:21, msg:"group fail: group_id not exist"});
       }
       else{
-        return res.send({code:0, msg:"request success", grouplist: results});
+        return res.send({code:0, msg:"request success", grouplist: results[0]});
       }
     }
   });
@@ -137,12 +137,22 @@ app.post('/group-enter', function(req, res){
         return res.send({code:22, msg:"group fail: group_pw incorrect"});
       }
       else{
-        sql = 'INSERT INTO MEMBERLIST(group_id, user_id) VALUE(?, ?)';
-        mysqlDB.query(sql, [group_id, user_id], function(err,results){
-          if(err) return res.send({code:11, msg:`${err}`});
+        sql = 'SELECT * FROM MEMBERLIST WHERE GROUP_ID=? and USER_ID=?';
+        mysqlDB.query(sql, [group_id, user_id], function(err, results2){
+          if(err) return res.send({code:11, msg:`${err}`})
           else{
-            return res.send({code:0, msg:"request success"});
-          } 
+            if(results2[0])
+              return res.send({code:23, msg:"group fail: already user in group"});
+            else{
+              sql = 'INSERT INTO MEMBERLIST(group_id, user_id) VALUE(?, ?)';
+              mysqlDB.query(sql, [group_id, user_id], function(err,results3){
+              if(err) return res.send({code:11, msg:`${err}`});
+              else{
+                return res.send({code:0, msg:"request success"});
+              } 
+            });
+          }
+        }
         });
       }
     }
@@ -157,7 +167,24 @@ app.post('/group-out', function(req, res){
   mysqlDB.query(sql, [group_id, user_id], function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
-      return res.send({code:0, msg:"request success"});
+      sql = 'SELECT * FROM MEMBERLIST WHERE GROUP_ID=?';
+      mysqlDB.query(sql, group_id, function(err, results2){
+        if(err) return res.send({code:12, msg:`${err}`});
+        else {
+          if(!results2[0]){
+            sql = 'DELETE FROM GROUPLIST WHERE GROUP_ID=?';
+            mysqlDB.query(sql, group_id, function(err, results3){
+              if(err) return res.send({code:13, msg:`${err}`});
+              else{
+                return res.send({code:0, msg:"request success"});
+              } 
+            });
+          }
+          else{
+            return res.send({code:0, msg:"request success"});
+          }
+        }
+      });
       }
   });
 });

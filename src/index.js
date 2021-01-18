@@ -10,11 +10,11 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 const theme = createMuiTheme({
   palette: {
      primary: {
-        main: "#ffa500" 
+        main: "#ffc31e" 
      },
      secondary: {
         main: "#000000" 
-     }
+     },
     }
 });
 
