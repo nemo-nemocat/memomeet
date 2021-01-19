@@ -1,10 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {  Grid, Paper, Typography, TextField, Button, Chip } from '@material-ui/core';
+import {  Grid, Paper, Typography, TextField, Button, Chip, Container } from '@material-ui/core';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import EventIcon from '@material-ui/icons/Event';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 
@@ -15,14 +14,20 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         padding: theme.spacing(2),
         margin: 'auto',
-        Width: 500,
+        Width: 250,
     },
     papers: {
         padding: theme.spacing(2),
         marginTop: 20,
-        Width: 500,
+        width: 400,
+        height: 600,
     },
-    container: {
+    Subpaper: {
+        marginTop: theme.spacing(1),
+        width: 370,
+        height: 80,
+    },
+    form: {
         display: 'flex',
         flexWrap: 'wrap',
         marginTop: theme.spacing(2),
@@ -36,13 +41,17 @@ const useStyles = makeStyles((theme) => ({
         backgroundcolor: "#ffc31e",
         width: 100,
         marginLeft: theme.spacing(1),
+
+    },
+    Title: {
+        marginLeft: theme.spacing(1),
         marginTop: theme.spacing(2),
     },
     Chip: {
         backgroundColor: "#F8EF7A",
-        width: 230,
+        width: 120,
         marginRight: theme.spacing(1),
-        marginTop: theme.spacing(3),
+        marginTop: theme.spacing(1),
     },
     Tag: {
         marginRight: theme.spacing(1),
@@ -56,14 +65,14 @@ export default function Group() {
     const handleDateChange = (date) => {setSelectedDate(date);};
 
     return(
-        <div className={classes.root}>
+    <div className={classes.root}>
             <Paper className={classes.paper}>
                 <Typography variant="h6" align="left">
                     회의 예약
                 </Typography>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <Grid container justify="space-around">
-                        <form className={classes.container}>
+                        <form className={classes.form}>
                         <TextField className={classes.textField}
                         id="meet_title"
                         label="회의명"
@@ -82,7 +91,7 @@ export default function Group() {
                             'aria-label': 'change date',
                         }}
                         />
-                        <form className={classes.container}>
+                        <form className={classes.form}>
                         <TextField
                         id="meet_time"
                         label="예약 시간"
@@ -107,138 +116,135 @@ export default function Group() {
                 </MuiPickersUtilsProvider>
             </Paper>
 
+    <Grid container spacing={12}>
+        <Grid item xs={6}>
             <Paper className={classes.papers}>
                 <Typography variant="h6" align="left">
                     예정 회의
                 </Typography>
-                <Grid>
-                    <Chip
-                    className={classes.Chip}
-                    id="meet_title"
-                    icon={<LibraryBooksIcon />}
-                    label="졸업프로젝트 3회차"
-                    />
-                    <Chip
-                    className={classes.Chip}
-                    id="meet_day"
-                    icon={<EventIcon />}
-                    label="2021/01/20"
-                    />
-                    <Chip
-                    className={classes.Chip}
-                    id="meet_time"
-                    icon={<ScheduleIcon />}
-                    label="오후 12:30"
-                    />
-                    <Button 
-                    className={classes.Button} 
-                    height="30"
-                    variant="contained" 
-                    color="primary"
-                    >
-                        회의 시작
-                    </Button>
-                </Grid>
-                
+                <Paper className={classes.Subpaper}>
+                    <Grid className={classes.Title} align="left">
+                        <Typography variant="h6">
+                            project2
+                        </Typography>
+                    </Grid>
+                    <Grid align="left">
+                        <Chip
+                        className={classes.Chip}
+                        id="meet_day"
+                        icon={<EventIcon />}
+                        label="2021/01/20"
+                        />
+                        <Chip
+                        className={classes.Chip}
+                        id="meet_time"
+                        icon={<ScheduleIcon />}
+                        label="오후 12:30"
+                        />
+                        <Button 
+                        className={classes.Button} 
+                        height="30"
+                        variant="contained" 
+                        color="primary"
+                        >
+                            회의 시작
+                        </Button>
+                    </Grid>
+                </Paper>
+                <Paper className={classes.Subpaper}>
+                    <Grid className={classes.Title} align="left">
+                        <Typography variant="h6">
+                            project3
+                        </Typography>
+                    </Grid>
+                    <Grid align="left">
+                        <Chip
+                        className={classes.Chip}
+                        id="meet_day"
+                        icon={<EventIcon />}
+                        label="2021/01/20"
+                        />
+                        <Chip
+                        className={classes.Chip}
+                        id="meet_time"
+                        icon={<ScheduleIcon />}
+                        label="오후 12:30"
+                        />
+                        <Button 
+                        className={classes.Button} 
+                        height="30"
+                        variant="contained" 
+                        color="primary"
+                        >
+                            회의 시작
+                        </Button>
+                    </Grid>
+                </Paper>
             </Paper>
+        </Grid>
 
+        <Grid item xs={6}>
             <Paper className={classes.papers}>
-                <Typography variant="h6" align="left" gutterBottom>
+                <Typography variant="h6" align="left">
                     지난 회의
                 </Typography>
-                <Grid>
-                    <Chip
-                    className={classes.Chip}
-                    id="meet_title"
-                    icon={<LibraryBooksIcon />}
-                    label="졸업프로젝트 1회차"
-                    />
-                    <Chip
-                    className={classes.Chip}
-                    id="meet_day"
-                    icon={<EventIcon />}
-                    label="2021/01/16"
-                    />
-                    <Chip
-                    className={classes.Chip}
-                    id="meet_time"
-                    icon={<ScheduleIcon />}
-                    label="오전 11:30"
-                    />
-                    <Button 
-                    className={classes.Button} 
-                    height="30"
-                    variant="contained"
-                    color="primary"
-                    >
-                        분석 보기
-                    </Button>
-                </Grid>
-                <Grid container spacing={0.5}>
-                    <Chip className={classes.Tag}
-                    variant="outlined" 
-                    size="small" 
-                    label="프로젝트 주제" />
-                    <Chip className={classes.Tag}
-                    variant="outlined" 
-                    size="small" 
-                    label="영어동화" />
-                    <Chip className={classes.Tag}
-                    variant="outlined" 
-                    size="small" 
-                    label="화상회의" />
-                </Grid>
-                <Grid>
-                <Chip
-                    className={classes.Chip}
-                    id="meet_title"
-                    icon={<LibraryBooksIcon />}
-                    label="졸업프로젝트 2회차"
-                    />
-                    <Chip
-                    className={classes.Chip}
-                    id="meet_day"
-                    icon={<EventIcon />}
-                    label="2021/01/18"
-                    />
-                    <Chip
-                    className={classes.Chip}
-                    id="meet_time"
-                    icon={<ScheduleIcon />}
-                    label="오후 12:30"
-                    />
-                    <Button
-                    className={classes.Button}
-                    height="30"
-                    variant="contained"
-                    color="primary"
-                    >
-                        분석 보기
-                    </Button>
-                </Grid>
-                <Grid container spacing={0.5}>
-                    <Chip className={classes.Tag}
-                    variant="outlined" 
-                    size="small" 
-                    label="기술검증" />
-                    <Chip className={classes.Tag}
-                    variant="outlined" 
-                    size="small" 
-                    label="webRTC" />
-                    <Chip className={classes.Tag}
-                    variant="outlined" 
-                    size="small" 
-                    label="역할분배" />
-                    <Chip className={classes.Tag}
-                    variant="outlined" 
-                    size="small" 
-                    label="프론트엔드" />
-                    <Chip className={classes.Tag}
-                    variant="outlined" 
-                    size="small" 
-                    label="백엔드" />
-                </Grid>
+                <Paper className={classes.Subpaper}>
+                    <Grid className={classes.Title} align="left">
+                        <Typography variant="h6">
+                            project1
+                        </Typography>
+                    </Grid>
+                    <Grid align="left">
+                        <Chip
+                        className={classes.Chip}
+                        id="meet_day"
+                        icon={<EventIcon />}
+                        label="2021/01/16"
+                        />
+                        <Chip
+                        className={classes.Chip}
+                        id="meet_time"
+                        icon={<ScheduleIcon />}
+                        label="오전 11:30"
+                        />
+                        <Button 
+                        className={classes.Button} 
+                        height="30"
+                        variant="contained"
+                        color="primary"
+                        >
+                            분석 보기
+                        </Button>
+                    </Grid>
+                    <Grid container spacing={0.5} align="left">
+                        <Chip className={classes.Tag}
+                        variant="outlined" 
+                        size="small" 
+                        label="프로젝트 주제" />
+                        <Chip className={classes.Tag}
+                        variant="outlined" 
+                        size="small" 
+                        label="영어동화" />
+                        <Chip className={classes.Tag}
+                        variant="outlined" 
+                        size="small" 
+                        label="화상회의" />
+                        <Chip className={classes.Tag}
+                        variant="outlined" 
+                        size="small" 
+                        label="중고거래" />
+                        <Chip className={classes.Tag}
+                        variant="outlined" 
+                        size="small" 
+                        label="미술치료" />
+                    </Grid>
+                </Paper>
+                    
             </Paper>
+        </Grid>
+    </Grid>
+            
+            
         </div>
     );
 }
