@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Tab, Tabs, Typography, Box, Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle }from '@material-ui/core';
-import Navigation from '../components/Navigation';
-import Group from '../components/Group';
+import Navigation from '../Components/Navigation';
+import Group from '../Components/Group';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
