@@ -211,11 +211,12 @@ app.post('/group-memberlist', function(req, res){
 //회의 예약 하기
 app.post('/forwardmeet-create', function(req,res){
   var group_id = req.body.group_id;
+  var meet_id = shortid.generate();  //유니크 키 값 생성
   var meet_title = req.body.meet_title;
   var meet_day = req.body.meet_day;
   var meet_time = req.body.meet_time;
-  var sql = 'INSERT INTO FORWARDMEET VALUE(?, ?, ?, ?)';
-  mysqlDB.query(sql, [group_id, meet_title, meet_day, meet_time], function(err, results){
+  var sql = 'INSERT INTO FORWARDMEET VALUE(?, ?, ?, ?, ?)';
+  mysqlDB.query(sql, [group_id, meet_id, meet_title, meet_day, meet_time], function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
       return res.send({code:0, msg:"request success"});
@@ -224,9 +225,8 @@ app.post('/forwardmeet-create', function(req,res){
 });
 
 //예약 회의 목록
-app.get('/forwardmeet-list', function(req,res){
-  //var group_id = req.body.group_id;
-  var group_id = "test_group";
+app.post('/forwardmeet-list', function(req,res){
+  var group_id = req.body.group_id;
   var sql = 'SELECT * FROM FORWARDMEET WHERE GROUP_ID=?';
   mysqlDB.query(sql, group_id, function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
