@@ -33,17 +33,16 @@ function getFormatDate(date){
 export default function NewMeet(prop) {
     const classes = useStyles();
     const [selectedDate, setDate] = useState(new Date());
-    const [meet_date, setMeetDate] = useState(getFormatDate(selectedDate));
+    const [meet_date, setMeetDate] = useState('');
     const [meet_title, setMeetTitle] = useState('');
     const [meet_time, setMeetTime] = useState('');
 
     const handleDateChange = (date) => { 
         setDate(date); 
+        setMeetDate(getFormatDate(date));
     };
 
     const handleSubmit=()=>{
-        setMeetDate(getFormatDate(selectedDate));
-
         if(meet_title === '' || meet_time === ''){
             alert("예약할 회의 정보를 모두 입력해주세요");
         }

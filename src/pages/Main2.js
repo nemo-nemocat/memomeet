@@ -70,8 +70,10 @@ const useStyles = makeStyles((theme) => ({
 export default function InteractiveList() {
   const classes = useStyles();
   const [groups, setGroups] = useState([]);;
-  const [activeTab, setActiveTab] = useState(-1);
+  const [activeTab, setActiveTab] = useState(localStorage.getItem("preTab"));
   const [exitOpen, setExitOpen] = useState(false);
+  const [group_pw, setGroupPw] = useState('');
+  const [group_name, setGroupName] = useState('');
 
   useEffect(() => {
     var requestOptions = {
@@ -90,6 +92,7 @@ export default function InteractiveList() {
 
   const clickHandler = (id) => {
     setActiveTab(id);
+    localStorage.setItem("preTab",id);
   }
 
   const clickExitOpen = () => {
@@ -138,6 +141,7 @@ export default function InteractiveList() {
         console.log(result);
         if (result.code === 0) {
           alert("로그아웃 되었습니다.");
+          localStorage.setItem("preTab",-1);
           window.location.href = "/";
         }
       })
@@ -146,12 +150,37 @@ export default function InteractiveList() {
 
   const handleClickGroupId = () => {
     var t = document.createElement("textarea");
+    var user_name = localStorage.getItem("user_name");
+    
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({ "group_id": activeTab });
+
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+    };
+
+    fetch("/group-search", requestOptions)
+        .then(res => res.json())
+        .then(result => {
+            console.log(result);
+            if (result.code === 0) {
+              setGroupName(result.grouplist.group_name);
+              setGroupPw(result.grouplist.group_pw);
+            }
+        })
+        .catch(error => console.log('error', error))
+
     document.body.appendChild(t);
-    t.value = activeTab;
+    t.value = `${user_name}님이 [${group_name}] 그룹 초대 메세지를 보냈습니다. \n그룹ID: ${activeTab}\n그룹PW: ${group_pw}`;
     t.select();
     document.execCommand('copy');
     document.body.removeChild(t);
-    alert("그룹 ID가 복사되었습니다");
+    alert("그룹 초대 메세지가 복사되었습니다");
   }
 
   const handleClickMeet = () => {
@@ -203,9 +232,9 @@ export default function InteractiveList() {
       </div>
       <div>
         <div className={classes.header}>
-          {(activeTab !== -1) ?
+          {(activeTab !== '-1') ?
             <Button className={classes.headerBtn} onClick={handleClickGroupId} color="primary" variant="contained">
-              <LinkIcon /> 그룹ID
+              <LinkIcon /> 그룹초대
         </Button>
             : <div />
           }
@@ -216,7 +245,7 @@ export default function InteractiveList() {
             LOGOUT
     </Button>
         </div>
-          {(activeTab !== -1) ?
+          {(activeTab !== '-1') ?
             <div className={classes.body}>
               <NewMeet group_id={activeTab} />  <Scheduled group_id={activeTab}/>  <Scheduled group_id={activeTab}/>
             </div>

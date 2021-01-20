@@ -112,8 +112,8 @@ export default function SignUp() {
             .then(result => {
                 console.log(result);
                 if(result.code===0){
-                alert("회원가입 성공");
-                window.location.href = "/";}
+                  alert("회원가입 성공");
+                  window.location.href = "/";}
                 else if(result.code===3){
                     alert("이미 존재하는 아이디입니다.")
                 }
@@ -192,7 +192,6 @@ export default function SignUp() {
             </Grid>
           </Grid>
           <Button
-            type="submit"
             size="large"
             variant="contained"
             color="secondary"
