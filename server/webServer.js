@@ -237,6 +237,18 @@ app.post('/forwardmeet-list', function(req,res){
   });
 });
 
+//예약 회의 삭제
+app.post('/forwardmeet-delete', function(req,res){
+  var meet_id = req.body.meet_id;
+  var sql = 'DELETE FROM FORWARDMEET WHERE MEET_ID=?';
+  mysqlDB.query(sql, meet_id, function(err, results){
+    if(err) return res.send({code:11, msg:`${err}`});
+    else{
+      return res.send({code:0, msg:"request success"});
+    }
+  })
+});
+
 
 app.listen(AppPort, function () {
   console.log(`Example app listening on port ${AppPort}!`);
