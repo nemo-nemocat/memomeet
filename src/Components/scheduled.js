@@ -5,6 +5,8 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import EventIcon from '@material-ui/icons/Event';
 import ScheduleIcon from '@material-ui/icons/Schedule';
+import StartMeetingIcon from '../enter.png';
+import DeleteForever from '@material-ui/icons/DeleteForever';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,6 +28,12 @@ const useStyles = makeStyles((theme) => ({
         padding:0,
         marginBottom:"3%"
     },
+    Icon: {
+        width:"50%",
+        height: "50%",
+        marginTop: "12%",
+        marginLeft: "20%",
+    }
 }));
 
 export default function Scheduled(prop) {
@@ -70,13 +78,19 @@ export default function Scheduled(prop) {
                     {list && list.map(data => (
                         <ListItem key={data.meet_id} className={classes.data}>
                             <div style={{display:'block', width:"80%", margin:"2%"}}>
+                                <DeleteForever style={{marginTop:"-2%"}} color="error"/>
                                 <span style={{fontWeight:"bold"}}>{data.meet_title}</span>
                                 <Grid>
                                     <Chip className={classes.Chip} id="meet_day" icon={<EventIcon/>} label={data.meet_day}/>
                                     <Chip className={classes.Chip} id="meet_time" icon={<ScheduleIcon/>} label={data.meet_time}/>
                                 </Grid>
                             </div>
-                            <div style={{backgroundColor:"#000000", width:"25%", height:"100%", borderTopRightRadius:10, borderBottomRightRadius:10}}></div>
+                            <div style={{backgroundColor:"#000000", width:80, height:70, borderTopRightRadius:10, borderBottomRightRadius:10}}>
+                                <img src={StartMeetingIcon} className={classes.Icon} alt='StartMeetingIcon' />
+                                <Typography variant="button" align="center">
+                                    <span style={{color:"#FFFFFF", marginLeft:"18%"}}>Start</span>
+                                </Typography>
+                            </div>
                         </ListItem>
                     ))}
                 </List>
