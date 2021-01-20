@@ -19,39 +19,40 @@ import logo from '../memomeet_logo.png'
 const useStyles = makeStyles((theme) => ({
   header: {
     backgroundColor: "#000000",
-    width: 1280,
-    height: 60,
+    width: "100%",
+    height: "10%",
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "center"
   },
   headerBtn: {
-    margin: 10
+    margin: "1%"
   },
   sideBar: {
-    width: 250,
-    height: window.innerHeight,
+    width: "23%",
+    height: "40%",
     backgroundColor: "#ffc31e",
   },
   clickGroup: {
     backgroundColor: "ffffff"
   },
   listTitle: {
-    paddingTop: 15,
-    marginBottom: 30,
+    paddingTop: "7%",
+    marginBottom: "10%",
   },
   exitIcon: {
     width: 20,
     height: 20,
     color: "#ffffff",
+    marginLeft: "20%"
   },
   groupBtn: {
-    width: 250,
-    height: 50,
+    width: "100%",
+    height: "10%",
   },
   selectGroupBtn: {
-    width: 250,
-    height: 50,
+    width: "100%",
+    height: "10%",
     backgroundColor: "#000000",
     color: "#ffffff"
   },
@@ -63,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     height: window.innerHeight - 60,
   },
   logo:{
-    marginTop:150
+    marginTop:"150%",
   },
 }));
 
@@ -198,7 +199,7 @@ export default function InteractiveList() {
         </Typography>
         <SearchBtn />
         <div>
-          <List style={{ marginBottom: 20, height:500, overflow:"auto"}}>
+          <List style={{ marginBottom: "106%", height:"260%", overflow:"auto"}}>
             {groups && groups.map(group => (
               <ListItem key={group.group_id} onClick={() => clickHandler(group.group_id)} className={(activeTab === group.group_id) ? classes.selectGroupBtn : classes.groupBtn}>
                 <ListItemText
@@ -230,7 +231,7 @@ export default function InteractiveList() {
           </DialogActions>
         </Dialog>
       </div>
-      <div>
+      <div style={{width: "100%", height:"100%"}}>
         <div className={classes.header}>
           {(activeTab !== '-1') ?
             <Button className={classes.headerBtn} onClick={handleClickGroupId} color="primary" variant="contained">
@@ -240,7 +241,7 @@ export default function InteractiveList() {
           }
           <Button className={classes.headerBtn} onClick={handleClickMeet} color="primary" variant="contained">
             MEETING
-    </Button>
+          </Button>
           <Button className={classes.headerBtn} onClick={handleClickLogout} color="primary" variant="contained">
             LOGOUT
     </Button>

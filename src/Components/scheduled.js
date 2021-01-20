@@ -8,7 +8,7 @@ import ScheduleIcon from '@material-ui/icons/Schedule';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width:"35%",
+        width:"45%",
         marginRight:"3%",
         height:500,
     },
