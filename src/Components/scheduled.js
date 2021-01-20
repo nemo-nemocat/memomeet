@@ -21,9 +21,10 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor:"#ffffff",
         width:"95%",
         margin:"auto",
+        height:"16%",
         borderRadius:10,
         padding:0,
-        marginBottom:"2%"
+        marginBottom:"3%"
     },
 }));
 
@@ -75,7 +76,7 @@ export default function Scheduled(prop) {
                                     <Chip className={classes.Chip} id="meet_time" icon={<ScheduleIcon/>} label={data.meet_time}/>
                                 </Grid>
                             </div>
-                            <div style={{backgroundColor:"#000000", width:80, height:70, borderTopRightRadius:10, borderBottomRightRadius:10}}></div>
+                            <div style={{backgroundColor:"#000000", width:"25%", height:"100%", borderTopRightRadius:10, borderBottomRightRadius:10}}></div>
                         </ListItem>
                     ))}
                 </List>
