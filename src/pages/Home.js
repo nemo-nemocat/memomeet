@@ -10,7 +10,7 @@ import logo from '../memomeet_logo.png';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(3),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -23,9 +23,9 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 2, 2),
   },
   logo:{
-    marginTop: 80,
-    width: 150,
-    height: 200,
+    marginTop: "10%",
+    width: "40%",
+    height: "30%",
   },
 }));
 
@@ -61,12 +61,11 @@ export default function SignIn() {
                 alert(`${result.user_name}님 환영합니다!`);
                 localStorage.setItem("user_id", result.user_id);
                 localStorage.setItem("user_name", result.user_name);
-                window.location.href='/main2';  //수정 해야함!
+                localStorage.setItem("preTab",-1);
+                window.location.href='/main';  
               }
             })
             .catch(error => console.log('error', error))
-
-
     } 
   };
 
@@ -74,7 +73,6 @@ export default function SignIn() {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <img src={logo} className={classes.logo} alt="logo"/>
-
       <div className={classes.paper}>
         <Typography component="h1" variant="h6">
           WELCOME TO MEMOMEET
@@ -117,8 +115,6 @@ export default function SignIn() {
               LOGIN
             </Typography>
           </Button>
-          
-          
           <br/>
           <Link href="/Signup" variant="body2" color="secondary">
              {"회원가입"}

@@ -10,4 +10,8 @@ module.exports = function (app) {
         target: 'http://localhost:3002',
         changeOrigin: true,
     }));
+    app.use(["/forwardmeet-create", "/forwardmeet-list"],createProxyMiddleware({
+        target: 'http://localhost:3002',
+        changeOrigin: true,
+    }));
 };
