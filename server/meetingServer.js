@@ -37,24 +37,27 @@ app.get('/meeting', (req, res) => {
 })
 
 io.on('connection', socket => {
-    
+  
+  // 지금 userID는 DB에 있는 아이디가 아니라 peer의 고유 id!!!
   socket.on('joinRoom', (roomId, userId, userName) => {
 
-      // 소켓에 id, 이름 저장해두기
-      socket.id = userId
-      socket.name = userName
+    // 소켓에 id, 이름 저장해두기
+    // socket.id = userId
+    // socket.name = userName
+    console.log("룸번호는" + roomId + "입니다.")
 
-      socket.join(roomId)
-      socket.to(roomId).broadcast.emit('userConnected', userId)
-      
-      socket.on('message', (message, userName) => {
-        io.to(roomId).emit('creatMessage', message, userName)
-      })
+    socket.join(roomId)
+    socket.to(roomId).broadcast.emit('userConnected', userId)
 
-      socket.on('disconnect', () => {
-        socket.to(roomId).broadcast.emit('userDisconnected', userId)
-      })
+    // socket.on 함수 밖으로 빼는 거 시도하기...
+    socket.on('message', (message) => {
+      io.to(roomId).emit('creatMessage', message, userName)
     })
+
+    socket.on('disconnect', () => {
+      socket.to(roomId).broadcast.emit('userDisconnected', userId)
+    })
+  })
 })
 
 server.listen(serverPort, function () {
