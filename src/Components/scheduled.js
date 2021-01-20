@@ -85,28 +85,8 @@ export default function Scheduled(prop) {
     const handleEnterMeet = (meet_id) => {
         var user_id = localStorage.getItem("user_id");
         var user_name = localStorage.getItem("user_name");
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-    
-        var raw = JSON.stringify({ "meet_id": meet_id });
-    
-        var requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: raw,
-            redirect: 'follow'
-        };
-    
-        fetch("/forwardmeet-delete", requestOptions)
-            .then(res => res.json())
-            .then(result => {
-                console.log(result);
-                if (result.code === 0) {    
-                    alert("회의에 입장합니다");
-                    window.open(`http://localhost:3003/meeting?meet_id=${meet_id}&user_id=${user_id}&user_name=${user_name}`, 'Lets MeMoMeet');
-                }
-            })
-            .catch(error => console.log('error', error))
+        alert("회의에 입장합니다");
+        window.open(`http://localhost:3003/meet_id=${meet_id}&user_id=${user_id}&user_name=${user_name}`, 'Lets MeMoMeet');
     }
 
     const handleDeleteIcon =(meet_id) => {
@@ -147,7 +127,7 @@ export default function Scheduled(prop) {
                         <ListItem key={data.meet_id} className={classes.data}>
                             <div style={{display:'block',width:"80%", margin:"2%"}}>
                                 <div className={classes.ScheduledName}>
-                                <DeleteForever style={{marginTop:"-2%"}} color="error"/>
+                                <DeleteForever onClick={handleDeleteIcon} style={{marginTop:"-2%"}} color="error"/>
                                 <span style={{fontWeight:"bold"}}>{data.meet_title}</span>
                                 </div>
                                 <Grid>
