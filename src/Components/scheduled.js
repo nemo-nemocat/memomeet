@@ -23,9 +23,10 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor:"#ffffff",
         width:"95%",
         margin:"auto",
+        height:"16%",
         borderRadius:10,
         padding:0,
-        marginBottom:"2%"
+        marginBottom:"3%"
     },
     Icon: {
         width:"50%",

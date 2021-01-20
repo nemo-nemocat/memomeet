@@ -15,8 +15,8 @@ const useStyles = makeStyles((theme) => ({
     },
     Button: {
         width:"40%",
-        marginTop:20,
-        marginBottom:10,
+        marginTop: "10%",
+        marginBottom:"5%",
     },
 }));
 
@@ -33,7 +33,7 @@ function getFormatDate(date){
 export default function NewMeet(prop) {
     const classes = useStyles();
     const [selectedDate, setDate] = useState(new Date());
-    const [meet_date, setMeetDate] = useState('');
+    const [meet_date, setMeetDate] = useState(getFormatDate(new Date()));
     const [meet_title, setMeetTitle] = useState('');
     const [meet_time, setMeetTime] = useState('');
 
@@ -78,10 +78,10 @@ export default function NewMeet(prop) {
                 <Typography variant="h6" align="center">
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}> New Meet</span>   
                 </Typography>
-                <div style={{backgroundColor:"#eaeaea", width:"90%", borderRadius:10, marginLeft:"5%", marginTop:10}}>
+                <div style={{backgroundColor:"#eaeaea", width:"90%", borderRadius:10, marginLeft:"5%", marginTop:"5%"}}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <form>
-                        <TextField className={classes.textField} style={{marginTop:5}} id="meet_title" label="Meet Title" value={meet_title} onChange={({ target: { value } }) => setMeetTitle(value)}/>
+                        <TextField className={classes.textField} style={{marginTop:"3%"}} id="meet_title" label="Meet Title" value={meet_title} onChange={({ target: { value } }) => setMeetTitle(value)}/>
                     </form>
                     <KeyboardDatePicker
                         disableToolbar
@@ -106,7 +106,7 @@ export default function NewMeet(prop) {
                             className={classes.textField}
                             InputLabelProps={{shrink: true,}}
                             inputProps={{step: 300,}}
-                            style={{marginBottom:20}}
+                            style={{marginBottom:"10%"}}
                             value={meet_time} onChange={({ target: { value } }) => setMeetTime(value)}
                         />
                     </form>

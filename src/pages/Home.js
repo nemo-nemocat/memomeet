@@ -62,7 +62,7 @@ export default function SignIn() {
                 localStorage.setItem("user_id", result.user_id);
                 localStorage.setItem("user_name", result.user_name);
                 localStorage.setItem("preTab",-1);
-                window.location.href='/main2';  //수정 해야함!
+                window.location.href='/main';  
               }
             })
             .catch(error => console.log('error', error))
