@@ -38,12 +38,17 @@ app.get('/meeting', (req, res) => {
 
 io.on('connection', socket => {
     
-    socket.on('joinRoom', (roomId, userId) => {
+  socket.on('joinRoom', (roomId, userId, userName) => {
+
+      // 소켓에 id, 이름 저장해두기
+      socket.id = userId
+      socket.name = userName
+
       socket.join(roomId)
       socket.to(roomId).broadcast.emit('userConnected', userId)
       
-      socket.on('message', (message, userId) => {
-          io.to(roomId).emit('creatMessage', message, userId)
+      socket.on('message', (message, userName) => {
+        io.to(roomId).emit('creatMessage', message, userName)
       })
 
       socket.on('disconnect', () => {
