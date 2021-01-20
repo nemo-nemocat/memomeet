@@ -33,6 +33,12 @@ const useStyles = makeStyles((theme) => ({
         height: "50%",
         marginTop: "12%",
         marginLeft: "20%",
+    },
+    ScheduledName: {
+        display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        verticalAlign: "middle",
     }
 }));
 
@@ -77,9 +83,11 @@ export default function Scheduled(prop) {
                 <List style={{height:"100%", overflow:"auto"}}>
                     {list && list.map(data => (
                         <ListItem key={data.meet_id} className={classes.data}>
-                            <div style={{display:'block', width:"80%", margin:"2%"}}>
+                            <div style={{display:'block',width:"80%", margin:"2%"}}>
+                                <div className={classes.ScheduledName}>
                                 <DeleteForever style={{marginTop:"-2%"}} color="error"/>
                                 <span style={{fontWeight:"bold"}}>{data.meet_title}</span>
+                                </div>
                                 <Grid>
                                     <Chip className={classes.Chip} id="meet_day" icon={<EventIcon/>} label={data.meet_day}/>
                                     <Chip className={classes.Chip} id="meet_time" icon={<ScheduleIcon/>} label={data.meet_time}/>

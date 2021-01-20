@@ -7,7 +7,7 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width:"20%",
+        width:"22%",
         margin:"3%",
     },
     textField: {
