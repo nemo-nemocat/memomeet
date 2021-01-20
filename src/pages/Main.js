@@ -15,20 +15,10 @@ import GroupCreateBtn from '../Components/groupCreateBtn';
 import NewMeet from '../Components/newMeet';
 import Scheduled from '../Components/scheduled';
 import LinkIcon from '@material-ui/icons/Link';
-import logo from '../memomeet_logo.png'
+import logo from '../memomeet_logo.png';
+import Header from '../Components/Header';
 
 const useStyles = makeStyles((theme) => ({
-  header: {
-    minWidth:1000,
-    backgroundColor: "#000000",
-    width: "100%",
-    display: "flex",
-    justifyContent: "flex-end",
-    alignItems: "center"
-  },
-  headerBtn: {
-    margin: "1%"
-  },
   sideBar: {
     minWidth: 230,
     width: "23%",
@@ -133,67 +123,6 @@ export default function InteractiveList() {
       .catch(error => console.log('error', error))
   }
 
-  const handleClickLogout = () => {
-    var requestOptions = {
-      method: 'GET',
-      redirect: 'follow'
-    };
-
-    fetch("/auth-logout", requestOptions)
-      .then(res => res.json())
-      .then(result => {
-        console.log(result);
-        if (result.code === 0) {
-          alert("로그아웃 되었습니다.");
-          localStorage.setItem("preTab",-1);
-          window.location.href = "/";
-        }
-      })
-      .catch(error => console.log('error', error));
-  };
-
-  const handleClickGroupId = () => {
-    var t = document.createElement("textarea");
-    var user_name = localStorage.getItem("user_name");
-    
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify({ "group_id": activeTab });
-
-    var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-    };
-
-    fetch("/group-search", requestOptions)
-        .then(res => res.json())
-        .then(result => {
-            console.log(result);
-            if (result.code === 0) {
-              setGroupName(result.grouplist.group_name);
-              setGroupPw(result.grouplist.group_pw);
-            }
-        })
-        .catch(error => console.log('error', error))
-
-    document.body.appendChild(t);
-    t.value = `${user_name}님이 [${group_name}] 그룹 초대 메세지를 보냈습니다. \n그룹ID: ${activeTab}\n그룹PW: ${group_pw}`;
-    t.select();
-    document.execCommand('copy');
-    document.body.removeChild(t);
-    alert("그룹 초대 메세지가 복사되었습니다");
-  }
-
-  const handleClickMeet = () => {
-    var meet_id = 'temp';
-    var user_id = localStorage.getItem("user_id");
-    var user_name = localStorage.getItem("user_name");
-    window.open(`http://localhost:3003/meeting?meet_id=${meet_id}&user_id=${user_id}&user_name=${user_name}`, 'Lets MeMoMeet');
-  };
-
   return (
     <div style={{ display: "flex" }}>
       <div className={classes.sideBar}>
@@ -202,7 +131,7 @@ export default function InteractiveList() {
         </Typography>
         <SearchBtn />
         <div style={{height:"84%"}}>
-          <List style={{ marginBottom: "10%", height:"80%", overflow:"auto"}}>
+          <List style={{ marginBottom: "5%", height:"80%", overflow:"auto"}}>
             {groups && groups.map(group => (
               <ListItem key={group.group_id} onClick={() => clickHandler(group.group_id)} className={(activeTab === group.group_id) ? classes.selectGroupBtn : classes.groupBtn}>
                 <ListItemText
@@ -235,20 +164,7 @@ export default function InteractiveList() {
         </Dialog>
       </div>
       <div style={{width: "100%", height:"90%"}}>
-        <div className={classes.header}>
-          {(activeTab !== '-1') ?
-            <Button className={classes.headerBtn} onClick={handleClickGroupId} color="primary" variant="contained">
-              <LinkIcon /> 그룹초대
-        </Button>
-            : <div />
-          }
-          <Button className={classes.headerBtn} onClick={handleClickMeet} color="primary" variant="contained">
-            MEETING
-          </Button>
-          <Button className={classes.headerBtn} onClick={handleClickLogout} color="primary" variant="contained">
-            LOGOUT
-    </Button>
-        </div>
+        <Header group_id={activeTab}/>
           {(activeTab !== '-1') ?
             <div className={classes.body}>
               <NewMeet group_id={activeTab} />  <Scheduled group_id={activeTab}/>  <Scheduled group_id={activeTab}/>
