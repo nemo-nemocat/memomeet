@@ -49,15 +49,15 @@ let user_id, user_name
 // 아래 코드대로 안하고 위 코드를 쓰면 채팅만 연결되고 미디어 연결이 안됨. peer의 id를 지우면 안됨.
 /*
 peer.on('open', () => { 
-    user_id = searchParam('user_id')
-    user_name = searchParam('user_name')
+    user_id = getQueryString('user_id')
+    user_name = getQueryString('user_name')
     $('ul').append(`<font color=#CC3B33>${user_name}님 하이</font></br>`) // 채팅창에 append
     socket.emit('joinRoom', ROOM_ID, user_id, user_name)
 })
 */
 peer.on('open', id => { 
-  user_id = searchParam('user_id')
-  user_name = searchParam('user_name')
+  user_id = getQueryString('user_id')
+  user_name = getQueryString('user_name')
   $('ul').append(`<font color=#CC3B33>${user_name}님 하이</font></br>`) // 채팅창에 append
   socket.emit('joinRoom', ROOM_ID, id, user_name)
 })
@@ -118,13 +118,38 @@ const scrollToBottom = () => {
     $('.main__chat_window').scrollTop($('.main__chat_window').prop("scrollHeight"));
 }
 
-// URL query용
-const URLSearch = new URLSearchParams(location.search)
-function searchParam(key){
-  return new URLSearchParams(location.search).get(key)
+// URL query string 가져오는 함수 
+function getQueryString(key) {
+  var str_encoded = location.href; // 한글이 %로 인코딩된 주소 그대로 
+  var str = decodeURI(str_encoded); // 디코딩
+  var index = str.indexOf("/") + 1;
+  var lastIndex = str.indexOf("#") > -1 ? str.indexOf("#") + 1 : str.length;
+
+  if (index == 0) {
+      return "";
+  }
+
+  str = str.substring(index, lastIndex); 
+  str = str.split("&");
+
+  var rst = "";
+
+  for (var i = 0; i < str.length; i++) {
+      var arr = str[i].split("=");
+
+      if (arr.length != 2) {
+          break;
+      }
+
+      if (arr[0] == key) {
+          rst = arr[1];
+          break;
+      }
+  }
+  return rst;
 }
 
-// 여기부터 버튼 기능 함수들
+//////////////////////* 여기부터 버튼 기능 함수들 *//////////////////////
 
 const muteUnmute = () => {
     const enabled = myVideoStream.getAudioTracks()[0].enabled;

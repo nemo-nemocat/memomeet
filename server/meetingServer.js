@@ -31,14 +31,14 @@ app.use(express.static('public'))
 //     res.redirect("/meeting-start") // uuid 생성된 URL로 redirect
 // })
 
-app.get('/meeting', (req, res) => {
+app.get('/:room', (req, res) => {
     console.log("meeting enter");
     res.render('room', { roomId: req.params.room }) // room.ejs 렌더링, 생성된 uuid를 roomId로 넘김
 })
 
 io.on('connection', socket => {
   
-  // 지금 userID는 DB에 있는 아이디가 아니라 peer의 고유 id!!!
+  // 지금 userID는 DB에 있는 아이디가 아니라 peer의 고유 id를 받아온 것!!! so 입장,퇴장은 고유 id로 나옴.
   socket.on('joinRoom', (roomId, userId, userName) => {
 
     // 소켓에 id, 이름 저장해두기
