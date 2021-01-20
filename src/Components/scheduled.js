@@ -17,7 +17,8 @@ const useStyles = makeStyles((theme) => ({
     Chip: {
         backgroundColor: "#ffc31e",
         marginTop:"1%",
-        marginRight:"3%"
+        marginRight:"3%",
+        height:30
     },
     data:{
         backgroundColor:"#ffffff",
@@ -27,6 +28,15 @@ const useStyles = makeStyles((theme) => ({
         borderRadius:10,
         padding:0,
         marginBottom:"3%"
+    },
+    startBtn:{
+        backgroundColor:"#000000", 
+        maxWidth:70,
+        width:"25%", 
+        height:"100%", 
+        borderTopRightRadius:10, 
+        borderBottomRightRadius:10,
+        textAlign: "center"
     },
     Icon: {
         width:"50%",
@@ -71,6 +81,58 @@ export default function Scheduled(prop) {
             })
             .catch(error => console.log('error', error))
       }, [prop]);
+
+    const handleEnterMeet = (meet_id) => {
+        var user_id = localStorage.getItem("user_id");
+        var user_name = localStorage.getItem("user_name");
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+    
+        var raw = JSON.stringify({ "meet_id": meet_id });
+    
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+    
+        fetch("/forwardmeet-delete", requestOptions)
+            .then(res => res.json())
+            .then(result => {
+                console.log(result);
+                if (result.code === 0) {    
+                    alert("회의에 입장합니다");
+                    window.open(`http://localhost:3003/meeting?meet_id=${meet_id}&user_id=${user_id}&user_name=${user_name}`, 'Lets MeMoMeet');
+                }
+            })
+            .catch(error => console.log('error', error))
+    }
+
+    const handleDeleteIcon =(meet_id) => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+    
+        var raw = JSON.stringify({ "meet_id": meet_id });
+    
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+    
+        fetch("/forwardmeet-delete", requestOptions)
+            .then(res => res.json())
+            .then(result => {
+                console.log(result);
+                if (result.code === 0) {    
+                    alert("예약 회의를 삭제합니다");
+                    window.location.reload();
+                }
+            })
+            .catch(error => console.log('error', error))
+    }
    
 
     return (
@@ -93,10 +155,10 @@ export default function Scheduled(prop) {
                                     <Chip className={classes.Chip} id="meet_time" icon={<ScheduleIcon/>} label={data.meet_time}/>
                                 </Grid>
                             </div>
-                            <div style={{backgroundColor:"#000000", width:80, height:70, borderTopRightRadius:10, borderBottomRightRadius:10}}>
+                            <div className={classes.startBtn} onClick={() => handleEnterMeet(data.meet_id)}>
                                 <img src={StartMeetingIcon} className={classes.Icon} alt='StartMeetingIcon' />
                                 <Typography variant="button" align="center">
-                                    <span style={{color:"#FFFFFF", marginLeft:"18%"}}>Start</span>
+                                    <span style={{color:"#FFFFFF"}}>Start</span>
                                 </Typography>
                             </div>
                         </ListItem>

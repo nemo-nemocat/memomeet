@@ -98,7 +98,7 @@ app.post('/group-create', function(req,res){
 //사용자가 속한 그룹 리스트 출력
 app.get('/group-show', function(req, res){
   var userID = req.session.userID;
-  var sql = "SELECT * FROM GROUPLIST WHERE GROUP_ID IN (SELECT GROUP_ID FROM MEMBERLIST WHERE USER_ID=?)";
+  var sql = "SELECT * FROM GROUPLIST WHERE GROUP_ID IN (SELECT GROUP_ID FROM MEMBERLIST WHERE USER_ID=?) ORDER BY GROUP_NAME";
   mysqlDB.query(sql, userID, function(err, results){
     if(err)  return res.send({code:11, msg:`${err}`});
     else{
