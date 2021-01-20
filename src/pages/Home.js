@@ -23,9 +23,10 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 2, 2),
   },
   logo:{
-    marginTop: "10%",
+    marginTop: "20%",
     width: "40%",
     height: "30%",
+    marginBottom: "10%"
   },
 }));
 
