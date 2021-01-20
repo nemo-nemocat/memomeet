@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
         margin:"auto",
         borderRadius:10,
         padding:0,
-        marginBottom:"3%"
+        marginBottom:"2%"
     },
 }));
 
@@ -65,13 +65,13 @@ export default function Scheduled(prop) {
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}> Scheduled</span>   
                 </Typography>
                 <div style={{backgroundColor:"#eaeaea", width:"90%", height:"85%",borderRadius:10, marginLeft:"5%", marginTop:10}}>
-                <List>
+                <List style={{height:"100%", overflow:"auto"}}>
                     {list && list.map(data => (
                         <ListItem key={data.meet_id} className={classes.data}>
                             <div style={{display:'block', width:"80%", margin:"2%"}}>
                                 <span style={{fontWeight:"bold"}}>{data.meet_title}</span>
                                 <Grid>
-                                    <Chip className={classes.Chip} id="meet_day" icon={<EventIcon/>} label={data.meet_day.slice(0,10)}/>
+                                    <Chip className={classes.Chip} id="meet_day" icon={<EventIcon/>} label={data.meet_day}/>
                                     <Chip className={classes.Chip} id="meet_time" icon={<ScheduleIcon/>} label={data.meet_time}/>
                                 </Grid>
                             </div>

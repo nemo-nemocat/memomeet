@@ -227,7 +227,7 @@ app.post('/forwardmeet-create', function(req,res){
 //예약 회의 목록
 app.post('/forwardmeet-list', function(req,res){
   var group_id = req.body.group_id;
-  var sql = 'SELECT * FROM FORWARDMEET WHERE GROUP_ID=?';
+  var sql = 'SELECT * FROM FORWARDMEET WHERE GROUP_ID=? ORDER BY MEET_DAY, MEET_TIME';
   mysqlDB.query(sql, group_id, function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
