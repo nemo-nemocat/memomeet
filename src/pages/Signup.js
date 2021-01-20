@@ -1,18 +1,16 @@
 
 import React,{useState} from 'react';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import logo from '../memomeet_logo.png';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -22,15 +20,15 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: '100%', 
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
   logo:{
-    marginTop: 30,
-    width: 100,
-    height: 130,
+    marginTop: "5%",
+    width: "25%",
+    height: "30%",
   },
 }));
 
@@ -64,6 +62,7 @@ export default function SignUp() {
   const [user_pw, setUserPw] = useState("");
   const [user_name, setUserName] = useState("");
   const [user_email, setUserEmail] = useState("");
+  const [user_pwcheck, setUserPwcheck] = useState("");
 
   const handleIdChange = (e) => {
         setUserId(e.target.value);
@@ -76,6 +75,9 @@ export default function SignUp() {
   }
   const handleEmailChange = (e) => {
     setUserEmail(e.target.value);
+  }
+  const handlePwCheckChange = (e) => {
+    setUserPwcheck(e.target.value);
   }
 
   const handleSubmit = () => {
@@ -93,6 +95,9 @@ export default function SignUp() {
     }
     else if (checkEmail(user_email)) {
         alert("이메일 형식이 올바르지 않습니다!");
+    }
+    else if (user_pw != user_pwcheck) {
+        alert("비밀번호가 일치하지 않습니다!");
     }
     else {
         var myHeaders = new Headers();
@@ -123,7 +128,6 @@ export default function SignUp() {
     }
   }
 
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -131,9 +135,6 @@ export default function SignUp() {
         <img src={logo} className={classes.logo} alt="logo"/>
       </a>
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -187,6 +188,20 @@ export default function SignUp() {
                 id="password"
                 value={user_pw}
                 onChange={handlePwChange}
+                autoComplete="current-password"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="passwordcheck"
+                label="비밀번호 확인"
+                type="password"
+                id="passwordcheck"
+                value={user_pwcheck}
+                onChange={handlePwCheckChange}
                 autoComplete="current-password"
               />
             </Grid>
