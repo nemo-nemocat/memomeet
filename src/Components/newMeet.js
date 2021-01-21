@@ -9,13 +9,15 @@ const useStyles = makeStyles((theme) => ({
     root: {
         width:"94%",
         margin:"auto",
-        marginTop:"1%",
-        height:"24%"
+        display:"flex",
+        verticalAlign:"middle",
+        height:"25%"
     },
     paper: {
         margin:"auto",
         width:"80%",
         minHeight:130,
+        paddingTop:"1%",
     },
     textField: {
         width:"25%",
