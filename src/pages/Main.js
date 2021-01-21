@@ -64,11 +64,19 @@ export default function InteractiveList() {
   const [groups, setGroups] = useState([]);;
   const [activeTab, setActiveTab] = useState(sessionStorage.getItem("preTab"));
   const [exitOpen, setExitOpen] = useState(false);
+  const user_id= sessionStorage.getItem("user_id")
 
   useEffect(() => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({ "user_id": user_id});
+
     var requestOptions = {
-      method: 'GET',
-      redirect: 'follow'
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
     };
 
     fetch("/group-show", requestOptions)
@@ -78,7 +86,7 @@ export default function InteractiveList() {
         setGroups(result.grouplist);
       })
       .catch(error => console.log('error', error));
-  }, []);
+  }, [user_id]);
 
   const clickHandler = (id) => {
     setActiveTab(id);
@@ -97,7 +105,7 @@ export default function InteractiveList() {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({ "group_id": activeTab });
+    var raw = JSON.stringify({ "group_id": activeTab, "user_id": user_id });
 
     var requestOptions = {
       method: 'POST',
