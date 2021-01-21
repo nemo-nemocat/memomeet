@@ -59,9 +59,9 @@ export default function SignIn() {
               if(result.code !== 0) alert("아이디 혹은 비밀번호가 틀렸습니다");
               else{
                 alert(`${result.user_name}님 환영합니다!`);
-                localStorage.setItem("user_id", result.user_id);
-                localStorage.setItem("user_name", result.user_name);
-                localStorage.setItem("preTab",-1);
+                sessionStorage.setItem("user_id", result.user_id);
+                sessionStorage.setItem("user_name", result.user_name);
+                sessionStorage.setItem("preTab",-1);
                 window.location.href='/main';  
               }
             })
@@ -70,7 +70,7 @@ export default function SignIn() {
   };
 
   return (
-    <Container component="main" maxWidth="xs" >
+    <Container component="main" maxWidth="xs" style={{height: window.innerHeight}}>
       <CssBaseline />
       <img src={logo} className={classes.logo} alt="logo"/>
       <div className={classes.paper}>

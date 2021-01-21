@@ -1,5 +1,4 @@
 import React, { useState} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Dialog from '@material-ui/core/Dialog';
@@ -13,6 +12,7 @@ export default function GroupCreateBtn() {
     const [group_name, setGroupName] = useState('');
     const [group_pw, setGroupPw] = useState('');
     const [pw_check, setPwCheck] = useState('');
+    const user_id= sessionStorage.getItem("user_id")
 
     const clickCreateOpen = () => {
         setCreateOpen(true);
@@ -36,7 +36,7 @@ export default function GroupCreateBtn() {
             var myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
 
-            var raw = JSON.stringify({ "group_name": group_name, "group_pw": group_pw });
+            var raw = JSON.stringify({ "group_name": group_name, "group_pw": group_pw, "user_id": user_id});
 
             var requestOptions = {
                 method: 'POST',

@@ -100,9 +100,9 @@ video {
 
 .main__message_container input {
     flex-grow: 1;
-    background-color: transparent;
+    background-color: white;
     border: none;
-    color: #F5F5F5;
+    color: black;
 }
 
 .leave_meeting {

@@ -49,7 +49,7 @@ function checkPw(pw) {
 }
 
 function checkEmail(email) {
-  var exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+  var exptext = /^[A-Za-z0-9_]+@[A-Za-z0-9]+\.[A-Za-z0-9]+/;
   if (exptext.test(email) === false) {
       return true;
   }
@@ -85,19 +85,19 @@ export default function SignUp() {
         alert("정보를 모두 입력해주세요!!");
     }
     else if (checkId(user_id)) {
-        alert("아이디에 특수문자 또는 한글을 제외해주세요!");
+        alert("아이디에 특수문자 또는 한글을 제외해주세요");
     }
     else if (user_pw.length < 8) {
-        alert("비밀번호는 8자리 이상으로 설정해주세요!")
+        alert("비밀번호는 8자리 이상으로 설정해주세요")
     }
     else if (checkPw(user_pw)) {
         alert("비밀번호에 가능한 특수문자는 ~!@ 입니다");
     }
     else if (checkEmail(user_email)) {
-        alert("이메일 형식이 올바르지 않습니다!");
+        alert("이메일 형식이 올바르지 않습니다");
     }
-    else if (user_pw != user_pwcheck) {
-        alert("비밀번호가 일치하지 않습니다!");
+    else if (user_pw !== user_pwcheck) {
+        alert("비밀번호가 일치하지 않습니다");
     }
     else {
         var myHeaders = new Headers();

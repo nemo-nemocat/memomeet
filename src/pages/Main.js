@@ -13,7 +13,6 @@ import SearchBtn from '../Components/searchBtn';
 import GroupCreateBtn from '../Components/groupCreateBtn';
 import NewMeet from '../Components/newMeet';
 import Scheduled from '../Components/scheduled';
-import LinkIcon from '@material-ui/icons/Link';
 import logo from '../memomeet_logo.png';
 import Header from '../Components/Header';
 
@@ -59,15 +58,21 @@ const useStyles = makeStyles((theme) => ({
 export default function InteractiveList() {
   const classes = useStyles();
   const [groups, setGroups] = useState([]);;
-  const [activeTab, setActiveTab] = useState(localStorage.getItem("preTab"));
+  const [activeTab, setActiveTab] = useState(sessionStorage.getItem("preTab"));
   const [exitOpen, setExitOpen] = useState(false);
-  const [group_pw, setGroupPw] = useState('');
-  const [group_name, setGroupName] = useState('');
+  const user_id= sessionStorage.getItem("user_id")
 
   useEffect(() => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({ "user_id": user_id});
+
     var requestOptions = {
-      method: 'GET',
-      redirect: 'follow'
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
     };
 
     fetch("/group-show", requestOptions)
@@ -77,11 +82,11 @@ export default function InteractiveList() {
         setGroups(result.grouplist);
       })
       .catch(error => console.log('error', error));
-  }, []);
+  }, [user_id]);
 
   const clickHandler = (id) => {
     setActiveTab(id);
-    localStorage.setItem("preTab",id);
+    sessionStorage.setItem("preTab",id);
   }
 
   const clickExitOpen = () => {
@@ -96,7 +101,7 @@ export default function InteractiveList() {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({ "group_id": activeTab });
+    var raw = JSON.stringify({ "group_id": activeTab, "user_id": user_id });
 
     var requestOptions = {
       method: 'POST',
