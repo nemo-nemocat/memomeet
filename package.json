@@ -41,9 +41,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "webServer": "nodemon ./server/webServer.js",
+    "webServer": "cd server && nodemon webServer.js",
     "meetingServer": "cd server && nodemon meetingServer.js",
-    "dev": "concurrently  \"yarn start\" \"npm run webServer\" \"npm run meetingServer\" \"peerjs --port 3001\""
+    "dev": "concurrently  \"yarn start\" \"npm run webServer\""
   },
   "eslintConfig": {
     "extends": [
