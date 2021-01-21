@@ -9,7 +9,8 @@ const useStyles = makeStyles((theme) => ({
     root: {
         width:"94%",
         margin:"auto",
-        marginTop:"1%"
+        marginTop:"1%",
+        height:"24%"
     },
     paper: {
         margin:"auto",
@@ -81,7 +82,7 @@ export default function NewMeet(prop) {
 
     return (
         <div className={classes.root}>
-            <Paper className={classes.paper} elevation={3}>
+            <Paper className={classes.paper} elevation={1}>
                 <Typography variant="h6" align="center">
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>New Meet</span>   
                 </Typography>

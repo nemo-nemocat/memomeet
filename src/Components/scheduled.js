@@ -11,10 +11,8 @@ import DeleteForever from '@material-ui/icons/DeleteForever';
 const useStyles = makeStyles((theme) => ({
     root: {
         width:"45%",
-        marginRight:"-0.5%",
-        height:400,
-        marginLeft:"3%",
-        marginTop:"1.5%",
+        height:380,
+        margin:"1%"
     },
     Chip: {
         backgroundColor: "#ffc31e",
