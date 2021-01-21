@@ -64,7 +64,12 @@ export default function SearchBtn() {
                         .then(res2 => res2.json())
                         .then(result2 => {
                             console.log(result2);
-                            setGroupMember(result2.members);
+                            var members="";
+                            result2.members.map(result=>(
+                              members += result.user_name + " "
+                            ));
+                    
+                            setGroupMember(members);
                         })
                 }
                 else setResult(false);
