@@ -41,9 +41,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "webServer": "cd server && nodemon webServer.js",
+    "server": "cd server && nodemon server.js",
     "meetingServer": "cd server && nodemon meetingServer.js",
-    "dev": "concurrently  \"yarn start\" \"npm run webServer\""
+    "dev": "concurrently  \"yarn start\" \"npm run server\""
   },
   "eslintConfig": {
     "extends": [
