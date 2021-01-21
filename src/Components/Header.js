@@ -23,8 +23,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Header(prop) {
   const classes = useStyles();
-  const [group_pw, setGroupPw] = useState('');
-  const [group_name, setGroupName] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const [members, setGroupMember] = useState([]);
 
@@ -98,17 +96,13 @@ export default function Header(prop) {
         .then(result => {
             console.log(result);
             if (result.code === 0) {
-              setGroupName(result.grouplist.group_name);
-              setGroupPw(result.grouplist.group_pw);
+              document.body.appendChild(t);
+              t.value = `${user_name}님이 [${result.grouplist.group_name}] 그룹 초대 메세지를 보냈습니다. \n그룹ID: ${prop.group_id}\n그룹PW: ${result.grouplist.group_pw}`;
+              t.select();
+              document.execCommand('copy');
+              document.body.removeChild(t);
+              alert("그룹 초대 메세지가 복사되었습니다");
             }
-        })
-        .then(()=>{
-          document.body.appendChild(t);
-          t.value = `${user_name}님이 [${group_name}] 그룹 초대 메세지를 보냈습니다. \n그룹ID: ${prop.group_id}\n그룹PW: ${group_pw}`;
-          t.select();
-          document.execCommand('copy');
-          document.body.removeChild(t);
-          alert("그룹 초대 메세지가 복사되었습니다");
         })
         .catch(error => console.log('error', error))
   }
