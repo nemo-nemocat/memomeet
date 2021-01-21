@@ -47,11 +47,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#ffffff"
   },
   body: {
-    minWidth: 1000,
-    display: "flex",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    verticalAlign: "middle",
+    minWidth: 850,
     height: window.innerHeight - 60,
   },
   logo:{
@@ -171,7 +167,10 @@ export default function InteractiveList() {
         <Header group_id={activeTab}/>
           {(activeTab !== '-1') ?
             <div className={classes.body}>
-              <NewMeet group_id={activeTab} />  <Scheduled group_id={activeTab}/>  <Scheduled group_id={activeTab}/>
+              <NewMeet group_id={activeTab} /> 
+              <div style={{display:"flex"}}>
+              <Scheduled group_id={activeTab} /> <Scheduled group_id={activeTab} />
+              </div>
             </div>
             :<div style={{minWidth:1000, paddingTop:"15%"}}> 
               <img src={logo} alt="logo"/>
