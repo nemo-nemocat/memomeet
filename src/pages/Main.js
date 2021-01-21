@@ -168,7 +168,7 @@ export default function InteractiveList() {
           {(activeTab !== '-1') ?
             <div className={classes.body}>
               <NewMeet group_id={activeTab} /> 
-              <div style={{display:"flex"}}>
+              <div style={{display:"flex", height: "75%", alignItems:"center", justifyContent:"center" }}>
               <Scheduled group_id={activeTab} /> <Scheduled group_id={activeTab} />
               </div>
             </div>
