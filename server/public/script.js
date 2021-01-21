@@ -1,11 +1,10 @@
-const socket = io('/')
+const socket = io()
 const videoGrid = document.getElementById('video-grid')
 const myVideo = document.createElement('video')
 myVideo.muted = true
 
-const peer = new Peer(undefined, {
-    host: '/',
-    port: '3001'
+// 공용으로 PeerServer를 호스팅하는 서비스인 PeerServer cloud를 이용, 최대 50개의 동시연결까지 무료로 가능.
+const peer = new Peer(USER_ID, { // peer 고유 id (자동생성) 대신 user id 사용
 });
 
 const peers = {}
@@ -55,12 +54,25 @@ peer.on('open', () => {
     socket.emit('joinRoom', ROOM_ID, user_id, user_name)
 })
 */
+
 peer.on('open', peerid => {
+  console.log(peerid)
+  console.log('피어연결')
   room_id = ROOM_ID
   user_id = USER_ID
   user_name = USER_NAME
-  $('ul').append(`<font color=#CC3B33>${user_name}님 하이</font></br>`) // 채팅창에 append
+  $('ul').append(`<font color=#CC3B33>${user_name}님 하이 피어연결</font></br>`) // 채팅창에 append
   socket.emit('joinRoom', room_id, peerid, user_name)
+})
+
+// 소켓 연결 코드
+socket.on('connect', function() {
+  console.log('소켓연결')
+  room_id = ROOM_ID
+  user_id = USER_ID
+  user_name = USER_NAME
+  $('ul').append(`<font color=#CC3B33>${user_name}님 하이 소켓연결</font></br>`) // 채팅창에 append
+  //socket.emit('joinRoom', room_id, user_id, user_name)
 })
 
 // 새로운 유저가 접속하면 그 유저의 stream을 내 브라우저에 추가하기 위해 요청을 보냄 (peer.call)

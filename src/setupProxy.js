@@ -1,8 +1,7 @@
 const {createProxyMiddleware} = require('http-proxy-middleware');
 
-
 module.exports = function (app) {
-    app.use(["/auth-login","/auth-logout","/auth-signup"],createProxyMiddleware({
+    app.use(["/meeting","/auth-login","/auth-logout","/auth-signup"],createProxyMiddleware({
         target: 'http://localhost:3002',
         changeOrigin: true,
     }));
@@ -14,4 +13,17 @@ module.exports = function (app) {
         target: 'http://localhost:3002',
         changeOrigin: true,
     }));
+    app.use('/socket.io',createProxyMiddleware({
+        target: 'http://localhost:3002',
+        changeOrigin: true,
+        ws: true,
+    }));
+
+    // const wsProxy = createProxyMiddleware('/socket.io', {
+    //     target: 'ws://localhost:3002',
+    //     changeOrigin: true,
+    //     ws: true,
+    // });
+    // app.use(wsProxy);
+
 };

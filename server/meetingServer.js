@@ -6,6 +6,7 @@ const socket = require('socket.io')
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
+const { ExpressPeerServer } = require('peer');
 
 // express http 서버 생성 후, 서버를 socket.io에 바인딩
 const app = express()
@@ -13,6 +14,12 @@ const server = http.Server(app)
 const io = socket(server)
 app.use(cors());
 app.use(bodyParser.json());
+
+const peerServer = ExpressPeerServer(server, {
+  debug: true,
+  path: '/myapp'
+})
+app.use('/peerjs', peerServer)
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'));
@@ -30,7 +37,7 @@ io.on('connection', socket => {
     // 소켓에 id, 이름 저장해두기
     // socket.id = userId
     // socket.name = userName
-    console.log("룸번호는" + roomId + "입니다.")
+    console.log(roomId + ' 방에 ' + userName + ' 입장')
 
     socket.join(roomId)
     socket.to(roomId).broadcast.emit('userConnected', userId)
