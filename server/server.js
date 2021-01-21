@@ -14,12 +14,6 @@ app.use(bodyParser.json());
 
 /************************************ 화상채팅용 코드 시작 ************************************/
 
-// const { ExpressPeerServer } = require('peer');
-// const peerServer = ExpressPeerServer(server, {
-//   debug: true
-// })
-// app.use('/peerjs', peerServer)
-
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 app.use('/meeting', express.static(path.join(__dirname, 'public')));
@@ -29,26 +23,25 @@ app.get('/meeting', (req, res) => {
 })
 
 io.on('connection', socket => {
-  
-  // 지금 userID는 DB에 있는 아이디가 아니라 peer의 고유 id를 받아온 것!!! so 입장,퇴장은 고유 id로 나옴.
+
+  var room, id, name
+
   socket.on('joinRoom', (roomId, userId, userName) => {
 
-    // 소켓에 id, 이름 저장해두기
-    // socket.id = userId
-    // socket.name = userName
-    console.log(roomId + ' 방에 ' + userName + ' 입장')
+    room = roomId
+    id = userId
+    name = userName
 
-    socket.join(roomId)
-    socket.to(roomId).broadcast.emit('userConnected', userId)
+    socket.join(room)
+    socket.to(room).broadcast.emit('userConnected', id)
+  })
 
-    // socket.on 함수 밖으로 빼는 거 시도하기...
-    socket.on('message', (message) => {
-      io.to(roomId).emit('creatMessage', message, userName)
-    })
+  socket.on('message', (message) => {
+    io.to(room).emit('creatMessage', message, name)
+  })
 
-    socket.on('disconnect', () => {
-      socket.to(roomId).broadcast.emit('userDisconnected', userId)
-    })
+  socket.on('disconnect', () => {
+    socket.to(room).broadcast.emit('userDisconnected', id)
   })
 })
 
