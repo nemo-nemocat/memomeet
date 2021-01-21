@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {Paper, Typography, Button, Chip, Grid} from '@material-ui/core';
+import {Paper, Typography, Chip, Grid} from '@material-ui/core';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import EventIcon from '@material-ui/icons/Event';
@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
         width:"50%",
         height: "50%",
         marginTop: "12%",
-        marginLeft: "20%",
     },
     ScheduledName: {
         display: "flex",
@@ -127,7 +126,7 @@ export default function Scheduled(prop) {
                         <ListItem key={data.meet_id} className={classes.data}>
                             <div style={{display:'block',width:"80%", margin:"2%"}}>
                                 <div className={classes.ScheduledName}>
-                                <DeleteForever onClick={handleDeleteIcon} style={{marginTop:"-2%"}} color="error"/>
+                                <DeleteForever onClick={()=> handleDeleteIcon(data.meet_id)} style={{marginTop:"-2%"}} color="error"/>
                                 <span style={{fontWeight:"bold"}}>{data.meet_title}</span>
                                 </div>
                                 <Grid>

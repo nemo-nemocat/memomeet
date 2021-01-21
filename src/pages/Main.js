@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -14,7 +13,6 @@ import SearchBtn from '../Components/searchBtn';
 import GroupCreateBtn from '../Components/groupCreateBtn';
 import NewMeet from '../Components/newMeet';
 import Scheduled from '../Components/scheduled';
-import LinkIcon from '@material-ui/icons/Link';
 import logo from '../memomeet_logo.png';
 import Header from '../Components/Header';
 
@@ -64,10 +62,8 @@ const useStyles = makeStyles((theme) => ({
 export default function InteractiveList() {
   const classes = useStyles();
   const [groups, setGroups] = useState([]);;
-  const [activeTab, setActiveTab] = useState(localStorage.getItem("preTab"));
+  const [activeTab, setActiveTab] = useState(sessionStorage.getItem("preTab"));
   const [exitOpen, setExitOpen] = useState(false);
-  const [group_pw, setGroupPw] = useState('');
-  const [group_name, setGroupName] = useState('');
 
   useEffect(() => {
     var requestOptions = {
@@ -86,7 +82,7 @@ export default function InteractiveList() {
 
   const clickHandler = (id) => {
     setActiveTab(id);
-    localStorage.setItem("preTab",id);
+    sessionStorage.setItem("preTab",id);
   }
 
   const clickExitOpen = () => {
