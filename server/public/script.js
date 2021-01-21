@@ -45,11 +45,21 @@ socket.on('userDisconnected', userId => {
 let user_id, user_name
 // peer 서버와 정상적으로 통신이 된 경우 'open' event가 발생.
 // 'open' event가 발생하면 url의 uuid를 통해 유저를 room에 join시킴
+
+// 아래 코드대로 안하고 위 코드를 쓰면 채팅만 연결되고 미디어 연결이 안됨. peer의 id를 지우면 안됨.
+/*
 peer.on('open', () => { 
-    user_id = searchParam('user_id')
-    user_name = searchParam('user_name')
-    $('ul').append(`<font color=#CC3B33>${user_name} 입장</font></br>`) // 채팅창에 append
+    user_id = getQueryString('user_id')
+    user_name = getQueryString('user_name')
+    $('ul').append(`<font color=#CC3B33>${user_name}님 하이</font></br>`) // 채팅창에 append
     socket.emit('joinRoom', ROOM_ID, user_id, user_name)
+})
+*/
+peer.on('open', id => { 
+  user_id = getQueryString('user_id')
+  user_name = getQueryString('user_name')
+  $('ul').append(`<font color=#CC3B33>${user_name}님 하이</font></br>`) // 채팅창에 append
+  socket.emit('joinRoom', ROOM_ID, id, user_name)
 })
 
 // 새로운 유저가 접속하면 그 유저의 stream을 내 브라우저에 추가하기 위해 요청을 보냄 (peer.call)
@@ -83,16 +93,24 @@ function removeVideoStream(video, stream){
     videoGrid.remove(video)
 }
 
-let text = $('input')
-$('html').keydown((e) => { // 엔터 입력 시 input 확인하고 text 전송 후 비우기
-    if (e.which == 13 && text.val().length !== 0) {
-        socket.emit('message', text.val(), user_name);
-        text.val('')
+// 엔터 누르거나 전송 버튼 클릭 시 send() 함수 호출
+$('html').keydown((e) => { 
+    if (e.which == 13){
+      send()
     }
 })
 
-socket.on('creatMessage', (message, userId) => {
-    $('ul').append(`<li class="message"><b>${userId}</b> ${message}</li>`) // 채팅창에 append
+// 메시지 길이가 0이 아니면 message를 emit
+function send() {
+  var message = document.getElementById('chat_message').value
+  if(message.length !== 0) { 
+    socket.emit('message', message);
+      document.getElementById('chat_message').value = '' 
+  }
+}
+
+socket.on('creatMessage', (message, userName) => {
+    $('ul').append(`<li class="message"><b>${userName}</b> ${message}</li>`) // 채팅창에 append
     scrollToBottom() // 자동스크롤
 })
 
@@ -100,13 +118,38 @@ const scrollToBottom = () => {
     $('.main__chat_window').scrollTop($('.main__chat_window').prop("scrollHeight"));
 }
 
-// URL query용
-const URLSearch = new URLSearchParams(location.search)
-function searchParam(key){
-  return new URLSearchParams(location.search).get(key)
+// URL query string 가져오는 함수 
+function getQueryString(key) {
+  var str_encoded = location.href; // 한글이 %로 인코딩된 주소 그대로 
+  var str = decodeURI(str_encoded); // 디코딩
+  var index = str.indexOf("/") + 1;
+  var lastIndex = str.indexOf("#") > -1 ? str.indexOf("#") + 1 : str.length;
+
+  if (index == 0) {
+      return "";
+  }
+
+  str = str.substring(index, lastIndex); 
+  str = str.split("&");
+
+  var rst = "";
+
+  for (var i = 0; i < str.length; i++) {
+      var arr = str[i].split("=");
+
+      if (arr.length != 2) {
+          break;
+      }
+
+      if (arr[0] == key) {
+          rst = arr[1];
+          break;
+      }
+  }
+  return rst;
 }
 
-// 여기부터 버튼 기능 함수들
+//////////////////////* 여기부터 버튼 기능 함수들 *//////////////////////
 
 const muteUnmute = () => {
     const enabled = myVideoStream.getAudioTracks()[0].enabled;

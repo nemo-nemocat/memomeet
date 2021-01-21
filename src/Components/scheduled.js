@@ -82,11 +82,11 @@ export default function Scheduled(prop) {
       }, [prop]);
 
     const handleEnterMeet = (meet_id) => {
-        var user_id = sessionStorage.getItem("user_id");
-        var user_name = sessionStorage.getItem("user_name");
+        var user_id = localStorage.getItem("user_id");
+        var user_name = localStorage.getItem("user_name");
         alert("회의에 입장합니다");
-        window.open(`http://localhost:3003/meeting?meet_id=${meet_id}&user_id=${user_id}&user_name=${user_name}`, 'Lets MeMoMeet');
-    };
+        window.open(`http://localhost:3003/meet_id=${meet_id}&user_id=${user_id}&user_name=${user_name}`, 'Lets MeMoMeet');
+    }
 
     const handleDeleteIcon =(meet_id) => {
         var myHeaders = new Headers();
