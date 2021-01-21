@@ -10,7 +10,6 @@ import logo from '../memomeet_logo.png';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -20,15 +19,14 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: '100%', 
-    marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    marginTop:"5%"
   },
   logo:{
-    marginTop: "5%",
-    width: "25%",
-    height: "30%",
+    marginTop: "10%",
+    height:"25%",
+    marginBottom: "15%",
   },
 }));
 
@@ -63,6 +61,7 @@ export default function SignUp() {
   const [user_name, setUserName] = useState("");
   const [user_email, setUserEmail] = useState("");
   const [user_pwcheck, setUserPwcheck] = useState("");
+  const isHyomin = window.innerHeight > 700 ? true : false;
 
   const handleIdChange = (e) => {
         setUserId(e.target.value);
@@ -129,7 +128,7 @@ export default function SignUp() {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" style={{width:400, height:window.innerHeight}}>
       <CssBaseline />
       <a href="/" >
         <img src={logo} className={classes.logo} alt="logo"/>
@@ -149,6 +148,7 @@ export default function SignUp() {
                 value={user_name} 
                 onChange={handleNameChange}
                 autoFocus
+                size={isHyomin ? "large" : "small"}
               />
             </Grid>
             <Grid item xs={12}>
@@ -161,6 +161,7 @@ export default function SignUp() {
                 name="email"
                 value={user_email}
                 onChange={handleEmailChange}
+                size={isHyomin ? "large" : "small"}
                 autoComplete="email"
               />
             </Grid>
@@ -174,6 +175,7 @@ export default function SignUp() {
                 name="id"
                 value={user_id}
                 onChange={handleIdChange}
+                size={isHyomin ? "large" : "small"}
                 autoComplete="id"
               />
             </Grid>
@@ -189,6 +191,7 @@ export default function SignUp() {
                 value={user_pw}
                 onChange={handlePwChange}
                 autoComplete="current-password"
+                size={isHyomin ? "large" : "small"}
               />
             </Grid>
             <Grid item xs={12}>
@@ -203,6 +206,7 @@ export default function SignUp() {
                 value={user_pwcheck}
                 onChange={handlePwCheckChange}
                 autoComplete="current-password"
+                size={isHyomin ? "large" : "small"}
               />
             </Grid>
           </Grid>

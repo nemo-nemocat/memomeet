@@ -5,13 +5,13 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import EventIcon from '@material-ui/icons/Event';
 import ScheduleIcon from '@material-ui/icons/Schedule';
-import StartMeetingIcon from '../enter.png';
+import ScriptIcon from '../script.png';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         width:"45%",
-        height:"90%",
+        height:380,
         margin:"1%"
     },
     Chip: {
@@ -20,18 +20,22 @@ const useStyles = makeStyles((theme) => ({
         marginRight:"3%",
         height:30
     },
+    TagChip: {
+        marginRight:"1%",
+        marginTop:"1%"
+    },
     data:{
         backgroundColor:"#ffffff",
         width:"95%",
         margin:"auto",
-        height:"20%",
+        height:"30%",
         borderRadius:10,
         padding:0,
         marginBottom:"3%"
     },
-    startBtn:{
-        backgroundColor:"#000000", 
-        maxWidth:70,
+    scriptBtn:{
+        backgroundColor:"#808080",
+        maxWidth:80,
         width:"25%", 
         height:"100%", 
         borderTopRightRadius:10, 
@@ -41,7 +45,8 @@ const useStyles = makeStyles((theme) => ({
     Icon: {
         width:"40%",
         height: "40%",
-        marginTop: "15%",
+        marginTop: "20%",
+        marginBottom: "5%",
     },
     ScheduledName: {
         display: "flex",
@@ -51,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Scheduled(prop) {
+export default function Finished(prop) {
     const classes = useStyles();
     const [list, setList] = useState('');
 
@@ -82,10 +87,10 @@ export default function Scheduled(prop) {
       }, [prop]);
 
     const handleEnterMeet = (meet_id) => {
-        var user_id = sessionStorage.getItem("user_id");
-        var user_name = sessionStorage.getItem("user_name");
+        var user_id = localStorage.getItem("user_id");
+        var user_name = localStorage.getItem("user_name");
         alert("회의에 입장합니다");
-        window.open(`http://localhost:3003/meeting?meet_id=${meet_id}&user_id=${user_id}&user_name=${user_name}`, 'Lets MeMoMeet');
+        window.open(`http://localhost:3003/meet_id=${meet_id}&user_id=${user_id}&user_name=${user_name}`, 'Lets MeMoMeet');
     }
 
     const handleDeleteIcon =(meet_id) => {
@@ -116,9 +121,9 @@ export default function Scheduled(prop) {
 
     return (
         <div className={classes.root}>
-            <Paper elevation={3} style={{height:"100%", paddingTop:"1%"}}>
+            <Paper elevation={3} style={{height:"100%"}}>
                 <Typography variant="h6" align="center">
-                    <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Scheduled</span>   
+                    <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Finished</span>   
                 </Typography>
                 <div style={{backgroundColor:"#eaeaea", width:"90%", height:"85%",borderRadius:10, margin:"auto"}}>
                 <List style={{height:"100%", overflow:"auto"}}>
@@ -133,11 +138,16 @@ export default function Scheduled(prop) {
                                     <Chip className={classes.Chip} id="meet_day" icon={<EventIcon/>} label={data.meet_day}/>
                                     <Chip className={classes.Chip} id="meet_time" icon={<ScheduleIcon/>} label={data.meet_time}/>
                                 </Grid>
+                                <Grid>
+                                    <Chip className={classes.TagChip} variant="outlined" size="small" label="주제 선정"/>
+                                    <Chip className={classes.TagChip} variant="outlined" size="small" label="영어동화"/>
+                                    <Chip className={classes.TagChip} variant="outlined" size="small" label="화상회의"/>
+                                </Grid>
                             </div>
-                            <div className={classes.startBtn} onClick={() => handleEnterMeet(data.meet_id)}>
-                                <img src={StartMeetingIcon} className={classes.Icon} alt='StartMeetingIcon' />
+                            <div className={classes.scriptBtn} onClick={() => handleEnterMeet(data.meet_id)}>
+                                <img src={ScriptIcon} className={classes.Icon} alt='ScriptIcon' />
                                 <Typography variant="button" align="center">
-                                    <span style={{color:"#FFFFFF"}}>Start</span>
+                                    <span style={{color:"#FFFFFF"}}>Script</span>
                                 </Typography>
                             </div>
                         </ListItem>

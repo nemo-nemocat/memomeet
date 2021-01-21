@@ -10,7 +10,6 @@ import logo from '../memomeet_logo.png';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(3),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -20,18 +19,19 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 2, 2),
+    marginTop: "3%",
+    marginBottom: "3%"
   },
   logo:{
-    marginTop: "10%",
-    width: "40%",
+    marginTop: "25%",
+    marginBottom: "15%",
     height: "30%",
   },
 }));
 
 export default function SignIn() {
   const classes = useStyles();
-  
+  const isHyomin = window.innerHeight > 700 ? true : false;
   const [userid, setUserid] = useState('');
   const [pw, setPw] = useState('');
 
@@ -70,7 +70,7 @@ export default function SignIn() {
   };
 
   return (
-    <Container component="main" maxWidth="xs" style={{height: window.innerHeight}}>
+    <Container component="main" style={{width:400, height: window.innerHeight}}>
       <CssBaseline />
       <img src={logo} className={classes.logo} alt="logo"/>
       <div className={classes.paper}>
@@ -89,6 +89,7 @@ export default function SignIn() {
             autoComplete="id"
             autoFocus
             value={userid}
+            size={isHyomin ? "large" : "small"}
             onChange={({ target: { value } }) => setUserid(value)}
           />
           <TextField
@@ -102,6 +103,7 @@ export default function SignIn() {
             id="password"
             autoComplete="current-password"
             value={pw}
+            size={isHyomin ? "large" : "small"}
             onChange={({ target: { value } }) => setPw(value)}
           />
           <Button
@@ -111,9 +113,7 @@ export default function SignIn() {
             className={classes.submit}
             onClick={handleClick}
           >
-            <Typography component="h1" variant="button">
-              LOGIN
-            </Typography>
+            LOGIN
           </Button>
           <br/>
           <Link href="/Signup" variant="body2" color="secondary">

@@ -9,7 +9,7 @@ import LogoutIcon from '@material-ui/icons/LockOpen';
 
 const useStyles = makeStyles((theme) => ({
   header: {
-    minWidth:1000,
+    minWidth:850,
     backgroundColor: "#000000",
     width: "100%",
     display: "flex",

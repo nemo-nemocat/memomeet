@@ -15,6 +15,7 @@ import NewMeet from '../Components/newMeet';
 import Scheduled from '../Components/scheduled';
 import logo from '../memomeet_logo.png';
 import Header from '../Components/Header';
+import Finished from '../Components/finished';
 
 const useStyles = makeStyles((theme) => ({
   sideBar: {
@@ -49,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
   body: {
     minWidth: 850,
     height: window.innerHeight - 60,
+    justifyContent:"center"
   },
   logo:{
     marginTop:"10%",
@@ -168,8 +170,8 @@ export default function InteractiveList() {
           {(activeTab !== '-1') ?
             <div className={classes.body}>
               <NewMeet group_id={activeTab} /> 
-              <div style={{display:"flex", height: "75%", alignItems:"center", justifyContent:"center" }}>
-              <Scheduled group_id={activeTab} /> <Scheduled group_id={activeTab} />
+              <div style={{display:"flex", height: "75%", alignItems:"center", justifyContent:"center", width:"94%", margin:"auto"}}>
+              <Scheduled group_id={activeTab} /> <Finished group_id={activeTab} />
               </div>
             </div>
             :<div style={{minWidth:1000, paddingTop:"15%"}}> 
