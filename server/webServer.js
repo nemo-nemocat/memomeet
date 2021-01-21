@@ -4,28 +4,10 @@ const bodyParser = require('body-parser');
 const AppPort = 3002;
 const cors = require('cors');
 const mysqlDB = require("./mysql-db");  //db 연결
-const session = require('express-session'); //session 생성
-const MySQLStore = require('express-mysql-session')(session); //db에 session 관리
 const shortid = require ('shortid'); // unique id 생성
 
 app.use(cors());
 app.use(bodyParser.json());
-
-//session store - 다시 실행해도 세션 유지
-var options = {
-  host: 'localhost',
-  port: 3306,
-  user: 'root',
-  password: 'root',
-  database: 'memomeet'
-}
-var sessionStore = new MySQLStore(options);
-app.use(session({
-  secret: 'secret-code',
-  resave: false,
-  saveUninitialized: true,
-  store: sessionStore
-}));
 
 //login 요청
 app.post('/auth-login', function(req, res) {
@@ -41,22 +23,12 @@ app.post('/auth-login', function(req, res) {
 
     var user = results[0];
     if(user.user_pw === pw) {
-      req.session.userID = results[0].user_id;
-      req.session.isLogined = true;
-      req.session.save();
       return res.send({code:0, msg:"request success", user_id:user.user_id, user_name:user.user_name});
     }
     else{
       return res.send({code:2, msg:"auth fail:wrong password"});
     }
   });
-}
-);
-
-//logout 요청
-app.get('/auth-logout', function(req, res){
-  req.session.destroy();
-  return res.send({code:0, msg:"request success"});
 }
 );
 
@@ -81,7 +53,7 @@ app.post('/group-create', function(req,res){
   var group_name = req.body.group_name;
   var group_pw = req.body.group_pw;
   var group_id = shortid.generate();  //유니크 키 값 생성
-  var user_id = req.session.userID;
+  var user_id = req.body.user_id;
   var sql = 'INSERT INTO GROUPLIST(group_id, group_pw, group_name) VALUE(?, ?, ?)';
   mysqlDB.query(sql, [group_id, group_pw, group_name], function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
@@ -96,10 +68,10 @@ app.post('/group-create', function(req,res){
 });
 
 //사용자가 속한 그룹 리스트 출력
-app.get('/group-show', function(req, res){
-  var userID = req.session.userID;
+app.post('/group-show', function(req, res){
+  var user_id = req.body.user_id;
   var sql = "SELECT * FROM GROUPLIST WHERE GROUP_ID IN (SELECT GROUP_ID FROM MEMBERLIST WHERE USER_ID=?) ORDER BY GROUP_NAME";
-  mysqlDB.query(sql, userID, function(err, results){
+  mysqlDB.query(sql, user_id, function(err, results){
     if(err)  return res.send({code:11, msg:`${err}`});
     else{
       return res.send({code:0, msg:"request success", grouplist: results});
@@ -128,7 +100,7 @@ app.post('/group-search', function(req, res){
 app.post('/group-enter', function(req, res){
   var group_id = req.body.group_id;
   var group_pw = req.body.group_pw;
-  var user_id = req.session.userID;
+  var user_id = req.body.user_id;
   var sql = 'SELECT * FROM GROUPLIST WHERE GROUP_ID=? AND GROUP_PW=?';
   mysqlDB.query(sql, [group_id, group_pw], function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
@@ -162,7 +134,7 @@ app.post('/group-enter', function(req, res){
 //그룹 나가기
 app.post('/group-out', function(req, res){
   var group_id = req.body.group_id;
-  var user_id = req.session.userID;
+  var user_id = req.body.user_id;
   var sql = 'DELETE FROM MEMBERLIST WHERE GROUP_ID=? AND USER_ID=?';
   mysqlDB.query(sql, [group_id, user_id], function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});

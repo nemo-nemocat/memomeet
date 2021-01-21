@@ -27,22 +27,11 @@ export default function Header(prop) {
   const [members, setGroupMember] = useState([]);
 
   const handleClickLogout = () => {
-    var requestOptions = {
-      method: 'GET',
-      redirect: 'follow'
-    };
-
-    fetch("/auth-logout", requestOptions)
-      .then(res => res.json())
-      .then(result => {
-        console.log(result);
-        if (result.code === 0) {
-          alert("로그아웃 되었습니다.");
-          sessionStorage.setItem("preTab",-1);
-          window.location.href = "/";
-        }
-      })
-      .catch(error => console.log('error', error));
+    sessionStorage.setItem("user_id",'');
+    sessionStorage.setItem("user_name",'');
+    sessionStorage.setItem("preTab",-1);
+    alert("로그아웃 되었습니다.");
+    window.location.href = "/";
   };
 
   const handleClickMember = (event) => {
