@@ -23,10 +23,9 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 2, 2),
   },
   logo:{
-    marginTop: "20%",
+    marginTop: "10%",
     width: "40%",
     height: "30%",
-    marginBottom: "10%"
   },
 }));
 
@@ -71,7 +70,7 @@ export default function SignIn() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" >
       <CssBaseline />
       <img src={logo} className={classes.logo} alt="logo"/>
       <div className={classes.paper}>

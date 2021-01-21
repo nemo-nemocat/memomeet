@@ -11,8 +11,10 @@ import DeleteForever from '@material-ui/icons/DeleteForever';
 const useStyles = makeStyles((theme) => ({
     root: {
         width:"45%",
-        marginRight:"3%",
-        height:500,
+        marginRight:"-0.5%",
+        height:400,
+        marginLeft:"3%",
+        marginTop:"1.5%",
     },
     Chip: {
         backgroundColor: "#ffc31e",
@@ -24,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor:"#ffffff",
         width:"95%",
         margin:"auto",
-        height:"16%",
+        height:"20%",
         borderRadius:10,
         padding:0,
         marginBottom:"3%"
@@ -39,10 +41,9 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "center"
     },
     Icon: {
-        width:"50%",
-        height: "50%",
-        marginTop: "12%",
-        marginLeft: "20%",
+        width:"40%",
+        height: "40%",
+        marginTop: "15%",
     },
     ScheduledName: {
         display: "flex",
@@ -139,15 +140,15 @@ export default function Scheduled(prop) {
         <div className={classes.root}>
             <Paper elevation={3} style={{height:"100%"}}>
                 <Typography variant="h6" align="center">
-                    <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}> Scheduled</span>   
+                    <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Scheduled</span>   
                 </Typography>
-                <div style={{backgroundColor:"#eaeaea", width:"90%", height:"85%",borderRadius:10, marginLeft:"5%", marginTop:10}}>
+                <div style={{backgroundColor:"#eaeaea", width:"90%", height:"85%",borderRadius:10, margin:"auto"}}>
                 <List style={{height:"100%", overflow:"auto"}}>
                     {list && list.map(data => (
                         <ListItem key={data.meet_id} className={classes.data}>
                             <div style={{display:'block',width:"80%", margin:"2%"}}>
                                 <div className={classes.ScheduledName}>
-                                <DeleteForever style={{marginTop:"-2%"}} color="error"/>
+                                <DeleteForever style={{marginTop:"-1%"}} color="error" onClick={() => handleDeleteIcon(data.meet_id)}/>
                                 <span style={{fontWeight:"bold"}}>{data.meet_title}</span>
                                 </div>
                                 <Grid>

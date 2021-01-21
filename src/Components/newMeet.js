@@ -7,16 +7,23 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width:"22%",
-        margin:"3%",
+        width:"94%",
+        margin:"auto",
+        marginTop:"1%"
+    },
+    paper: {
+        margin:"auto",
+        width:"80%",
+        minHeight:130,
     },
     textField: {
-        width:"90%",
+        width:"25%",
+        marginTop:"2.7%",
     },
     Button: {
-        width:"40%",
-        marginTop: "10%",
-        marginBottom:"5%",
+        width:"10%",
+        marginTop:"4%",
+        marginLeft:"3%"
     },
 }));
 
@@ -74,15 +81,13 @@ export default function NewMeet(prop) {
 
     return (
         <div className={classes.root}>
-            <Paper elevation={3}>
+            <Paper className={classes.paper} elevation={3}>
                 <Typography variant="h6" align="center">
-                    <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}> New Meet</span>   
+                    <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>New Meet</span>   
                 </Typography>
-                <div style={{backgroundColor:"#eaeaea", width:"90%", borderRadius:10, marginLeft:"5%", marginTop:"5%"}}>
+                <div style={{backgroundColor:"#eaeaea", width:"90%", borderRadius:10, margin:"auto"}}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <form>
-                        <TextField className={classes.textField} style={{marginTop:"3%"}} id="meet_title" label="Meet Title" value={meet_title} onChange={({ target: { value } }) => setMeetTitle(value)}/>
-                    </form>
+                    <TextField className={classes.textField} style={{marginTop:"2.3%", marginRight:"2%"}} id="meet_title" label="Meet Title" value={meet_title} onChange={({ target: { value } }) => setMeetTitle(value)}/>
                     <KeyboardDatePicker
                         disableToolbar
                         variant="inline"
@@ -95,25 +100,20 @@ export default function NewMeet(prop) {
                         KeyboardButtonProps={{
                             'aria-label': 'change date',
                         }}
-                        style={{width:"90%"}}
+                        style={{width:"25%", marginRight:"2%"}}
                     />
-                    <form >
-                        <TextField
-                            id="meet_time"
-                            label="Meet Time"
-                            type="time"
-                            size="small"
-                            className={classes.textField}
-                            InputLabelProps={{shrink: true,}}
-                            inputProps={{step: 300,}}
-                            style={{marginBottom:"10%"}}
-                            value={meet_time} onChange={({ target: { value } }) => setMeetTime(value)}
+                    <TextField
+                        id="meet_time"
+                        label="Meet Time"
+                        type="time"
+                        size="small"
+                        className={classes.textField}
+                        InputLabelProps={{shrink: true,}}
+                        inputProps={{step: 300,}}
+                        style={{marginBottom:"2%"}}
+                        value={meet_time} onChange={({ target: { value } }) => setMeetTime(value)}
                         />
-                    </form>
                 </MuiPickersUtilsProvider>
-                
-                </div>
-                
                 <Button
                         className={classes.Button}
                         height="50"
@@ -122,6 +122,7 @@ export default function NewMeet(prop) {
                         onClick={handleSubmit}>
                         PLAN
                         </Button>
+                </div>
             </Paper>
         </div>
     );
