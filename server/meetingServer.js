@@ -3,8 +3,6 @@ const express = require('express')
 const http = require('http')
 const serverPort = 3003
 const socket = require('socket.io')
-const { v4: uuidv4 } = require('uuid')
-const { ExpressPeerServer } = require('peer')
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -16,24 +14,12 @@ const io = socket(server)
 app.use(cors());
 app.use(bodyParser.json());
 
-const peerServer = ExpressPeerServer(server, {
-    debug: true
-})
-
-app.use('/peerjs', peerServer)
-
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static('public'))
 
-// 3000/meeting/ -> 3003/ 으로 바꿔주는데 3000/ 으로 보임
-// app.get('/meeting', (req, res) => {
-//     res.redirect("/meeting-start") // uuid 생성된 URL로 redirect
-// })
-
-app.get('/:room', (req, res) => {
-    console.log("meeting enter");
-    res.render('room', { roomId: req.params.room }) // room.ejs 렌더링, 생성된 uuid를 roomId로 넘김
+app.get('/meeting', (req, res) => {
+  res.render('room', { roomId: req.query.meet_id, userId: req.query.user_id, userName: req.query.user_name })
 })
 
 io.on('connection', socket => {

@@ -55,11 +55,12 @@ peer.on('open', () => {
     socket.emit('joinRoom', ROOM_ID, user_id, user_name)
 })
 */
-peer.on('open', id => { 
-  user_id = getQueryString('user_id')
-  user_name = getQueryString('user_name')
+peer.on('open', peerid => {
+  room_id = ROOM_ID
+  user_id = USER_ID
+  user_name = USER_NAME
   $('ul').append(`<font color=#CC3B33>${user_name}님 하이</font></br>`) // 채팅창에 append
-  socket.emit('joinRoom', ROOM_ID, id, user_name)
+  socket.emit('joinRoom', room_id, peerid, user_name)
 })
 
 // 새로운 유저가 접속하면 그 유저의 stream을 내 브라우저에 추가하기 위해 요청을 보냄 (peer.call)
@@ -152,43 +153,43 @@ function getQueryString(key) {
 //////////////////////* 여기부터 버튼 기능 함수들 *//////////////////////
 
 const muteUnmute = () => {
-    const enabled = myVideoStream.getAudioTracks()[0].enabled;
-    if (enabled) {
-      myVideoStream.getAudioTracks()[0].enabled = false;
-      setUnmuteButton();
-    } else {
-      setMuteButton();
-      myVideoStream.getAudioTracks()[0].enabled = true;
-    }
+  const enabled = myVideoStream.getAudioTracks()[0].enabled;
+  if (enabled) {
+    myVideoStream.getAudioTracks()[0].enabled = false;
+    setUnmuteButton();
+  } else {
+    setMuteButton();
+    myVideoStream.getAudioTracks()[0].enabled = true;
   }
+}
   
-  const playStop = () => {
-    let enabled = myVideoStream.getVideoTracks()[0].enabled;
-    if (enabled) {
-      myVideoStream.getVideoTracks()[0].enabled = false;
-      setPlayVideo()
-    } else {
-      setStopVideo()
-      myVideoStream.getVideoTracks()[0].enabled = true;
-    }
+const playStop = () => {
+  let enabled = myVideoStream.getVideoTracks()[0].enabled;
+  if (enabled) {
+    myVideoStream.getVideoTracks()[0].enabled = false;
+    setPlayVideo()
+  } else {
+    setStopVideo()
+    myVideoStream.getVideoTracks()[0].enabled = true;
   }
+}
   
-  const setMuteButton = () => {
-    const html = `<span>마이크 끄기</span>`
-    document.querySelector('.main__mute_button').innerHTML = html;
-  }
-  
-  const setUnmuteButton = () => {
-    const html = `<span>마이크 켜기</span>`
-    document.querySelector('.main__mute_button').innerHTML = html;
-  }
-  
-  const setStopVideo = () => {
-    const html = `<span>카메라 끄기</span>`
-    document.querySelector('.main__video_button').innerHTML = html;
-  }
-  
-  const setPlayVideo = () => {
-    const html = `<span>카메라 켜기</span>`
-    document.querySelector('.main__video_button').innerHTML = html;
-  }
+const setMuteButton = () => {
+  const html = `<span>마이크 끄기</span>`
+  document.querySelector('.main__mute_button').innerHTML = html;
+}
+
+const setUnmuteButton = () => {
+  const html = `<span>마이크 켜기</span>`
+  document.querySelector('.main__mute_button').innerHTML = html;
+}
+
+const setStopVideo = () => {
+  const html = `<span>카메라 끄기</span>`
+  document.querySelector('.main__video_button').innerHTML = html;
+}
+
+const setPlayVideo = () => {
+  const html = `<span>카메라 켜기</span>`
+  document.querySelector('.main__video_button').innerHTML = html;
+}
