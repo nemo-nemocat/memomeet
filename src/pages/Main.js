@@ -69,7 +69,7 @@ const ListItem = withStyles({
     },
     "&:hover": {
       backgroundColor: "#ab861f",
-      color: "white"
+      color: "black"
     }
   },
   selected: {}
