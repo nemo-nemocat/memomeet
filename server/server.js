@@ -41,7 +41,7 @@ io.on('connection', socket => {
     }
 
     rooms[room].num++
-    rooms[room].members.push(id)
+    rooms[room].members.push(name)
 
     socket.join(room)
     socket.to(room).broadcast.emit('userConnected', id)
@@ -55,7 +55,7 @@ io.on('connection', socket => {
   socket.on('disconnect', () => {
     socket.to(room).broadcast.emit('userDisconnected', id)
     rooms[room].num--
-    rooms[room].members.pop(rooms[room].members.indexOf(id),1)
+    rooms[room].members.pop(rooms[room].members.indexOf(name),1)
     if(rooms[room].num == 0){
       delete rooms[room]
     }
