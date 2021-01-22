@@ -34,19 +34,17 @@ video {
 }
 
 .main__controls {
-    background-color: #1C1E20;
+    background-color: #ffc31e;
+    height: 50px;
+    color: #000000;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
 }
 
 .main__right {
     background-color: #242324;
     border-left: 1px solid #3D3D42;
-}
-
-.main__controls {
-    color: #D2D2D2;
-    display: flex;
-    justify-content: space-between;
-    padding: 5px;
 }
 
 .main__controls__block {
@@ -61,6 +59,10 @@ video {
     padding: 8px 10px;
     min-width: 80px;
     cursor: pointer;
+}
+
+.main__controls__button_icon {
+    font-size: 30px;
 }
 
 .main__controls__button:hover {

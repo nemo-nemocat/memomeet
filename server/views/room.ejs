@@ -14,6 +14,7 @@
        const USER_ID = "<%= userId %>"
        const USER_NAME = "<%= userName %>"
     </script>
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
 </head>
 
 <body>
@@ -26,21 +27,30 @@
             <div class="main__controls">
                 <div class="main__controls__block">
                    <div onclick="muteUnmute()" class="main__controls__button main__mute_button">
-                      <span>마이크 끄기</span>
+                     <div class="main__controls__button_icon">
+                        <i class="fas fa-microphone-slash"></i>
+                      </div> 
+                     <span>마이크 끄기</span>
                    </div>
                    <div onclick="playStop()" class="main__controls__button main__video_button" >
+                     <div class="main__controls__button_icon">
+                        <i class="fas fa-video-slash"></i>
+                      </div>
                       <span>카메라 끄기</span>
                    </div>
                 </div>
                 <div class="main__controls__block">
                    <div class="main__controls__button">
-                      <span>버튼1</span>
+                      <div class="main__controls__button_icon">
+                        <i class="fas fa-users"></i>
+                      </div>
+                      <span>참가자</span>
                    </div>
                    <div class="main__controls__button">
-                      <span>버튼2</span>
-                   </div>
-                   <div class="main__controls__button">
-                      <span>버튼3</span>
+                      <div class="main__controls__button_icon">
+                        <i class="fas fa-comments"></i>
+                      </div>
+                      <span>채팅</span>
                    </div>
                 </div>
                 <div class="main__controls__block">

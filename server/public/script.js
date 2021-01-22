@@ -145,22 +145,22 @@ const playStop = () => {
 }
   
 const setMuteButton = () => {
-  const html = `<span>마이크 끄기</span>`
+  const html = `<i class="fas fa-microphone-slash fa-2x"></i><span>마이크 끄기</span>`
   document.querySelector('.main__mute_button').innerHTML = html;
 }
 
 const setUnmuteButton = () => {
-  const html = `<span>마이크 켜기</span>`
+  const html = `<i class="fas fa-microphone fa-2x"></i><span>마이크 켜기</span>`
   document.querySelector('.main__mute_button').innerHTML = html;
 }
 
 const setStopVideo = () => {
-  const html = `<span>카메라 끄기</span>`
+  const html = `<i class="fas fa-video-slash fa-2x"></i><span>카메라 끄기</span>`
   document.querySelector('.main__video_button').innerHTML = html;
 }
 
 const setPlayVideo = () => {
-  const html = `<span>카메라 켜기</span>`
+  const html = `<i class="fas fa-video fa-2x"></i><span>카메라 켜기</span>`
   document.querySelector('.main__video_button').innerHTML = html;
 }
 
