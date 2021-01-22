@@ -108,7 +108,6 @@ export default function SearchBtn() {
             .catch(error => console.log('error', error))
     }
 
-
     return (
         <div>
         <div className={classes.searchBtn} onClick={clickSearchOpen}>

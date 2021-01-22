@@ -30,13 +30,13 @@
                      <div class="main__controls__button_icon">
                         <i class="fas fa-microphone-slash"></i>
                       </div> 
-                     <span>마이크 끄기</span>
+                     <span>Mic off</span>
                    </div>
                    <div onclick="playStop()" class="main__controls__button main__video_button" >
                      <div class="main__controls__button_icon">
                         <i class="fas fa-video-slash"></i>
                       </div>
-                      <span>카메라 끄기</span>
+                      <span>Cam off</span>
                    </div>
                 </div>
                 <div class="main__controls__block">
@@ -44,18 +44,21 @@
                       <div class="main__controls__button_icon">
                         <i class="fas fa-users"></i>
                       </div>
-                      <span>참가자</span>
+                      <span>Member</span>
                    </div>
                    <div class="main__controls__button">
                       <div class="main__controls__button_icon">
                         <i class="fas fa-comments"></i>
                       </div>
-                      <span>채팅</span>
+                      <span>Chat</span>
                    </div>
                 </div>
                 <div class="main__controls__block">
                    <div class="main__controls__button">
-                      <span class="leave_meeting">회의 나가기</span>
+                     <div class="main__controls__button_icon">
+                        <i class="fas fa-door-open"></i>
+                      </div>
+                      <span class="leave_meeting">EXIT</span>
                    </div>
                 </div>
              </div>
@@ -72,7 +75,7 @@
             </div>
             <div class="main__message_container">
                <input id="chat_message" type="text" placeholder="메시지를 입력하세요"></input>
-               <button onclick="send()">전송</button>
+               <button class="main__message_button" onclick="send()">전송</button>
             </div>
          </div>
       </div>
