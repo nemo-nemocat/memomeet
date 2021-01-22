@@ -66,7 +66,7 @@ video {
 }
 
 .main__controls__button:hover {
-    background-color: #343434;
+    background-color: #a07b17;
     border-radius: 5px;
 }
 
@@ -105,18 +105,18 @@ video {
     background-color: white;
     border: none;
     color: black;
+    border-radius: 0.5em; 
 }
 
 .main__message_button {
     color:#000; 
-    background:#ffc31e; 
-    font-size: 0.8em; 
+    background:#ffc31e;
     border-radius: 0.5em; 
     padding: 5px 20px;
 }
 
 .leave_meeting {
-    color: #CC3B33;
+    color: red;
 }
 
 .unmute, .stop {
