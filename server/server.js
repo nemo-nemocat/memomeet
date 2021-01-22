@@ -22,9 +22,11 @@ app.get('/meeting', (req, res) => {
   res.render('room', { roomId: req.query.meet_id, userId: req.query.user_id, userName: req.query.user_name })
 })
 
+let rooms = {}
+
 io.on('connection', socket => {
 
-  var room, id, name
+  let room, id, name
 
   socket.on('joinRoom', (roomId, userId, userName) => {
 
@@ -32,8 +34,18 @@ io.on('connection', socket => {
     id = userId
     name = userName
 
+    if (rooms.hasOwnProperty(room)==false) {
+      rooms[room] = {}
+      rooms[room].num = 0
+      rooms[room].members = []
+    }
+
+    rooms[room].num++
+    rooms[room].members.push(id)
+
     socket.join(room)
     socket.to(room).broadcast.emit('userConnected', id)
+    console.log(rooms)
   })
 
   socket.on('message', (message) => {
@@ -42,6 +54,12 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
     socket.to(room).broadcast.emit('userDisconnected', id)
+    rooms[room].num--
+    rooms[room].members.pop(rooms[room].members.indexOf(id),1)
+    if(rooms[room].num == 0){
+      delete rooms[room]
+    }
+    console.log(rooms)
   })
 })
 
