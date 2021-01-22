@@ -18,13 +18,12 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "#ffc31e",
         marginTop:"1%",
         marginRight:"3%",
-        height:30
+        height:"10%"
     },
     data:{
         backgroundColor:"#ffffff",
         width:"95%",
         margin:"auto",
-        height:"20%",
         borderRadius:10,
         padding:0,
         marginBottom:"3%"

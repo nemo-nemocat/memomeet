@@ -11,14 +11,14 @@ import DeleteForever from '@material-ui/icons/DeleteForever';
 const useStyles = makeStyles((theme) => ({
     root: {
         width:"45%",
-        height:380,
+        height:"90%",
         margin:"1%"
     },
     Chip: {
         backgroundColor: "#ffc31e",
         marginTop:"1%",
         marginRight:"3%",
-        height:30
+        height:"10%"
     },
     TagChip: {
         marginRight:"1%",
@@ -28,10 +28,10 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor:"#ffffff",
         width:"95%",
         margin:"auto",
-        height:"30%",
         borderRadius:10,
         padding:0,
-        marginBottom:"3%"
+        marginBottom:"3%",
+        height:window.innerHeight>700 ? "22%" : "27%"
     },
     scriptBtn:{
         backgroundColor:"#808080",
@@ -45,8 +45,8 @@ const useStyles = makeStyles((theme) => ({
     Icon: {
         width:"40%",
         height: "40%",
-        marginTop: "20%",
-        marginBottom: "5%",
+        marginTop: "15%",
+        marginBottom: "3%",
     },
     ScheduledName: {
         display: "flex",
@@ -121,7 +121,7 @@ export default function Finished(prop) {
 
     return (
         <div className={classes.root}>
-            <Paper elevation={3} style={{height:"100%"}}>
+            <Paper elevation={3} style={{height:"100%", paddingTop:"1%"}}>
                 <Typography variant="h6" align="center">
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Finished</span>   
                 </Typography>
@@ -129,7 +129,7 @@ export default function Finished(prop) {
                 <List style={{height:"100%", overflow:"auto"}}>
                     {list && list.map(data => (
                         <ListItem key={data.meet_id} className={classes.data}>
-                            <div style={{display:'block',width:"80%", margin:"2%"}}>
+                            <div style={{display:'block', width:"80%", margin:"2%"}}>
                                 <div className={classes.ScheduledName}>
                                 <DeleteForever onClick={()=> handleDeleteIcon(data.meet_id)} style={{marginTop:"-2%"}} color="error"/>
                                 <span style={{fontWeight:"bold"}}>{data.meet_title}</span>
