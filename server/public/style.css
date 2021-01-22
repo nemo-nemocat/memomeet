@@ -35,7 +35,7 @@ video {
 
 .main__controls {
     background-color: #ffc31e;
-    height: 50px;
+    height: 60px;
     color: #000000;
     display: flex;
     justify-content: space-between;
@@ -62,7 +62,7 @@ video {
 }
 
 .main__controls__button_icon {
-    font-size: 30px;
+    font-size: 20px;
 }
 
 .main__controls__button:hover {
@@ -105,6 +105,14 @@ video {
     background-color: white;
     border: none;
     color: black;
+}
+
+.main__message_button {
+    color:#000; 
+    background:#ffc31e; 
+    font-size: 0.8em; 
+    border-radius: 0.5em; 
+    padding: 5px 20px;
 }
 
 .leave_meeting {
