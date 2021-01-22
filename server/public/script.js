@@ -9,6 +9,23 @@ const peer = new Peer(USER_ID, { // peer 고유 id (자동생성) 대신 user id
 
 const peers = {}
 
+let room_id, user_id, user_name
+// peer 서버와 정상적으로 통신이 된 경우 'open' event가 발생.
+// 'open' event가 발생하면 유저를 room에 join시킴.
+peer.on('open', peerid => {
+  room_id = ROOM_ID
+  user_id = USER_ID
+  user_name = USER_NAME
+  console.log('[PEER CONNECTED] ' + room_id, user_id, user_name)
+  $('ul').append(`<font color=#CC3B33>${user_name}님 하이</font></br>`) // 채팅창에 append
+  socket.emit('joinRoom', room_id, peerid, user_name)
+})
+
+// 소켓 연결 코드
+socket.on('connect', function() {
+  console.log('[SOCKET CONNECTED] ' + room_id, user_id, user_name)
+})
+
 let myVideoStream
 // 유저의 브라우저로부터 Media Device들을 받아오는 과정
 navigator.mediaDevices.getUserMedia({ 
@@ -40,27 +57,6 @@ socket.on('userDisconnected', userId => {
     $('ul').append(`<font color=#CC3B33>${userId} 퇴장</font></br>`) // 채팅창에 append
     if (peers[userId]) peers[userId].close()
   })
-
-let user_id, user_name
-// peer 서버와 정상적으로 통신이 된 경우 'open' event가 발생.
-// 'open' event가 발생하면 유저를 room에 join시킴.
-peer.on('open', peerid => {
-  room_id = ROOM_ID
-  user_id = USER_ID
-  user_name = USER_NAME
-  console.log('[PEER CONNECTED] ' + room_id, user_id, user_name)
-  $('ul').append(`<font color=#CC3B33>${user_name}님 하이</font></br>`) // 채팅창에 append
-  socket.emit('joinRoom', room_id, peerid, user_name)
-})
-
-// 소켓 연결 코드
-socket.on('connect', function() {
-  room_id = ROOM_ID
-  user_id = USER_ID
-  user_name = USER_NAME
-  console.log('[SOCKET CONNECTED] ' + room_id, user_id, user_name)
-  //socket.emit('joinRoom', room_id, user_id, user_name)
-})
 
 // 새로운 유저가 접속하면 그 유저의 stream을 내 브라우저에 추가하기 위해 요청을 보냄 (peer.call)
 function connectToNewUser(userId, stream) {
@@ -118,7 +114,7 @@ const scrollToBottom = () => {
     $('.main__chat_window').scrollTop($('.main__chat_window').prop("scrollHeight"));
 }
 
-/************************************ 버튼 기능 함수들 ************************************/
+/************************************ 버튼 기능 함수 ************************************/
 
 const muteUnmute = () => {
   const enabled = myVideoStream.getAudioTracks()[0].enabled;
@@ -164,9 +160,8 @@ const setPlayVideo = () => {
   document.querySelector('.main__video_button').innerHTML = html;
 }
 
-  // *********************
-  // *** voice -> chat ***
-  // *********************
+/************************************ 음성 인식 시작 ************************************/
+
   try{
     var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     var recognition = new SpeechRecognition();
