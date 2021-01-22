@@ -5,7 +5,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import EventIcon from '@material-ui/icons/Event';
 import ScheduleIcon from '@material-ui/icons/Schedule';
-import ScriptIcon from '../script.png';
+import ScriptIcon from '../Icons/script.png';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 
 const useStyles = makeStyles((theme) => ({

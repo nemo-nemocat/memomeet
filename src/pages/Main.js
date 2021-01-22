@@ -7,13 +7,13 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import exit_black from '../exit_black.png';
-import exit_white from '../exit_white.png';
+import exit_black from '../Icons/exit_black.png';
+import exit_white from '../Icons/exit_white.png';
 import SearchBtn from '../Components/searchBtn';
 import GroupCreateBtn from '../Components/groupCreateBtn';
 import NewMeet from '../Components/newMeet';
 import Scheduled from '../Components/scheduled';
-import logo from '../memomeet_logo.png';
+import logo from '../Icons/memomeet_logo.png';
 import Header from '../Components/Header';
 import Finished from '../Components/finished';
 
@@ -59,17 +59,9 @@ const useStyles = makeStyles((theme) => ({
 
 const ListItem = withStyles({
   root: {
-    "&$selected": {
-      backgroundColor: "#000000",
-      color: "white"
-    },
-    "&$selected:hover": {
-      backgroundColor: "#000000",
-      color: "white"
-    },
     "&:hover": {
       backgroundColor: "#ab861f",
-      color: "white"
+      color: "black"
     }
   },
   selected: {}
@@ -153,7 +145,9 @@ export default function InteractiveList() {
         <div style={{height:"84%"}}>
           <List component="nav" style={{ marginBottom: "5%", height:"80%", overflow:"auto"}}>
             {groups && groups.map(group => (
-              <ListItem button key={group.group_id} onClick={() => clickHandler(group.group_id)} className={(activeTab === group.group_id) ? classes.selectGroupBtn : classes.groupBtn}>
+              <ListItem button key={group.group_id} onClick={() => clickHandler(group.group_id)} 
+                style={{pointerEvents: (activeTab === group.group_id) ? "none" : "auto"}}
+                className={(activeTab === group.group_id) ? classes.selectGroupBtn : classes.groupBtn}>
                 <ListItemText
                   primary={group.group_name}
                   color="#000000"

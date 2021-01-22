@@ -122,7 +122,7 @@ export default function Header(prop) {
       <Button style={{margin:"1%"}}onClick={handleClickLogout} color="primary" variant="contained">
         <LogoutIcon/>&nbsp;LOGOUT
       </Button>
-      <span style={{color: "#ffffff", fontWeight: "bold", maxWidth: "100%" }}>{sessionStorage.getItem("user_name")}님&nbsp;</span>
+      <span style={{color: "#ffffff", fontWeight: "bold", maxWidth: "100%", marginRight:"1%" }}>{sessionStorage.getItem("user_name")}님</span>
     </div>
   );
 }
