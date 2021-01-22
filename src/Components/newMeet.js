@@ -84,7 +84,7 @@ export default function NewMeet(prop) {
 
     return (
         <div className={classes.root}>
-            <Paper className={classes.paper} elevation={1}>
+            <Paper className={classes.paper}>
                 <Typography variant="h6" align="center">
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>New Meet</span>   
                 </Typography>

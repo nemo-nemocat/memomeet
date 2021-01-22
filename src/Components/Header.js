@@ -86,7 +86,7 @@ export default function Header(prop) {
             console.log(result);
             if (result.code === 0) {
               document.body.appendChild(t);
-              t.value = `${user_name}님이 [${result.grouplist.group_name}] 그룹 초대 메세지를 보냈습니다. \n그룹ID: ${prop.group_id}\n그룹PW: ${result.grouplist.group_pw}`;
+              t.value = `📝MEMO-MEET📝\n${user_name}님이 [${result.grouplist.group_name}] 그룹 초대 메세지를 보냈습니다. \n🔒그룹ID: ${prop.group_id}\n🔑그룹PW: ${result.grouplist.group_pw}`;
               t.select();
               document.execCommand('copy');
               document.body.removeChild(t);

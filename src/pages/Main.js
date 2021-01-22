@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
+import MuiListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#ffc31e",
   },
   clickGroup: {
-    backgroundColor: "ffffff"
+    backgroundColor: "#ffffff"
   },
   listTitle: {
     paddingTop: "4%",
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     height: "10%",
     backgroundColor: "#000000",
-    color: "#ffffff"
+    color: "#ffffff",
   },
   body: {
     minWidth: 850,
@@ -57,13 +57,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const ListItem = withStyles({
+  root: {
+    "&$selected": {
+      backgroundColor: "#000000",
+      color: "white"
+    },
+    "&$selected:hover": {
+      backgroundColor: "#000000",
+      color: "white"
+    },
+    "&:hover": {
+      backgroundColor: "#ab861f",
+      color: "white"
+    }
+  },
+  selected: {}
+})(MuiListItem);
+
 export default function InteractiveList() {
   const classes = useStyles();
   const [groups, setGroups] = useState([]);;
   const [activeTab, setActiveTab] = useState(sessionStorage.getItem("preTab"));
   const [exitOpen, setExitOpen] = useState(false);
-  const user_id= sessionStorage.getItem("user_id")
-
+  const user_id= sessionStorage.getItem("user_id");
+  
   useEffect(() => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -133,9 +151,9 @@ export default function InteractiveList() {
         </Typography>
         <SearchBtn />
         <div style={{height:"84%"}}>
-          <List style={{ marginBottom: "5%", height:"80%", overflow:"auto"}}>
+          <List component="nav" style={{ marginBottom: "5%", height:"80%", overflow:"auto"}}>
             {groups && groups.map(group => (
-              <ListItem key={group.group_id} onClick={() => clickHandler(group.group_id)} className={(activeTab === group.group_id) ? classes.selectGroupBtn : classes.groupBtn}>
+              <ListItem button key={group.group_id} onClick={() => clickHandler(group.group_id)} className={(activeTab === group.group_id) ? classes.selectGroupBtn : classes.groupBtn}>
                 <ListItemText
                   primary={group.group_name}
                   color="#000000"
