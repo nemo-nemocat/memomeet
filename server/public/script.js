@@ -125,9 +125,11 @@ const muteUnmute = () => {
   if (enabled) {
     myVideoStream.getAudioTracks()[0].enabled = false;
     setUnmuteButton();
+    recognition.stop();
   } else {
     setMuteButton();
     myVideoStream.getAudioTracks()[0].enabled = true;
+    recognition.start();
   }
 }
   
@@ -161,3 +163,77 @@ const setPlayVideo = () => {
   const html = `<span>카메라 켜기</span>`
   document.querySelector('.main__video_button').innerHTML = html;
 }
+
+  // *********************
+  // *** voice -> chat ***
+  // *********************
+  try{
+    var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    var recognition = new SpeechRecognition();
+  }
+  catch(e) {
+    console.error(e);
+    $('.no-browser-support').show();
+    alert('Google Chrome에서만 동작합니다.')
+  }
+  
+  var noteContent = '';
+
+  /*-----------------------------
+        Voice Recognition 
+  ------------------------------*/
+  // If false, the recording will stop after a few seconds of silence.
+  // When true, the silence period is longer (about 15 seconds),
+  // allowing us to keep recording even when the user pauses. 
+  recognition.continuous = true;
+
+  // This block is called every time the Speech APi captures a line. 
+  // 음성 인식 결과 처리
+  recognition.onresult = function(event) {
+    // event is a SpeechRecognitionEvent object.
+    // It holds all the lines we have captured so far. 
+    // We only need the current one.
+    var current = event.resultIndex;
+  
+    // Get a transcript of what was said.
+    var transcript = event.results[current][0].transcript;
+
+    // Add the current transcript to the contents of our Note.
+    // There is a weird bug on mobile, where everything is repeated twice.
+    // There is no official solution so far so we have to handle an edge case.
+    var mobileRepeatBug = (current == 1 && transcript == event.results[0][0].transcript);
+
+    if(!mobileRepeatBug) {
+      noteContent += transcript;
+      console.log(noteContent);
+    }
+    // Reset variables and emit on chat
+    socket.emit('message', noteContent); 
+    noteContent = '';
+  };
+
+  recognition.onstart = function() {
+    console.log('Voice recognition activated.')
+  }
+
+  recognition.onspeechend = function () {
+    console.log('Voice recognition turned itself off.')
+  }
+
+  recognition.onerror = function(event) {
+    if(event.error == 'no-speech') {
+      console.log('No speech was detected.')
+    };
+  }
+
+  // 음성 인식 트리거
+  function start() {
+    recognition.lang = "ko-KR";
+    recognition.start();
+  }
+  
+  start();
+
+   /*-----------------------------
+          Append Time
+  ------------------------------*/
