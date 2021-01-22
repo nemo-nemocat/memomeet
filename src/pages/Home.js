@@ -6,7 +6,7 @@ import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import logo from '../memomeet_logo.png';
+import logo from '../Icons/memomeet_logo.png';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
