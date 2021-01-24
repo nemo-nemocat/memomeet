@@ -172,7 +172,7 @@ const setPlayVideo = () => {
     alert('Google Chrome에서만 동작합니다.')
   }
   
-  var noteContent = '';
+  var speechContent = '';
 
   /*-----------------------------
         Voice Recognition 
@@ -181,6 +181,8 @@ const setPlayVideo = () => {
   // When true, the silence period is longer (about 15 seconds),
   // allowing us to keep recording even when the user pauses. 
   recognition.continuous = true;
+  recognition.lang = "ko-KR";
+  var recognizing = false;
 
   // This block is called every time the Speech APi captures a line. 
   // 음성 인식 결과 처리
@@ -193,41 +195,65 @@ const setPlayVideo = () => {
     // Get a transcript of what was said.
     var transcript = event.results[current][0].transcript;
 
+    if(typeof(event.results) == 'undefined'){
+      console.log("undefined start")
+      recognition.stop()
+      recognizing = false
+      recognition.start()
+      console.log("undefined end")
+      return;  
+    }
+
     // Add the current transcript to the contents of our Note.
     // There is a weird bug on mobile, where everything is repeated twice.
     // There is no official solution so far so we have to handle an edge case.
     var mobileRepeatBug = (current == 1 && transcript == event.results[0][0].transcript);
 
     if(!mobileRepeatBug) {
-      noteContent += transcript;
-      console.log(noteContent);
+      speechContent += transcript;
+      console.log(speechContent);
     }
     // Reset variables and emit on chat
-    socket.emit('message', noteContent); 
-    noteContent = '';
+    socket.emit('message', speechContent); 
+    speechContent = '';
   };
 
   recognition.onstart = function() {
     console.log('Voice recognition activated.')
+    recognizing = true;
   }
 
-  recognition.onspeechend = function () {
-    console.log('Voice recognition turned itself off.')
+  recognition.onend = function () {
+    console.log("ONEND")
+    recognition.stop()
+    recognizing = false
+    if(myVideoStream.getAudioTracks()[0].enabled){
+      recognition.start()
+    }
+    //console.log('Voice recognition turned itself off.')
   }
 
   recognition.onerror = function(event) {
-    if(event.error == 'no-speech') {
-      console.log('No speech was detected.')
-    };
+    console.log("ERROR")
+    recognizing = false
+    recognition.stop()
+    if (event.error == 'no-speech') {
+      console.log("NO SPEECH")
+    }
+    if (event.error == 'audio-capture') {
+        console.log("Capture Problem")
+    }
+    if (event.error == 'not-allowed') {
+        if (event.timeStamp - start_timestamp < 100) {
+            console.log("Block")
+        } else {
+            console.log("Deny")
+        }
+    }
   }
 
   // 음성 인식 트리거
-  function start() {
-    recognition.lang = "ko-KR";
-    recognition.start();
-  }
-  
-  start();
+  recognition.start();
 
    /*-----------------------------
           Append Time
