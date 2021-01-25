@@ -107,7 +107,6 @@ export default function SignIn() {
             onChange={({ target: { value } }) => setPw(value)}
           />
           <Button
-            type="submit"
             variant= "contained"
             color= "secondary"
             size="large"
