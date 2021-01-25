@@ -53,8 +53,18 @@ io.on('connection', socket => {
   })
 
   socket.on('message', (data) => {
+    
+    chat = `${name}: ${data.message}`;
+    contentArray.push(data.message);
+    chatArray.push(chat);
+
     data.name = name
-    socket.to(room).broadcast.emit('updateChat', data) // room 안의 나를 제외한 모두에게
+    if(data.type == 'mymessage') {
+      socket.emit('updateChat', data) // 나에게만
+    }
+    else{
+      socket.to(room).broadcast.emit('updateChat', data) // room 안의 나를 제외한 모두에게
+    }
   })
 
   socket.on('disconnect', () => {

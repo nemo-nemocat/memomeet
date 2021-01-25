@@ -118,16 +118,8 @@ function send() {
     document.getElementById('chat_message').value = '' 
 
     // 데이터 담아서 서버로 message 이벤트 emit
+    socket.emit('message', {type: 'mymessage', message: message})
     socket.emit('message', {type: 'message', message: message})
-
-    // 내 메시지는 나에게만 표시
-    var chat = document.getElementById('chat')
-    var msg = document.createElement('div')
-    var node = document.createTextNode(`${user_name} : ${message}`)
-    msg.classList.add('me')
-    msg.appendChild(node)
-    chat.appendChild(msg)
-    scrollToBottom()
   }
 }
 
@@ -139,6 +131,9 @@ socket.on('updateChat', (data) => {
 
     // 타입에 따라 적용할 클래스를 다르게 지정
     switch(data.type) {
+      case 'mymessage':
+        className = 'me'
+        break
       case 'message':
         className = 'other'
         break 
@@ -292,17 +287,10 @@ const setPlayVideo = () => {
     }
 
     // 데이터 담아서 서버로 message 이벤트 emit
+    socket.emit('message', {type: 'mymessage', message: speechContent})
     socket.emit('message', {type: 'message', message: speechContent})
 
-    // 내 메시지는 나에게만 표시
-    var chat = document.getElementById('chat')
-    var msg = document.createElement('div')
-    var node = document.createTextNode(`${user_name} : ${speechContent}`)
-    msg.classList.add('me')
-    msg.appendChild(node)
-    chat.appendChild(msg)
     speechContent = '';
-    scrollToBottom()
   };
 
   recognition.onstart = function() {
