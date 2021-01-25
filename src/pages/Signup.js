@@ -148,7 +148,7 @@ export default function SignUp() {
                 value={user_name} 
                 onChange={handleNameChange}
                 autoFocus
-                size={isHyomin ? "large" : "small"}
+                size={isHyomin ? "medium" : "small"}
               />
             </Grid>
             <Grid item xs={12}>
@@ -161,7 +161,7 @@ export default function SignUp() {
                 name="email"
                 value={user_email}
                 onChange={handleEmailChange}
-                size={isHyomin ? "large" : "small"}
+                size={isHyomin ? "medium" : "small"}
                 autoComplete="email"
               />
             </Grid>
@@ -175,7 +175,7 @@ export default function SignUp() {
                 name="id"
                 value={user_id}
                 onChange={handleIdChange}
-                size={isHyomin ? "large" : "small"}
+                size={isHyomin ? "medium" : "small"}
                 autoComplete="id"
               />
             </Grid>
@@ -191,7 +191,7 @@ export default function SignUp() {
                 value={user_pw}
                 onChange={handlePwChange}
                 autoComplete="current-password"
-                size={isHyomin ? "large" : "small"}
+                size={isHyomin ? "medium" : "small"}
               />
             </Grid>
             <Grid item xs={12}>
@@ -206,7 +206,7 @@ export default function SignUp() {
                 value={user_pwcheck}
                 onChange={handlePwCheckChange}
                 autoComplete="current-password"
-                size={isHyomin ? "large" : "small"}
+                size={isHyomin ? "medium" : "small"}
               />
             </Grid>
           </Grid>

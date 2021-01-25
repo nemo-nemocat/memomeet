@@ -33,6 +33,13 @@ video {
     object-fit: cover;
 }
 
+.nameTag {
+    font-weight: bold;
+    text-align: center;
+    background-color: #ffc31e;
+    color: #000000;
+}
+
 .main__controls {
     background-color: #ffc31e;
     height: 60px;

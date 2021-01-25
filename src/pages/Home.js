@@ -89,7 +89,7 @@ export default function SignIn() {
             autoComplete="id"
             autoFocus
             value={userid}
-            size={isHyomin ? "large" : "small"}
+            size={isHyomin ? "medium" : "small"}
             onChange={({ target: { value } }) => setUserid(value)}
           />
           <TextField
@@ -103,11 +103,10 @@ export default function SignIn() {
             id="password"
             autoComplete="current-password"
             value={pw}
-            size={isHyomin ? "large" : "small"}
+            size={isHyomin ? "medium" : "small"}
             onChange={({ target: { value } }) => setPw(value)}
           />
           <Button
-            type="submit"
             variant= "contained"
             color= "secondary"
             size="large"
