@@ -108,6 +108,18 @@ export default function SearchBtn() {
             .catch(error => console.log('error', error))
     }
 
+    const onKeyPress = (e) => {
+        if (e.key == 'Enter') {
+            groupSearch();
+        }
+      }
+
+    const enterKeyPress = (e) => {
+        if (e.key == 'Enter') {
+            groupEnter();
+        }
+    }
+
     return (
         <div>
         <div className={classes.searchBtn} onClick={clickSearchOpen}>
@@ -118,7 +130,7 @@ export default function SearchBtn() {
         <Dialog open={searchOpen} onClose={searchClose} aria-labelledby="search-group-dialog">
             <DialogTitle id="search-group-dialog">Search Group</DialogTitle>
             <DialogContent>
-            <TextField autoFocus margin="dense" id="search_group_id" label="Group ID" width="70%" value={group_id} onChange={({ target: { value } }) => setGroupId(value)} />
+            <TextField autoFocus margin="dense" id="search_group_id" label="Group ID" width="70%" value={group_id} onChange={({ target: { value } }) => setGroupId(value)} onKeyPress={onKeyPress}  />
             <Button onClick={groupSearch} color="secondary" variant="contained" size="small">
                 Search
             </Button>
@@ -127,7 +139,7 @@ export default function SearchBtn() {
             {result &&
                 <ListItem key={group_id} style={{ backgroundColor: "#fdf5e6", borderRadius: 10, flexDirection: "column" }}>
                     <ListItemText primary={group_name} secondary={group_member} style={{ width: 200 }} />
-                    <TextField margin="dense" id="search_group_pw" label="Group Password" color="secondary" width="70%" value={group_pw} onChange={({ target: { value } }) => setGroupPw(value)} />
+                    <TextField margin="dense" id="search_group_pw" label="Group Password" color="secondary" width="70%" value={group_pw} onChange={({ target: { value } }) => setGroupPw(value)} onKeyPress={enterKeyPress} />
                     <Button onClick={groupEnter} color="secondary" variant="contained" size="small">
                         Enter
                     </Button>

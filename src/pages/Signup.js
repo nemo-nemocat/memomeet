@@ -127,6 +127,12 @@ export default function SignUp() {
     }
   }
 
+  const onKeyPress = (e) => {
+    if (e.key == 'Enter') {
+      handleSubmit();
+    }
+  }
+
   return (
     <Container component="main" style={{width:400, height:window.innerHeight}}>
       <CssBaseline />
@@ -149,6 +155,7 @@ export default function SignUp() {
                 onChange={handleNameChange}
                 autoFocus
                 size={isHyomin ? "large" : "small"}
+                onKeyPress={onKeyPress}
               />
             </Grid>
             <Grid item xs={12}>
@@ -163,6 +170,7 @@ export default function SignUp() {
                 onChange={handleEmailChange}
                 size={isHyomin ? "large" : "small"}
                 autoComplete="email"
+                onKeyPress={onKeyPress}
               />
             </Grid>
             <Grid item xs={12}>
@@ -177,6 +185,7 @@ export default function SignUp() {
                 onChange={handleIdChange}
                 size={isHyomin ? "large" : "small"}
                 autoComplete="id"
+                onKeyPress={onKeyPress}
               />
             </Grid>
             <Grid item xs={12}>
@@ -192,6 +201,7 @@ export default function SignUp() {
                 onChange={handlePwChange}
                 autoComplete="current-password"
                 size={isHyomin ? "large" : "small"}
+                onKeyPress={onKeyPress}
               />
             </Grid>
             <Grid item xs={12}>
@@ -207,11 +217,11 @@ export default function SignUp() {
                 onChange={handlePwCheckChange}
                 autoComplete="current-password"
                 size={isHyomin ? "large" : "small"}
+                onKeyPress={onKeyPress}
               />
             </Grid>
           </Grid>
           <Button
-            type="submit"
             size="large"
             variant="contained"
             color="secondary"
