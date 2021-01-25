@@ -97,6 +97,8 @@ function gridArray(){
   }
 }
 
+/************************************ 채팅 송수신 ************************************/
+
 // 엔터 누르거나 전송 버튼 클릭 시 send() 함수 호출
 $('html').keydown((e) => { 
     if (e.which == 13){
@@ -120,6 +122,7 @@ function send() {
     msg.classList.add('me')
     msg.appendChild(node)
     chat.appendChild(msg)
+    scrollToBottom()
   }
 }
 
@@ -143,13 +146,14 @@ socket.on('updateChat', (data) => {
     msg.classList.add(className)
     msg.appendChild(node)
     chat.appendChild(msg)
-
-    scrollToBottom() // 자동스크롤
+    scrollToBottom()
 })
 
 const scrollToBottom = () => {
   $('#chat').scrollTop($('#chat').prop("scrollHeight"));
 }
+
+/************************************ 사용자 목록 ************************************/
 
 socket.on('updateMembers', (data) => {
   var members = document.getElementById('memberList');
@@ -292,8 +296,8 @@ const setPlayVideo = () => {
     msg.classList.add('me')
     msg.appendChild(node)
     chat.appendChild(msg)
-
     speechContent = '';
+    scrollToBottom()
   };
 
   recognition.onstart = function() {
