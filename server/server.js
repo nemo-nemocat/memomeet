@@ -45,15 +45,18 @@ io.on('connection', socket => {
 
     socket.join(room)
     socket.to(room).broadcast.emit('userConnected', id)
+    io.to(room).emit('update', {type: 'system', name: 'SYSTEM', message: name + '님 입장'}) // room 안의 모두에게 
     console.log(rooms)
   })
 
-  socket.on('message', (message) => {
-    io.to(room).emit('creatMessage', message, name)
+  socket.on('message', (data) => {
+    data.name = name
+    socket.to(room).broadcast.emit('update', data) // room 안의 나를 제외한 모두에게
   })
 
   socket.on('disconnect', () => {
     socket.to(room).broadcast.emit('userDisconnected', id)
+    io.to(room).emit('update', {type: 'system', name: 'SYSTEM', message: name + '님 퇴장'}) // room 안의 모두에게 
     rooms[room].num--
     rooms[room].members.pop(rooms[room].members.indexOf(name),1)
     if(rooms[room].num == 0){
