@@ -22,11 +22,13 @@ app.get('/meeting', (req, res) => {
   res.render('room', { roomId: req.query.meet_id, userId: req.query.user_id, userName: req.query.user_name })
 })
 
-let rooms = {}
+let rooms = {};
+let chatArray=[];   //(name: content) 담을 배열
+let contentArray=[];  //content 담을 배열
 
 io.on('connection', socket => {
 
-  let room, id, name
+  let room, id, name, chat
 
   socket.on('joinRoom', (roomId, userId, userName) => {
 
@@ -60,6 +62,16 @@ io.on('connection', socket => {
     rooms[room].members.pop(rooms[room].members.indexOf(name),1)
     if(rooms[room].num == 0){
       delete rooms[room]
+
+      //array DB에 insert
+      var contentInput = contentArray.toString();
+      var chatInput = chatArray.toString();
+
+      var sql = 'INSERT INTO  MEETSCRIPT VALUE(?, ?, ?)';
+      mysqlDB.query(sql, [room, chatInput, contentInput], function(err, results){
+        if(err) console.log(err);
+        else console.log('success input db');
+      });
     }
 
     socket.to(room).broadcast.emit('userDisconnected', id)

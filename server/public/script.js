@@ -1,6 +1,8 @@
 const socket = io()
 const videoGrid = document.getElementById('video-grid')
 const myVideo = document.createElement('video')
+const myVideoBx = document.createElement('div')
+const myNameTag = document.createElement('div')
 myVideo.muted = true
 
 // 공용으로 PeerServer를 호스팅하는 서비스인 PeerServer cloud를 이용, 최대 50개의 동시연결까지 무료로 가능.
@@ -32,15 +34,17 @@ navigator.mediaDevices.getUserMedia({
     audio: true
 }).then(stream => { // Media Device를 받아오는 데 성공하면 stream을 넘겨받을 수 있음
     myVideoStream = stream
-    addVideoStream(myVideo, stream) // 받아온 stream을 내 브라우저에 추가하는 함수
+    addVideoStream(myVideoBx, myNameTag, myVideo, user_id, stream) // 받아온 stream을 내 브라우저에 추가하는 함수
 
     peer.on('call', call => { // 이후 누군가 나에게 요청을 보내면 받기 위해 event를 on해줌
       // 나에게 응답을 준 다른 유저의 요청에 수락. 
       // 이 과정에서 내 stream을 다른 유저에게 보내주고, answer가 발생하면 'stream'이라는 event를 통해 다른 유저의 stream을 받아옴
       call.answer(stream)
         const video = document.createElement('video')
+        const videoBx = document.createElement('div')
+        const nameTag = document.createElement('div')
         call.on('stream', userVideoStream => { // 다른 유저의 stream을 내 브라우저에 추가하는 콜백 함수가 실행됨
-          addVideoStream(video, userVideoStream) 
+          addVideoStream(videoBx, nameTag, video, "받아온아이디", userVideoStream) 
         })
     })
 
@@ -58,43 +62,44 @@ socket.on('userDisconnected', userId => {
 // 새로운 유저가 접속하면 그 유저의 stream을 내 브라우저에 추가하기 위해 요청을 보냄 (peer.call)
 function connectToNewUser(userId, stream) {
     const call = peer.call(userId, stream) 
+    const videoBx = document.createElement('div')
+    const nameTag = document.createElement('div')
     const video = document.createElement('video') // 다른 유저를 위해 video element를 생성
     // 상대 유저가 answer했을 때 'stream' event가 발생되는데,
     // 이를 통해 상대 유저의 stream을 받아오고 내 화면에 추가시킴
     call.on('stream', userVideoStream => { 
-        addVideoStream(video, userVideoStream)
+        addVideoStream(videoBx, nameTag, video, userId, userVideoStream)
     })
     // 상대가 나가서 상대의 stream에 대해 'close' event가 발생하면 상대의 video를 제거하는 콜백 함수가 실행됨
     call.on('close', () => {
       //video.remove()
-      removeVideoStream(video, userVideoStream)
+      removeVideoStream(video, stream)
     })
 
     peers[userId] = call
 }
 
-function addVideoStream(video, stream){
+function addVideoStream(videoBx, nameTag, video, userId, stream){
+    let nameText = document.createTextNode(userId);
+    nameTag.className = 'nameTag';
+    if(!nameTag.hasChildNodes())nameTag.appendChild(nameText);
+
     video.srcObject = stream
     video.addEventListener('loadedmetadata', () => {
         video.play()
     })
-    videoGrid.append(video)
-    gridArray();
+
+    videoBx.append(nameTag);
+    videoBx.append(video);
+
+    videoGrid.append(videoBx);
 }
 
 function removeVideoStream(video, stream){
     video.srcObject = stream
-    videoGrid.remove(video)
-    gridArray();
-}
-
-function gridArray(){
-  var mainGrid = document.getElementById('main__videos');
-
-  console.log(videoGrid.childElementCount);
-  if(videoGrid.childElementCount>4){
-    mainGrid.style.gridTemplateRows = repeat(3, "300px");
-  }
+    const videoParent = video.parentNode;
+    console.log(videoParent);
+    //videoGrid.remove(videoParent)
 }
 
 /************************************ 채팅 송수신 ************************************/
