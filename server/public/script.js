@@ -58,6 +58,28 @@ socket.on('userDisconnected', userId => {
     if (peers[userId]) peers[userId].close()
   })
 
+let user_id, user_name
+// peer 서버와 정상적으로 통신이 된 경우 'open' event가 발생.
+// 'open' event가 발생하면 유저를 room에 join시킴.
+peer.on('open', peerid => {
+  room_id = ROOM_ID
+  user_id = USER_ID
+  user_name = USER_NAME
+  console.log('[PEER CONNECTED] ' + room_id, user_id, user_name)
+  $('ul').append(`<font color=#CC3B33>${user_name}님 하이</font></br>`) // 채팅창에 append
+  socket.emit('joinRoom', room_id, peerid, user_name)
+
+})
+
+// 소켓 연결 코드
+socket.on('connect', function() {
+  room_id = ROOM_ID
+  user_id = USER_ID
+  user_name = USER_NAME
+  console.log('[SOCKET CONNECTED] ' + room_id, user_id, user_name)
+  //socket.emit('joinRoom', room_id, user_id, user_name)
+})
+
 // 새로운 유저가 접속하면 그 유저의 stream을 내 브라우저에 추가하기 위해 요청을 보냄 (peer.call)
 function connectToNewUser(userId, stream) {
     const call = peer.call(userId, stream) 
@@ -82,11 +104,22 @@ function addVideoStream(video, stream){
         video.play()
     })
     videoGrid.append(video)
+    gridArray();
 }
 
 function removeVideoStream(video, stream){
     video.srcObject = stream
     videoGrid.remove(video)
+    gridArray();
+}
+
+function gridArray(){
+  var mainGrid = document.getElementById('main__videos');
+
+  console.log(videoGrid.childElementCount);
+  if(videoGrid.childElementCount>4){
+    mainGrid.style.gridTemplateRows = repeat(3, "300px");
+  }
 }
 
 // 엔터 누르거나 전송 버튼 클릭 시 send() 함수 호출
@@ -106,7 +139,7 @@ function send() {
 }
 
 socket.on('creatMessage', (message, userName) => {
-    $('ul').append(`<li class="message"><b>${userName}</b> ${message}</li>`) // 채팅창에 append
+    $('ul').append(`<li class="message"><b>${userName}</b></li><li> ${message}</li>`) // 채팅창에 append
     scrollToBottom() // 자동스크롤
 })
 
@@ -114,7 +147,8 @@ const scrollToBottom = () => {
     $('.main__chat_window').scrollTop($('.main__chat_window').prop("scrollHeight"));
 }
 
-/************************************ 버튼 기능 함수 ************************************/
+
+/************************************ 버튼 기능 함수들 ************************************/
 
 const muteUnmute = () => {
   const enabled = myVideoStream.getAudioTracks()[0].enabled;
