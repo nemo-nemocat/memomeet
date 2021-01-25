@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
         margin:"1%"
     },
     list:{
-        height:"93%",
+        height:"94%",
         overflow: "auto",
         '&::-webkit-scrollbar' : {
             display : 'none'

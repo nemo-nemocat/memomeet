@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
         margin:"1%"
     },
     list:{
-        height:"93%",
+        height:"95%",
         overflow: "auto",
         '&::-webkit-scrollbar' : {
             display : 'none'
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius:10,
         padding:0,
         marginBottom:"3%",
-        height:window.innerHeight>700 ? "22%" : "27%"
+        height:window.innerHeight>700 ? "24%" : "27%"
     },
     scriptBtn:{
         backgroundColor:"#808080",

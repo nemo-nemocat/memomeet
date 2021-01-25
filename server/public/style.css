@@ -35,7 +35,7 @@ video {
 
 .main__controls {
     background-color: #ffc31e;
-    height: 50px;
+    height: 60px;
     color: #000000;
     display: flex;
     justify-content: space-between;
@@ -62,11 +62,11 @@ video {
 }
 
 .main__controls__button_icon {
-    font-size: 30px;
+    font-size: 15px;
 }
 
 .main__controls__button:hover {
-    background-color: #343434;
+    background-color: #644d10;
     border-radius: 5px;
 }
 
@@ -108,7 +108,7 @@ video {
 }
 
 .leave_meeting {
-    color: #CC3B33;
+    color: #ff0d00;
 }
 
 .unmute, .stop {

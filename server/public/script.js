@@ -51,6 +51,7 @@ peer.on('open', peerid => {
   console.log('[PEER CONNECTED] ' + room_id, user_id, user_name)
   $('ul').append(`<font color=#CC3B33>${user_name}님 하이</font></br>`) // 채팅창에 append
   socket.emit('joinRoom', room_id, peerid, user_name)
+
 })
 
 // 소켓 연결 코드
@@ -86,11 +87,22 @@ function addVideoStream(video, stream){
         video.play()
     })
     videoGrid.append(video)
+    gridArray();
 }
 
 function removeVideoStream(video, stream){
     video.srcObject = stream
     videoGrid.remove(video)
+    gridArray();
+}
+
+function gridArray(){
+  var mainGrid = document.getElementById('main__videos');
+
+  console.log(videoGrid.childElementCount);
+  if(videoGrid.childElementCount>4){
+    mainGrid.style.gridTemplateRows = repeat(3, "300px");
+  }
 }
 
 // 엔터 누르거나 전송 버튼 클릭 시 send() 함수 호출
@@ -110,13 +122,14 @@ function send() {
 }
 
 socket.on('creatMessage', (message, userName) => {
-    $('ul').append(`<li class="message"><b>${userName}</b> ${message}</li>`) // 채팅창에 append
+    $('ul').append(`<li class="message"><b>${userName}</b></li><li> ${message}</li>`) // 채팅창에 append
     scrollToBottom() // 자동스크롤
 })
 
 const scrollToBottom = () => {
     $('.main__chat_window').scrollTop($('.main__chat_window').prop("scrollHeight"));
 }
+
 
 /************************************ 버튼 기능 함수들 ************************************/
 
@@ -145,22 +158,22 @@ const playStop = () => {
 }
   
 const setMuteButton = () => {
-  const html = `<i class="fas fa-microphone-slash fa-2x"></i><span>마이크 끄기</span>`
+  const html = `<i class="fas fa-microphone-slash fa-lg"></i><span>Mic off</span>`
   document.querySelector('.main__mute_button').innerHTML = html;
 }
 
 const setUnmuteButton = () => {
-  const html = `<i class="fas fa-microphone fa-2x"></i><span>마이크 켜기</span>`
+  const html = `<i class="fas fa-microphone fa-lg"></i><span>Mic on</span>`
   document.querySelector('.main__mute_button').innerHTML = html;
 }
 
 const setStopVideo = () => {
-  const html = `<i class="fas fa-video-slash fa-2x"></i><span>카메라 끄기</span>`
+  const html = `<i class="fas fa-video-slash fa-lg"></i><span>Cam off</span>`
   document.querySelector('.main__video_button').innerHTML = html;
 }
 
 const setPlayVideo = () => {
-  const html = `<i class="fas fa-video fa-2x"></i><span>카메라 켜기</span>`
+  const html = `<i class="fas fa-video fa-lg"></i><span>Cam on</span>`
   document.querySelector('.main__video_button').innerHTML = html;
 }
 
