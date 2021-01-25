@@ -53,7 +53,7 @@ io.on('connection', socket => {
   })
 
   socket.on('message', (data) => {
-    
+
     chat = `${name}: ${data.message}`;
     contentArray.push(data.message);
     chatArray.push(chat);
@@ -84,9 +84,11 @@ io.on('connection', socket => {
       });
     }
 
-    socket.to(room).broadcast.emit('userDisconnected', id)
-    io.to(room).emit('updateChat', {type: 'system', name: 'SYSTEM', message: name + '님 퇴장'}) // room 안의 모두에게
-    io.to(room).emit('updateMembers', {num: rooms[room].num, members: rooms[room].members}) // room 안의 모두에게
+    else{
+      socket.to(room).broadcast.emit('userDisconnected', id)
+      io.to(room).emit('updateChat', {type: 'system', name: 'SYSTEM', message: name + '님 퇴장'}) // room 안의 모두에게
+      io.to(room).emit('updateMembers', {num: rooms[room].num, members: rooms[room].members}) // room 안의 모두에게
+    }
     console.log(rooms)
   })
 })
