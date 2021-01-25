@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles} from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import MuiListItem from '@material-ui/core/ListItem';
+import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -48,12 +48,20 @@ const useStyles = makeStyles((theme) => ({
   groupBtn: {
     width: "100%",
     height: "10%",
+    "&:hover": {
+      backgroundColor: "#ab861f",
+      color: "black"
+    },
   },
   selectGroupBtn: {
     width: "100%",
     height: "10%",
     backgroundColor: "#000000",
     color: "#ffffff",
+    "&:hover": {
+      backgroundColor: "#000000",
+      color: "white"
+    },
   },
   body: {
     minWidth: 850,
@@ -65,15 +73,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ListItem = withStyles({
-  root: {
-    "&:hover": {
-      backgroundColor: "#ab861f",
-      color: "black"
-    }
-  },
-  selected: {}
-})(MuiListItem);
 
 export default function InteractiveList() {
   const classes = useStyles();
@@ -154,7 +153,6 @@ export default function InteractiveList() {
           <List component="nav" className={classes.list}>
             {groups && groups.map(group => (
               <ListItem button key={group.group_id} onClick={() => clickHandler(group.group_id)} 
-                style={{pointerEvents: (activeTab === group.group_id) ? "none" : "auto"}}
                 className={(activeTab === group.group_id) ? classes.selectGroupBtn : classes.groupBtn}>
                 <ListItemText
                   primary={group.group_name}

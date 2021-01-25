@@ -154,7 +154,7 @@ export default function SignUp() {
                 value={user_name} 
                 onChange={handleNameChange}
                 autoFocus
-                size={isHyomin ? "large" : "small"}
+                size={isHyomin ? "medium" : "small"}
                 onKeyPress={onKeyPress}
               />
             </Grid>
@@ -168,7 +168,7 @@ export default function SignUp() {
                 name="email"
                 value={user_email}
                 onChange={handleEmailChange}
-                size={isHyomin ? "large" : "small"}
+                size={isHyomin ? "medium" : "small"}
                 autoComplete="email"
                 onKeyPress={onKeyPress}
               />
@@ -183,7 +183,7 @@ export default function SignUp() {
                 name="id"
                 value={user_id}
                 onChange={handleIdChange}
-                size={isHyomin ? "large" : "small"}
+                size={isHyomin ? "medium" : "small"}
                 autoComplete="id"
                 onKeyPress={onKeyPress}
               />
@@ -200,7 +200,7 @@ export default function SignUp() {
                 value={user_pw}
                 onChange={handlePwChange}
                 autoComplete="current-password"
-                size={isHyomin ? "large" : "small"}
+                size={isHyomin ? "medium" : "small"}
                 onKeyPress={onKeyPress}
               />
             </Grid>
@@ -216,7 +216,7 @@ export default function SignUp() {
                 value={user_pwcheck}
                 onChange={handlePwCheckChange}
                 autoComplete="current-password"
-                size={isHyomin ? "large" : "small"}
+                size={isHyomin ? "medium" : "small"}
                 onKeyPress={onKeyPress}
               />
             </Grid>

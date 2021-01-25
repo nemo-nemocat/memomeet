@@ -22,11 +22,13 @@ app.get('/meeting', (req, res) => {
   res.render('room', { roomId: req.query.meet_id, userId: req.query.user_id, userName: req.query.user_name })
 })
 
-let rooms = {}
+let rooms = {};
+let chatArray=[];   //(name: content) 담을 배열
+let contentArray=[];  //content 담을 배열
 
 io.on('connection', socket => {
 
-  let room, id, name
+  let room, id, name, chat
 
   socket.on('joinRoom', (roomId, userId, userName) => {
 
@@ -45,20 +47,36 @@ io.on('connection', socket => {
 
     socket.join(room)
     socket.to(room).broadcast.emit('userConnected', id)
+    io.to(room).emit('updateChat', {type: 'system', name: 'SYSTEM', message: name + '님 입장'}) // room 안의 모두에게
+    io.to(room).emit('updateMembers', {num: rooms[room].num, members: rooms[room].members}) // room 안의 모두에게
     console.log(rooms)
   })
 
-  socket.on('message', (message) => {
-    io.to(room).emit('creatMessage', message, name)
+  socket.on('message', (data) => {
+    data.name = name
+    socket.to(room).broadcast.emit('updateChat', data) // room 안의 나를 제외한 모두에게
   })
 
   socket.on('disconnect', () => {
-    socket.to(room).broadcast.emit('userDisconnected', id)
     rooms[room].num--
     rooms[room].members.pop(rooms[room].members.indexOf(name),1)
     if(rooms[room].num == 0){
       delete rooms[room]
+
+      //array DB에 insert
+      var contentInput = contentArray.toString();
+      var chatInput = chatArray.toString();
+
+      var sql = 'INSERT INTO  MEETSCRIPT VALUE(?, ?, ?)';
+      mysqlDB.query(sql, [room, chatInput, contentInput], function(err, results){
+        if(err) console.log(err);
+        else console.log('success input db');
+      });
     }
+
+    socket.to(room).broadcast.emit('userDisconnected', id)
+    io.to(room).emit('updateChat', {type: 'system', name: 'SYSTEM', message: name + '님 퇴장'}) // room 안의 모두에게
+    io.to(room).emit('updateMembers', {num: rooms[room].num, members: rooms[room].members}) // room 안의 모두에게
     console.log(rooms)
   })
 })

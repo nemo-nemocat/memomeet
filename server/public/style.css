@@ -33,6 +33,13 @@ video {
     object-fit: cover;
 }
 
+.nameTag {
+    font-weight: bold;
+    text-align: center;
+    background-color: #ffc31e;
+    color: #000000;
+}
+
 .main__controls {
     background-color: #ffc31e;
     height: 60px;
@@ -79,15 +86,33 @@ video {
     flex-direction: column;
 }
 
-.main__chat_window {
+#chat {
     flex-grow: 1;
     overflow-y: auto;
 }
-
-.messages{
-    color: white;
-    list-style: none;
+  
+/* 메시지 스타일링 시작*/
+.system {
+    width: 90%;
+    margin: auto;
+    color: red;
+    margin-top: 10px;
 }
+
+.me {
+    width: 90%;
+    margin: auto;
+    color: blue;
+    margin-top: 10px;
+}
+
+.other {
+    width: 90%;
+    margin: auto;
+    color: white;
+    margin-top: 10px;
+}
+/* 메시지 스타일링 끝*/
 
 .main__message_container {
     padding: 22px 12px;
@@ -136,6 +161,7 @@ video {
     display: inline-block;
     margin: auto;
     margin-top: 10px;
+    margin-bottom: 10px;
   }
   
   .dropdown__content {
@@ -152,5 +178,5 @@ video {
     text-decoration: none;
     display: block;
   }
-  
+
   .show {display: block;}

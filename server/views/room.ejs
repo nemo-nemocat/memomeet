@@ -53,32 +53,9 @@
             <div class="dropdown">
                <button onclick="memberList()" class="dropbtn">Member List</button>
                <div id="memberList" class="dropdown__content">
-                 <a>박혜린</a>
-                 <a>유효민</a>
-                 <a>이다해</a>
-                 <a>김하연</a>
                </div>
              </div>
-             <script>
-               const memberList = () => {
-                  document.getElementById("memberList").classList.toggle("show");
-               }
-               window.onclick = function(event) {
-                  if (!event.target.matches('.dropbtn')) {
-                     var dropdowns = document.getElementsByClassName("dropdown__content");
-                     var i;
-                     for (i = 0; i < dropdowns.length; i++) {
-                        var openDropdown = dropdowns[i];
-                        if (openDropdown.classList.contains('show')) {
-                           openDropdown.classList.remove('show');
-                           }
-                        }
-                     }
-                  }
-             </script>
-            <div class="main__chat_window">
-               <ul class="messages">
-               </ul>
+            <div id = "chat">
             </div>
             <div class="main__message_container">
                <input id="chat_message" type="text" placeholder="메시지를 입력하세요"></input>

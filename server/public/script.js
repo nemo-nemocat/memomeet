@@ -1,6 +1,8 @@
 const socket = io()
 const videoGrid = document.getElementById('video-grid')
 const myVideo = document.createElement('video')
+const myVideoBx = document.createElement('div')
+const myNameTag = document.createElement('div')
 myVideo.muted = true
 
 // 공용으로 PeerServer를 호스팅하는 서비스인 PeerServer cloud를 이용, 최대 50개의 동시연결까지 무료로 가능.
@@ -17,7 +19,6 @@ peer.on('open', peerid => {
   user_id = USER_ID
   user_name = USER_NAME
   console.log('[PEER CONNECTED] ' + room_id, user_id, user_name)
-  $('ul').append(`<font color=#CC3B33>${user_name}님 하이</font></br>`) // 채팅창에 append
   socket.emit('joinRoom', room_id, peerid, user_name)
 })
 
@@ -33,72 +34,75 @@ navigator.mediaDevices.getUserMedia({
     audio: true
 }).then(stream => { // Media Device를 받아오는 데 성공하면 stream을 넘겨받을 수 있음
     myVideoStream = stream
-    addVideoStream(myVideo, stream) // 받아온 stream을 내 브라우저에 추가하는 함수
+    addVideoStream(myVideoBx, myNameTag, myVideo, user_id, stream) // 받아온 stream을 내 브라우저에 추가하는 함수
 
     peer.on('call', call => { // 이후 누군가 나에게 요청을 보내면 받기 위해 event를 on해줌
       // 나에게 응답을 준 다른 유저의 요청에 수락. 
       // 이 과정에서 내 stream을 다른 유저에게 보내주고, answer가 발생하면 'stream'이라는 event를 통해 다른 유저의 stream을 받아옴
       call.answer(stream)
         const video = document.createElement('video')
+        const videoBx = document.createElement('div')
+        const nameTag = document.createElement('div')
         call.on('stream', userVideoStream => { // 다른 유저의 stream을 내 브라우저에 추가하는 콜백 함수가 실행됨
-          addVideoStream(video, userVideoStream) 
+          addVideoStream(videoBx, nameTag, video, "받아온아이디", userVideoStream) 
         })
     })
 
     // 'userConnected' event가 발생하면 서버로부터 새로 접속한 유저의 userId를 받아온 후 call 요청을 보냄
     socket.on('userConnected', (userId) => {
-        $('ul').append(`<font color=#CC3B33>${userId} 입장</font></br>`) // 채팅창에 append
-        setTimeout(() => {connectToNewUser(userId, stream)}, 1000)
+      setTimeout(() => {connectToNewUser(userId, stream)}, 1000)
     })
 })
 
 // 유저가 나가면 socket.io에서는 자동으로 'disconnect' event를 발생시킴. 다른 유저의 stream을 close시킴. 
 socket.on('userDisconnected', userId => {
-    $('ul').append(`<font color=#CC3B33>${userId} 퇴장</font></br>`) // 채팅창에 append
     if (peers[userId]) peers[userId].close()
   })
 
 // 새로운 유저가 접속하면 그 유저의 stream을 내 브라우저에 추가하기 위해 요청을 보냄 (peer.call)
 function connectToNewUser(userId, stream) {
     const call = peer.call(userId, stream) 
+    const videoBx = document.createElement('div')
+    const nameTag = document.createElement('div')
     const video = document.createElement('video') // 다른 유저를 위해 video element를 생성
     // 상대 유저가 answer했을 때 'stream' event가 발생되는데,
     // 이를 통해 상대 유저의 stream을 받아오고 내 화면에 추가시킴
     call.on('stream', userVideoStream => { 
-        addVideoStream(video, userVideoStream)
+        addVideoStream(videoBx, nameTag, video, userId, userVideoStream)
     })
     // 상대가 나가서 상대의 stream에 대해 'close' event가 발생하면 상대의 video를 제거하는 콜백 함수가 실행됨
     call.on('close', () => {
       //video.remove()
-      removeVideoStream(video, userVideoStream)
+      removeVideoStream(video, stream)
     })
 
     peers[userId] = call
 }
 
-function addVideoStream(video, stream){
+function addVideoStream(videoBx, nameTag, video, userId, stream){
+    let nameText = document.createTextNode(userId);
+    nameTag.className = 'nameTag';
+    if(!nameTag.hasChildNodes())nameTag.appendChild(nameText);
+
     video.srcObject = stream
     video.addEventListener('loadedmetadata', () => {
         video.play()
     })
-    videoGrid.append(video)
-    gridArray();
+
+    videoBx.append(nameTag);
+    videoBx.append(video);
+
+    videoGrid.append(videoBx);
 }
 
 function removeVideoStream(video, stream){
     video.srcObject = stream
-    videoGrid.remove(video)
-    gridArray();
+    const videoParent = video.parentNode;
+    console.log(videoParent);
+    //videoGrid.remove(videoParent)
 }
 
-function gridArray(){
-  var mainGrid = document.getElementById('main__videos');
-
-  console.log(videoGrid.childElementCount);
-  if(videoGrid.childElementCount>4){
-    mainGrid.style.gridTemplateRows = repeat(3, "300px");
-  }
-}
+/************************************ 채팅 송수신 ************************************/
 
 // 엔터 누르거나 전송 버튼 클릭 시 send() 함수 호출
 $('html').keydown((e) => { 
@@ -111,20 +115,81 @@ $('html').keydown((e) => {
 function send() {
   var message = document.getElementById('chat_message').value
   if(message.length !== 0) { 
-    socket.emit('message', message);
-      document.getElementById('chat_message').value = '' 
+    document.getElementById('chat_message').value = '' 
+
+    // 데이터 담아서 서버로 message 이벤트 emit
+    socket.emit('message', {type: 'message', message: message})
+
+    // 내 메시지는 나에게만 표시
+    var chat = document.getElementById('chat')
+    var msg = document.createElement('div')
+    var node = document.createTextNode(`${user_name} : ${message}`)
+    msg.classList.add('me')
+    msg.appendChild(node)
+    chat.appendChild(msg)
+    scrollToBottom()
   }
 }
 
-socket.on('creatMessage', (message, userName) => {
-    $('ul').append(`<li class="message"><b>${userName}</b></li><li> ${message}</li>`) // 채팅창에 append
-    scrollToBottom() // 자동스크롤
+socket.on('updateChat', (data) => {
+  var chat = document.getElementById('chat')
+  var msg = document.createElement('div')
+  var node = document.createTextNode(`${data.name} : ${data.message}`)
+  var className = ''
+
+    // 타입에 따라 적용할 클래스를 다르게 지정
+    switch(data.type) {
+      case 'message':
+        className = 'other'
+        break 
+  
+      case 'system':
+        className = 'system'
+        break
+    }
+
+    msg.classList.add(className)
+    msg.appendChild(node)
+    chat.appendChild(msg)
+    scrollToBottom()
 })
 
 const scrollToBottom = () => {
-    $('.main__chat_window').scrollTop($('.main__chat_window').prop("scrollHeight"));
+  $('#chat').scrollTop($('#chat').prop("scrollHeight"));
 }
 
+/************************************ 사용자 목록 ************************************/
+
+socket.on('updateMembers', (data) => {
+  var members = document.getElementById('memberList');
+
+  while(members.hasChildNodes()){
+    members.removeChild(members.firstChild)
+  }
+  
+  for(var i=0; i<data.num; i++) {
+    var node = document.createTextNode(`${data.members[i]}`)
+    var member = document.createElement('a')
+    member.appendChild(node)
+    members.appendChild(member)
+  }
+})
+
+function memberList() {
+   document.getElementById("memberList").classList.toggle("show")
+}
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+      var dropdowns = document.getElementsByClassName("dropdown__content")
+      var i
+      for (i = 0; i < dropdowns.length; i++) {
+         var openDropdown = dropdowns[i]
+         if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show')
+            }
+         }
+      }
+    }
 
 /************************************ 버튼 기능 함수들 ************************************/
 
@@ -225,9 +290,19 @@ const setPlayVideo = () => {
       speechContent += transcript;
       console.log(speechContent);
     }
-    // Reset variables and emit on chat
-    socket.emit('message', speechContent); 
+
+    // 데이터 담아서 서버로 message 이벤트 emit
+    socket.emit('message', {type: 'message', message: speechContent})
+
+    // 내 메시지는 나에게만 표시
+    var chat = document.getElementById('chat')
+    var msg = document.createElement('div')
+    var node = document.createTextNode(`${user_name} : ${speechContent}`)
+    msg.classList.add('me')
+    msg.appendChild(node)
+    chat.appendChild(msg)
     speechContent = '';
+    scrollToBottom()
   };
 
   recognition.onstart = function() {
