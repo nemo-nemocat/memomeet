@@ -79,21 +79,33 @@ video {
     flex-direction: column;
 }
 
-.main__header {
-    padding-top: 5px;
-    color: #F5F5F5;
-    text-align: center;
-}
-
-.main__chat_window {
+#chat {
     flex-grow: 1;
     overflow-y: auto;
 }
-
-.messages{
-    color: white;
-    list-style: none;
+  
+/* 메시지 스타일링 시작*/
+.system {
+    width: 90%;
+    margin: auto;
+    color: red;
+    margin-top: 10px;
 }
+
+.me {
+    width: 90%;
+    margin: auto;
+    color: blue;
+    margin-top: 10px;
+}
+
+.other {
+    width: 90%;
+    margin: auto;
+    color: white;
+    margin-top: 10px;
+}
+/* 메시지 스타일링 끝*/
 
 .main__message_container {
     padding: 22px 12px;
@@ -122,3 +134,42 @@ video {
 .unmute, .stop {
     color: #CC3B33;
 }
+
+.dropbtn {
+    background-color:#ffc31e;
+    color: black;
+    padding: 10px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 0.5em;
+  }
+  
+  .dropbtn:hover, .dropbtn:focus {
+    background-color: #a07b17;
+  }
+  
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .dropdown__content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 100px;
+    overflow: auto;
+  }
+  
+  .dropdown__content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+    
+  .show {display: block;}
