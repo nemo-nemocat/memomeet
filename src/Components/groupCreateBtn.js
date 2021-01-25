@@ -59,6 +59,12 @@ export default function GroupCreateBtn() {
         }
     }
 
+    const onKeyPress = (e) => {
+        if (e.key == 'Enter') {
+            groupCreate();
+        }
+      }
+
     return (
         <div>
             <Button variant="contained" color="secondary" size="large" onClick={clickCreateOpen}>
@@ -69,9 +75,9 @@ export default function GroupCreateBtn() {
             <Dialog open={createOpen} onClose={createClose} aria-labelledby="create-group-dialog">
                 <DialogTitle id="search-group-dialog">Create Group</DialogTitle>
                 <DialogContent>
-                    <TextField autoFocus margin="dense" id="name" label="New Group Name" type="string" fullWidth value={group_name} onChange={({ target: { value } }) => setGroupName(value)} />
-                    <TextField margin="dense" id="pw" label="New Group Password" type="password" fullWidth value={group_pw} onChange={({ target: { value } }) => setGroupPw(value)} />
-                    <TextField margin="dense" id="pw_check" label="Password Check" type="password" fullWidth value={pw_check} onChange={({ target: { value } }) => setPwCheck(value)} />
+                    <TextField autoFocus margin="dense" id="name" label="New Group Name" type="string" fullWidth value={group_name} onChange={({ target: { value } }) => setGroupName(value)} onKeyPress={onKeyPress} />
+                    <TextField margin="dense" id="pw" label="New Group Password" type="password" fullWidth value={group_pw} onChange={({ target: { value } }) => setGroupPw(value)} onKeyPress={onKeyPress} />
+                    <TextField margin="dense" id="pw_check" label="Password Check" type="password" fullWidth value={pw_check} onChange={({ target: { value } }) => setPwCheck(value)} onKeyPress={onKeyPress} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={createClose} color="secondary" variant="contained">

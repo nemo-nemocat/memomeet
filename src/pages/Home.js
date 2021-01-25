@@ -69,6 +69,12 @@ export default function SignIn() {
     } 
   };
 
+  const onKeyPress = (e) => {
+    if (e.key == 'Enter') {
+      handleClick();
+    }
+  }
+
   return (
     <Container component="main" style={{width:400, height: window.innerHeight}}>
       <CssBaseline />
@@ -91,6 +97,7 @@ export default function SignIn() {
             value={userid}
             size={isHyomin ? "medium" : "small"}
             onChange={({ target: { value } }) => setUserid(value)}
+            onKeyPress={onKeyPress}
           />
           <TextField
             variant="outlined"
@@ -105,6 +112,7 @@ export default function SignIn() {
             value={pw}
             size={isHyomin ? "medium" : "small"}
             onChange={({ target: { value } }) => setPw(value)}
+            onKeyPress={onKeyPress}
           />
           <Button
             variant= "contained"
