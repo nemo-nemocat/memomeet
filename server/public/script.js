@@ -123,7 +123,7 @@ function send() {
   }
 }
 
-socket.on('update', (data) => {
+socket.on('updateChat', (data) => {
   var chat = document.getElementById('chat')
   var msg = document.createElement('div')
   var node = document.createTextNode(`${data.name} : ${data.message}`)
@@ -151,6 +151,36 @@ const scrollToBottom = () => {
   $('#chat').scrollTop($('#chat').prop("scrollHeight"));
 }
 
+socket.on('updateMembers', (data) => {
+  var members = document.getElementById('memberList');
+
+  while(members.hasChildNodes()){
+    members.removeChild(members.firstChild)
+  }
+  
+  for(var i=0; i<data.num; i++) {
+    var node = document.createTextNode(`${data.members[i]}`)
+    var member = document.createElement('a')
+    member.appendChild(node)
+    members.appendChild(member)
+  }
+})
+
+function memberList() {
+   document.getElementById("memberList").classList.toggle("show")
+}
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+      var dropdowns = document.getElementsByClassName("dropdown__content")
+      var i
+      for (i = 0; i < dropdowns.length; i++) {
+         var openDropdown = dropdowns[i]
+         if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show')
+            }
+         }
+      }
+    }
 
 /************************************ 버튼 기능 함수들 ************************************/
 
