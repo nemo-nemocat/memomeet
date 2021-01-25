@@ -19,7 +19,6 @@ peer.on('open', peerid => {
   user_id = USER_ID
   user_name = USER_NAME
   console.log('[PEER CONNECTED] ' + room_id, user_id, user_name)
-  $('ul').append(`<font color=#CC3B33>${user_name}님 하이</font></br>`) // 채팅창에 append
   socket.emit('joinRoom', room_id, peerid, user_name)
 })
 
@@ -51,14 +50,12 @@ navigator.mediaDevices.getUserMedia({
 
     // 'userConnected' event가 발생하면 서버로부터 새로 접속한 유저의 userId를 받아온 후 call 요청을 보냄
     socket.on('userConnected', (userId) => {
-        $('ul').append(`<font color=#CC3B33>${userId} 입장</font></br>`) // 채팅창에 append
-        setTimeout(() => {connectToNewUser(userId, stream)}, 1000)
+      setTimeout(() => {connectToNewUser(userId, stream)}, 1000)
     })
 })
 
 // 유저가 나가면 socket.io에서는 자동으로 'disconnect' event를 발생시킴. 다른 유저의 stream을 close시킴. 
 socket.on('userDisconnected', userId => {
-    $('ul').append(`<font color=#CC3B33>${userId} 퇴장</font></br>`) // 채팅창에 append
     if (peers[userId]) peers[userId].close()
   })
 
@@ -105,6 +102,8 @@ function removeVideoStream(video, stream){
     //videoGrid.remove(videoParent)
 }
 
+/************************************ 채팅 송수신 ************************************/
+
 // 엔터 누르거나 전송 버튼 클릭 시 send() 함수 호출
 $('html').keydown((e) => { 
     if (e.which == 13){
@@ -116,19 +115,81 @@ $('html').keydown((e) => {
 function send() {
   var message = document.getElementById('chat_message').value
   if(message.length !== 0) { 
-    socket.emit('message', message);
-      document.getElementById('chat_message').value = '' 
+    document.getElementById('chat_message').value = '' 
+
+    // 데이터 담아서 서버로 message 이벤트 emit
+    socket.emit('message', {type: 'message', message: message})
+
+    // 내 메시지는 나에게만 표시
+    var chat = document.getElementById('chat')
+    var msg = document.createElement('div')
+    var node = document.createTextNode(`${user_name} : ${message}`)
+    msg.classList.add('me')
+    msg.appendChild(node)
+    chat.appendChild(msg)
+    scrollToBottom()
   }
 }
 
-socket.on('creatMessage', (message, userName) => {
-    $('ul').append(`<li class="message"><b>${userName}</b></li><li> ${message}</li>`) // 채팅창에 append
-    scrollToBottom() // 자동스크롤
+socket.on('updateChat', (data) => {
+  var chat = document.getElementById('chat')
+  var msg = document.createElement('div')
+  var node = document.createTextNode(`${data.name} : ${data.message}`)
+  var className = ''
+
+    // 타입에 따라 적용할 클래스를 다르게 지정
+    switch(data.type) {
+      case 'message':
+        className = 'other'
+        break 
+  
+      case 'system':
+        className = 'system'
+        break
+    }
+
+    msg.classList.add(className)
+    msg.appendChild(node)
+    chat.appendChild(msg)
+    scrollToBottom()
 })
 
 const scrollToBottom = () => {
-    $('.main__chat_window').scrollTop($('.main__chat_window').prop("scrollHeight"));
+  $('#chat').scrollTop($('#chat').prop("scrollHeight"));
 }
+
+/************************************ 사용자 목록 ************************************/
+
+socket.on('updateMembers', (data) => {
+  var members = document.getElementById('memberList');
+
+  while(members.hasChildNodes()){
+    members.removeChild(members.firstChild)
+  }
+  
+  for(var i=0; i<data.num; i++) {
+    var node = document.createTextNode(`${data.members[i]}`)
+    var member = document.createElement('a')
+    member.appendChild(node)
+    members.appendChild(member)
+  }
+})
+
+function memberList() {
+   document.getElementById("memberList").classList.toggle("show")
+}
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+      var dropdowns = document.getElementsByClassName("dropdown__content")
+      var i
+      for (i = 0; i < dropdowns.length; i++) {
+         var openDropdown = dropdowns[i]
+         if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show')
+            }
+         }
+      }
+    }
 
 /************************************ 버튼 기능 함수들 ************************************/
 
@@ -229,9 +290,19 @@ const setPlayVideo = () => {
       speechContent += transcript;
       console.log(speechContent);
     }
-    // Reset variables and emit on chat
-    socket.emit('message', speechContent); 
+
+    // 데이터 담아서 서버로 message 이벤트 emit
+    socket.emit('message', {type: 'message', message: speechContent})
+
+    // 내 메시지는 나에게만 표시
+    var chat = document.getElementById('chat')
+    var msg = document.createElement('div')
+    var node = document.createTextNode(`${user_name} : ${speechContent}`)
+    msg.classList.add('me')
+    msg.appendChild(node)
+    chat.appendChild(msg)
     speechContent = '';
+    scrollToBottom()
   };
 
   recognition.onstart = function() {

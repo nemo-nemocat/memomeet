@@ -18,7 +18,6 @@
 </head>
 
 <body>
-
     <div class="main">
         <div class="main__left">
             <div class="main__videos" id="main__videos">
@@ -32,7 +31,7 @@
                       </div> 
                      <span>Mic off</span>
                    </div>
-                   <div onclick="playStop()" class="main__controls__button main__video_button" >
+                   <div onclick="playStop()" class="main__controls__button main__video_button">
                      <div class="main__controls__button_icon">
                         <i class="fas fa-video fa-lg"></i>
                       </div>
@@ -49,16 +48,13 @@
                 </div>
              </div>
         </div>
-
         <div class="main__right">
-
-            <div class="main__header">
-               <h3>Chat</h3>
-            </div>
-            <div class="main__chat_window">
-               <ul class="messages">
-
-               </ul>
+            <div class="dropdown">
+               <button onclick="memberList()" class="dropbtn">Member List</button>
+               <div id="memberList" class="dropdown__content">
+               </div>
+             </div>
+            <div id = "chat">
             </div>
             <div class="main__message_container">
                <input id="chat_message" type="text" placeholder="메시지를 입력하세요"></input>
@@ -70,7 +66,6 @@
             </div>
          </div>
       </div>
-
       <script src="script.js"></script>
 </body>
 

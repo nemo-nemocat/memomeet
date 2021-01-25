@@ -47,18 +47,17 @@ io.on('connection', socket => {
 
     socket.join(room)
     socket.to(room).broadcast.emit('userConnected', id)
-    //console.log(rooms)
+    io.to(room).emit('updateChat', {type: 'system', name: 'SYSTEM', message: name + '님 입장'}) // room 안의 모두에게
+    io.to(room).emit('updateMembers', {num: rooms[room].num, members: rooms[room].members}) // room 안의 모두에게
+    console.log(rooms)
   })
 
-  socket.on('message', (message) => {
-    chat = `${name}: ${message}`;
-    contentArray.push(message);
-    chatArray.push(chat);
-    io.to(room).emit('creatMessage', message, name)
+  socket.on('message', (data) => {
+    data.name = name
+    socket.to(room).broadcast.emit('updateChat', data) // room 안의 나를 제외한 모두에게
   })
 
   socket.on('disconnect', () => {
-    socket.to(room).broadcast.emit('userDisconnected', id)
     rooms[room].num--
     rooms[room].members.pop(rooms[room].members.indexOf(name),1)
     if(rooms[room].num == 0){
@@ -74,7 +73,11 @@ io.on('connection', socket => {
         else console.log('success input db');
       });
     }
-    //console.log(rooms)
+
+    socket.to(room).broadcast.emit('userDisconnected', id)
+    io.to(room).emit('updateChat', {type: 'system', name: 'SYSTEM', message: name + '님 퇴장'}) // room 안의 모두에게
+    io.to(room).emit('updateMembers', {num: rooms[room].num, members: rooms[room].members}) // room 안의 모두에게
+    console.log(rooms)
   })
 })
 
