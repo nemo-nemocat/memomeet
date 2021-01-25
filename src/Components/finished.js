@@ -14,6 +14,13 @@ const useStyles = makeStyles((theme) => ({
         height:"90%",
         margin:"1%"
     },
+    list:{
+        height:"95%",
+        overflow: "auto",
+        '&::-webkit-scrollbar' : {
+            display : 'none'
+        }
+    },
     Chip: {
         backgroundColor: "#ffc31e",
         marginTop:"1%",
@@ -31,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius:10,
         padding:0,
         marginBottom:"3%",
-        height:window.innerHeight>700 ? "22%" : "27%"
+        height:window.innerHeight>700 ? "24%" : "27%"
     },
     scriptBtn:{
         backgroundColor:"#808080",
@@ -126,7 +133,7 @@ export default function Finished(prop) {
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Finished</span>   
                 </Typography>
                 <div style={{backgroundColor:"#eaeaea", width:"90%", height:"85%",borderRadius:10, margin:"auto"}}>
-                <List style={{height:"100%", overflow:"auto"}}>
+                <List className={classes.list}>
                     {list && list.map(data => (
                         <ListItem key={data.meet_id} className={classes.data}>
                             <div style={{display:'block', width:"80%", margin:"2%"}}>

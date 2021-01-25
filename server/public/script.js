@@ -9,6 +9,23 @@ const peer = new Peer(USER_ID, { // peer 고유 id (자동생성) 대신 user id
 
 const peers = {}
 
+let room_id, user_id, user_name
+// peer 서버와 정상적으로 통신이 된 경우 'open' event가 발생.
+// 'open' event가 발생하면 유저를 room에 join시킴.
+peer.on('open', peerid => {
+  room_id = ROOM_ID
+  user_id = USER_ID
+  user_name = USER_NAME
+  console.log('[PEER CONNECTED] ' + room_id, user_id, user_name)
+  $('ul').append(`<font color=#CC3B33>${user_name}님 하이</font></br>`) // 채팅창에 append
+  socket.emit('joinRoom', room_id, peerid, user_name)
+})
+
+// 소켓 연결 코드
+socket.on('connect', function() {
+  console.log('[SOCKET CONNECTED] ' + room_id, user_id, user_name)
+})
+
 let myVideoStream
 // 유저의 브라우저로부터 Media Device들을 받아오는 과정
 navigator.mediaDevices.getUserMedia({ 
@@ -51,6 +68,7 @@ peer.on('open', peerid => {
   console.log('[PEER CONNECTED] ' + room_id, user_id, user_name)
   $('ul').append(`<font color=#CC3B33>${user_name}님 하이</font></br>`) // 채팅창에 append
   socket.emit('joinRoom', room_id, peerid, user_name)
+
 })
 
 // 소켓 연결 코드
@@ -86,11 +104,22 @@ function addVideoStream(video, stream){
         video.play()
     })
     videoGrid.append(video)
+    gridArray();
 }
 
 function removeVideoStream(video, stream){
     video.srcObject = stream
     videoGrid.remove(video)
+    gridArray();
+}
+
+function gridArray(){
+  var mainGrid = document.getElementById('main__videos');
+
+  console.log(videoGrid.childElementCount);
+  if(videoGrid.childElementCount>4){
+    mainGrid.style.gridTemplateRows = repeat(3, "300px");
+  }
 }
 
 // 엔터 누르거나 전송 버튼 클릭 시 send() 함수 호출
@@ -110,13 +139,14 @@ function send() {
 }
 
 socket.on('creatMessage', (message, userName) => {
-    $('ul').append(`<li class="message"><b>${userName}</b> ${message}</li>`) // 채팅창에 append
+    $('ul').append(`<li class="message"><b>${userName}</b></li><li> ${message}</li>`) // 채팅창에 append
     scrollToBottom() // 자동스크롤
 })
 
 const scrollToBottom = () => {
     $('.main__chat_window').scrollTop($('.main__chat_window').prop("scrollHeight"));
 }
+
 
 /************************************ 버튼 기능 함수들 ************************************/
 
@@ -164,9 +194,8 @@ const setPlayVideo = () => {
   document.querySelector('.main__video_button').innerHTML = html;
 }
 
-  // *********************
-  // *** voice -> chat ***
-  // *********************
+/************************************ 음성 인식 시작 ************************************/
+
   try{
     var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     var recognition = new SpeechRecognition();
@@ -177,7 +206,7 @@ const setPlayVideo = () => {
     alert('Google Chrome에서만 동작합니다.')
   }
   
-  var noteContent = '';
+  var speechContent = '';
 
   /*-----------------------------
         Voice Recognition 
@@ -186,6 +215,8 @@ const setPlayVideo = () => {
   // When true, the silence period is longer (about 15 seconds),
   // allowing us to keep recording even when the user pauses. 
   recognition.continuous = true;
+  recognition.lang = "ko-KR";
+  var recognizing = false;
 
   // This block is called every time the Speech APi captures a line. 
   // 음성 인식 결과 처리
@@ -198,41 +229,65 @@ const setPlayVideo = () => {
     // Get a transcript of what was said.
     var transcript = event.results[current][0].transcript;
 
+    if(typeof(event.results) == 'undefined'){
+      console.log("undefined start")
+      recognition.stop()
+      recognizing = false
+      recognition.start()
+      console.log("undefined end")
+      return;  
+    }
+
     // Add the current transcript to the contents of our Note.
     // There is a weird bug on mobile, where everything is repeated twice.
     // There is no official solution so far so we have to handle an edge case.
     var mobileRepeatBug = (current == 1 && transcript == event.results[0][0].transcript);
 
     if(!mobileRepeatBug) {
-      noteContent += transcript;
-      console.log(noteContent);
+      speechContent += transcript;
+      console.log(speechContent);
     }
     // Reset variables and emit on chat
-    socket.emit('message', noteContent); 
-    noteContent = '';
+    socket.emit('message', speechContent); 
+    speechContent = '';
   };
 
   recognition.onstart = function() {
     console.log('Voice recognition activated.')
+    recognizing = true;
   }
 
-  recognition.onspeechend = function () {
-    console.log('Voice recognition turned itself off.')
+  recognition.onend = function () {
+    console.log("ONEND")
+    recognition.stop()
+    recognizing = false
+    if(myVideoStream.getAudioTracks()[0].enabled){
+      recognition.start()
+    }
+    //console.log('Voice recognition turned itself off.')
   }
 
   recognition.onerror = function(event) {
-    if(event.error == 'no-speech') {
-      console.log('No speech was detected.')
-    };
+    console.log("ERROR")
+    recognizing = false
+    recognition.stop()
+    if (event.error == 'no-speech') {
+      console.log("NO SPEECH")
+    }
+    if (event.error == 'audio-capture') {
+        console.log("Capture Problem")
+    }
+    if (event.error == 'not-allowed') {
+        if (event.timeStamp - start_timestamp < 100) {
+            console.log("Block")
+        } else {
+            console.log("Deny")
+        }
+    }
   }
 
   // 음성 인식 트리거
-  function start() {
-    recognition.lang = "ko-KR";
-    recognition.start();
-  }
-  
-  start();
+  recognition.start();
 
    /*-----------------------------
           Append Time

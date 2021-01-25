@@ -24,6 +24,14 @@ const useStyles = makeStyles((theme) => ({
     minHeight: window.innerHeight,
     backgroundColor: "#ffc31e",
   },
+  list:{
+    marginBottom:"5%",
+    height:"80%",
+    overflow: "auto",
+    '&::-webkit-scrollbar' : {
+        display : 'none'
+    }
+  },
   clickGroup: {
     backgroundColor: "#ffffff"
   },
@@ -143,7 +151,7 @@ export default function InteractiveList() {
         </Typography>
         <SearchBtn />
         <div style={{height:"84%"}}>
-          <List component="nav" style={{ marginBottom: "5%", height:"80%", overflow:"auto"}}>
+          <List component="nav" className={classes.list}>
             {groups && groups.map(group => (
               <ListItem button key={group.group_id} onClick={() => clickHandler(group.group_id)} 
                 style={{pointerEvents: (activeTab === group.group_id) ? "none" : "auto"}}

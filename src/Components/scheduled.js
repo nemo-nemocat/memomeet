@@ -14,6 +14,13 @@ const useStyles = makeStyles((theme) => ({
         height:"90%",
         margin:"1%"
     },
+    list:{
+        height:"94%",
+        overflow: "auto",
+        '&::-webkit-scrollbar' : {
+            display : 'none'
+        }
+    },
     Chip: {
         backgroundColor: "#ffc31e",
         marginTop:"1%",
@@ -120,7 +127,7 @@ export default function Scheduled(prop) {
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Scheduled</span>   
                 </Typography>
                 <div style={{backgroundColor:"#eaeaea", width:"90%", height:"85%",borderRadius:10, margin:"auto"}}>
-                <List style={{height:"100%", overflow:"auto"}}>
+                <List className={classes.list}>
                     {list && list.map(data => (
                         <ListItem key={data.meet_id} className={classes.data}>
                             <div style={{display:'block',width:"80%", margin:"2%"}}>
