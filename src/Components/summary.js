@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {Paper, Typography, Chip, Grid} from '@material-ui/core';
 import EventIcon from '@material-ui/icons/Event';
 import ScheduleIcon from '@material-ui/icons/Schedule';
+import ChipInput from 'material-ui-chip-input';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -24,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
     },
     TagChip: {
         marginLeft:"1%",
+        marginTop:"0.5%"
     },
     data: {
         overflow:"auto",
@@ -33,6 +35,19 @@ const useStyles = makeStyles((theme) => ({
         }
     },
 }));
+
+const chipRenderer = ({ chip, className, handleClick, handleDelete }, key) => (
+    <Chip
+      className={className}
+      key={key}
+      label={chip}
+      onClick={handleClick}
+      onDelete={handleDelete}
+      size="small"
+    />
+  );
+  
+  const defaultValue = ["주제 선정", "영어 동화", "화상 회의"];
 
 export default function Script(prop) {
     const classes = useStyles();
@@ -63,16 +78,14 @@ export default function Script(prop) {
             })
             .catch(error => console.log('error', error))
       }, [prop]);
-   
+
     return (
         <div className={classes.root}>
             <Typography variant="h6" align="left">
             <span style={{fontWeight:"bold", marginLeft:"5%"}}>회의명</span>
                 <Chip className={classes.Chip} id="meet_day" icon={<EventIcon/>} label="2021-01-21" />
                 <Chip className={classes.Chip} id="meet_time" icon={<ScheduleIcon/>} label="13:00"/>
-                <Chip className={classes.TagChip} variant="outlined" size="small" label="주제 선정"/>
-                <Chip className={classes.TagChip} variant="outlined" size="small" label="영어동화"/>
-                <Chip className={classes.TagChip} variant="outlined" size="small" label="화상회의"/>
+                <ChipInput className={classes.TagChip} chipRenderer={chipRenderer} defaultValue={defaultValue} />
             </Typography>
             
             <Paper elevation={3} className={classes.paper}>
