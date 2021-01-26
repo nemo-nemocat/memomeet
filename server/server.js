@@ -14,8 +14,12 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname+'/build/index.html'));
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "build")));
+}
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '/build/index.html'));
 });
 
 /************************************ 화상채팅용 코드 시작 ************************************/
