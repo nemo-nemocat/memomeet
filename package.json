@@ -37,11 +37,10 @@
     "yarn": "^1.22.10"
   },
   "scripts": {
-    "start": "cd server && nodemon server.js",
-    "dev": "concurrently  \"npm run dev:server\" \"npm run dev:client\"",
-    "dev:server": "npm start",
-    "dev:client": "npm start",
-    "heroku-postbuild": "npm install && npm run build"
+    "start": "node server.js",
+    "heroku-postbuild": "npm install && npm run build",
+    "server": "cd server && nodemon server.js",
+    "dev": "concurrently  \"yarn start\" \"npm run server\""
   },
   "eslintConfig": {
     "extends": [
