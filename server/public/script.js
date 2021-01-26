@@ -142,19 +142,37 @@ function getTime(){
   var today = new Date();
   var h = today.getHours();
   var m = today.getMinutes();
-  var s = today.getSeconds();
   // add a zero in front of numbers<10
   m = checkTime(m);
-  s = checkTime(s);
-  var time = h + ":" + m + ":" + s + "\n" 
+  var time = h + ":" + m;
   return time;
 }
 
 socket.on('updateChat', (data) => {
   var chat = document.getElementById('chat')
   var msg = document.createElement('div')
-  var node = document.createTextNode(`${data.name} ${data.time} ${data.message}`)
+  //var node = document.createTextNode(`${data.name} ${data.time} ${data.message}`)
   var className = ''
+  
+  if(data.type == "system"){
+    var node = document.createTextNode(`${data.name} ${data.time} ${data.message}`)
+    msg.appendChild(node)
+  }
+  else{
+    var part1 = document.createTextNode(`${data.name}`)
+    var part2 = document.createTextNode(` ${data.time}`)
+    var part3 = document.createTextNode(`${data.message}`)
+    var bold = document.createElement('strong')
+    //bold.style.fontWeight = "50"
+    var br = document.createElement('br')
+  
+    bold.appendChild(part1)
+    msg.appendChild(bold)
+    msg.appendChild(part2)
+    msg.appendChild(br)
+    msg.appendChild(part3)
+  }
+
 
     // 타입에 따라 적용할 클래스를 다르게 지정
     switch(data.type) {
@@ -171,7 +189,7 @@ socket.on('updateChat', (data) => {
     }
 
     msg.classList.add(className)
-    msg.appendChild(node)
+    //msg.appendChild(node)
     chat.appendChild(msg)
     scrollToBottom()
 })
