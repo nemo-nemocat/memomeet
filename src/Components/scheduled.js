@@ -41,7 +41,10 @@ const useStyles = makeStyles((theme) => ({
         width:"25%",  
         borderTopRightRadius:10, 
         borderBottomRightRadius:10,
-        textAlign: "center"
+        textAlign: "center",
+        "&:hover": {
+          backgroundColor: "#8c8c8c",
+        },
     },
     Icon: {
         width:"40%",
@@ -129,7 +132,7 @@ export default function Scheduled(prop) {
                 <List className={classes.list}>
                     {list && list.map(data => (
                         <ListItem key={data.meet_id} className={classes.data}>
-                            <div style={{display:'block',width:"80%", margin:"2%"}}>
+                            <div style={{display:'block',width:"81%", margin:"2%"}}>
                                 <div className={classes.ScheduledName}>
                                 <DeleteForever onClick={()=> handleDeleteIcon(data.meet_id)} style={{marginTop:"-2%"}} color="error"/>
                                 <span style={{fontWeight:"bold"}}>{data.meet_title}</span>

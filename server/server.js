@@ -8,6 +8,7 @@ const cors = require('cors');
 const mysqlDB = require("./mysql-db");  //db 연결
 const shortid = require ('shortid'); // unique id 생성
 const path = require('path');
+const PythonShell = require('python-shell'); // python script 실행
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -93,7 +94,33 @@ io.on('connection', socket => {
   })
 })
 
-/************************************ 화상채팅용 코드 끝 ************************************/
+/************************************ Python 스크립트 실행 code ************************************/
+
+app.get('/keywordrank', function(req, res){
+  var meet_id="test"
+  var sql = 'SELECT content FROM MEETSCRIPT WHERE meet_id=?';
+  mysqlDB.query(sql, meet_id, function(err, results){
+    if(err) return res.send({code:11, msg:`${err}`});
+
+    else{
+      var options ={
+        mode: "text",
+        pythonPath: '',
+        pythonOptions: ['-u'],
+        scriptPath: '',
+        args: results[0].content
+      }
+  
+      PythonShell.PythonShell.run('keywordrank.py', options, function (err, results) {
+        if (err) throw err;
+        console.log('results: %j', results);
+      });
+    } 
+  });
+})
+
+
+/************************************ Web server code ************************************/
 
 //login 요청
 app.post('/auth-login', function(req, res) {
