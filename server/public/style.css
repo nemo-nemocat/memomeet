@@ -101,14 +101,14 @@ video {
 .system {
     width: 90%;
     margin: auto;
-    color: red;
+    color: rgb(192, 78, 43);
     margin-top: 10px;
 }
 
 .me {
     width: 90%;
     margin: auto;
-    color: blue;
+    color: rgb(255, 208, 121);
     margin-top: 10px;
 }
 
@@ -144,10 +144,6 @@ video {
     color: red;
 }
 
-.unmute, .stop {
-    color: #CC3B33;
-}
-
 .dropbtn {
     background-color:#ffc31e;
     color: black;
@@ -173,7 +169,7 @@ video {
   .dropdown__content {
     display: none;
     position: absolute;
-    background-color: #f1f1f1;
+    background-color: white;
     min-width: 100px;
     overflow: auto;
   }
