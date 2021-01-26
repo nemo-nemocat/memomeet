@@ -37,7 +37,6 @@ navigator.mediaDevices.getUserMedia({
     audio: true
 }).then(stream => { // Media Device를 받아오는 데 성공하면 stream을 넘겨받을 수 있음
     myVideoStream = stream
-    user_id = USER_ID
     user_name = USER_NAME
     addVideoStream(myVideoBx, myNameTag, myVideo, user_name, stream) // 받아온 stream을 내 브라우저에 추가하는 함수
 
