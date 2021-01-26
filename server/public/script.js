@@ -84,6 +84,8 @@ function connectToNewUser(userId, userName, stream) {
 }
 
 function addVideoStream(videoBx, nameTag, video, userName, stream){
+    videoBx.style.marginRight = '10px';
+
     let nameText = document.createTextNode(userName);
     nameTag.className = 'nameTag';
     if(!nameTag.hasChildNodes())nameTag.appendChild(nameText);
@@ -97,13 +99,15 @@ function addVideoStream(videoBx, nameTag, video, userName, stream){
     videoBx.append(video);
 
     videoGrid.append(videoBx);
+
+    if(videoGrid.childElementCount>4) videoGrid.style.gridTemplateColumns = "1fr 1fr 1fr";
 }
 
 function removeVideoStream(video, stream){
-    video.srcObject = stream
+    video.srcObject = stream;
     const videoParent = video.parentNode;
-    console.log(videoParent);
-    //videoGrid.remove(videoParent)
+    videoGrid.removeChild(videoParent);
+    if(videoGrid.childElementCount<4) videoGrid.style.gridTemplateColumns = "1fr 1fr";
 }
 
 /************************************ 채팅 송수신 ************************************/
