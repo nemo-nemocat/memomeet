@@ -86,7 +86,7 @@ io.on('connection', socket => {
 
     else{
       socket.to(room).broadcast.emit('userDisconnected', id)
-      io.to(room).emit('updateChat', {type: 'system', name: 'SYSTEM', message: name + '님 퇴장'}) // room 안의 모두에게
+      io.to(room).emit('updateChat', {type: 'system', name: 'SYSTEM', time: '', message: name + '님 퇴장'}) // room 안의 모두에게
       io.to(room).emit('updateMembers', {num: rooms[room].num, members: rooms[room].members}) // room 안의 모두에게
     }
     console.log(rooms)
