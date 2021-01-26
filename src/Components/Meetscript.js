@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         marginLeft:"5%",
         width:"100%",
-        marginTop:"6.5%",
+        marginTop:"7%",
         height:"100%", 
         paddingTop:"1%",
         display: "block",
