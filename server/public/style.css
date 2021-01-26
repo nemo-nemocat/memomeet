@@ -20,13 +20,18 @@ body {
 
 .main__videos {
     flex-grow: 1;
-    background-color: black;
+    background-color: rgb(93, 93, 93);
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 10px;
 }
-  
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
 video {
     width: 300px;
     height: 300px;

@@ -38,8 +38,7 @@ const useStyles = makeStyles((theme) => ({
     startBtn:{
         backgroundColor:"#000000", 
         maxWidth:70,
-        width:"25%", 
-        height:"100%", 
+        width:"25%",  
         borderTopRightRadius:10, 
         borderBottomRightRadius:10,
         textAlign: "center"
