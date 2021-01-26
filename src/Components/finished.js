@@ -28,12 +28,13 @@ const useStyles = makeStyles((theme) => ({
         height:"10%"
     },
     ScriptChip: {
-        backgroundColor: "#aaaaaa",
+        backgroundColor: "#000000",
+        color: "#ffffff",
         marginTop:"1%",
         marginRight:"3%",
         height:"10%",
         "&:hover": {
-          backgroundColor: "#000000",
+          backgroundColor: "#8c8c8c",
           color: "white"
         },
     },
