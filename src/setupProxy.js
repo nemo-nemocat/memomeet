@@ -6,12 +6,4 @@ module.exports = function (app) {
         changeOrigin: true,
         ws: true,
     }));
-
-    // const wsProxy = createProxyMiddleware('/socket.io', {
-    //     target: 'ws://localhost:3002',
-    //     changeOrigin: true,
-    //     ws: true,
-    // });
-    // app.use(wsProxy);
-
 };

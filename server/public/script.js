@@ -238,6 +238,12 @@ const playStop = () => {
     myVideoStream.getVideoTracks()[0].enabled = true;
   }
 }
+
+const exit = () => {
+  if (confirm("회의에서 나가시겠습니까?")){
+    self.close()
+  }
+}
   
 const setMuteButton = () => { 
   const html = `<i class="fas fa-microphone fa-lg"></i><span>Mic off</span>`
