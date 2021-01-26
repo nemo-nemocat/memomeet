@@ -24,6 +24,9 @@ peer.on('open', peerid => {
 
 // 소켓 연결 코드
 socket.on('connect', function() {
+  room_id = ROOM_ID
+  user_id = USER_ID
+  user_name = USER_NAME
   console.log('[SOCKET CONNECTED] ' + room_id, user_id, user_name)
 })
 
@@ -34,7 +37,8 @@ navigator.mediaDevices.getUserMedia({
     audio: true
 }).then(stream => { // Media Device를 받아오는 데 성공하면 stream을 넘겨받을 수 있음
     myVideoStream = stream
-    addVideoStream(myVideoBx, myNameTag, myVideo, user_id, stream) // 받아온 stream을 내 브라우저에 추가하는 함수
+    user_name = USER_NAME
+    addVideoStream(myVideoBx, myNameTag, myVideo, user_name, stream) // 받아온 stream을 내 브라우저에 추가하는 함수
 
     peer.on('call', call => { // 이후 누군가 나에게 요청을 보내면 받기 위해 event를 on해줌
       // 나에게 응답을 준 다른 유저의 요청에 수락. 
@@ -44,13 +48,13 @@ navigator.mediaDevices.getUserMedia({
         const videoBx = document.createElement('div')
         const nameTag = document.createElement('div')
         call.on('stream', userVideoStream => { // 다른 유저의 stream을 내 브라우저에 추가하는 콜백 함수가 실행됨
-          addVideoStream(videoBx, nameTag, video, "받아온아이디", userVideoStream) 
+          addVideoStream(videoBx, nameTag, video, "받아온 이름", userVideoStream) 
         })
     })
 
     // 'userConnected' event가 발생하면 서버로부터 새로 접속한 유저의 userId를 받아온 후 call 요청을 보냄
-    socket.on('userConnected', (userId) => {
-      setTimeout(() => {connectToNewUser(userId, stream)}, 1000)
+    socket.on('userConnected', (userId, userName) => {
+      setTimeout(() => {connectToNewUser(userId, userName, stream)}, 1000)
     })
 })
 
@@ -60,7 +64,7 @@ socket.on('userDisconnected', userId => {
   })
 
 // 새로운 유저가 접속하면 그 유저의 stream을 내 브라우저에 추가하기 위해 요청을 보냄 (peer.call)
-function connectToNewUser(userId, stream) {
+function connectToNewUser(userId, userName, stream) {
     const call = peer.call(userId, stream) 
     const videoBx = document.createElement('div')
     const nameTag = document.createElement('div')
@@ -68,7 +72,7 @@ function connectToNewUser(userId, stream) {
     // 상대 유저가 answer했을 때 'stream' event가 발생되는데,
     // 이를 통해 상대 유저의 stream을 받아오고 내 화면에 추가시킴
     call.on('stream', userVideoStream => { 
-        addVideoStream(videoBx, nameTag, video, userId, userVideoStream)
+        addVideoStream(videoBx, nameTag, video, userName, userVideoStream)
     })
     // 상대가 나가서 상대의 stream에 대해 'close' event가 발생하면 상대의 video를 제거하는 콜백 함수가 실행됨
     call.on('close', () => {
@@ -79,8 +83,10 @@ function connectToNewUser(userId, stream) {
     peers[userId] = call
 }
 
-function addVideoStream(videoBx, nameTag, video, userId, stream){
-    let nameText = document.createTextNode(userId);
+function addVideoStream(videoBx, nameTag, video, userName, stream){
+    videoBx.style.marginRight = '10px';
+
+    let nameText = document.createTextNode(userName);
     nameTag.className = 'nameTag';
     if(!nameTag.hasChildNodes())nameTag.appendChild(nameText);
 
@@ -93,13 +99,15 @@ function addVideoStream(videoBx, nameTag, video, userId, stream){
     videoBx.append(video);
 
     videoGrid.append(videoBx);
+
+    if(videoGrid.childElementCount>4) videoGrid.style.gridTemplateColumns = "1fr 1fr 1fr";
 }
 
 function removeVideoStream(video, stream){
-    video.srcObject = stream
+    video.srcObject = stream;
     const videoParent = video.parentNode;
-    console.log(videoParent);
-    //videoGrid.remove(videoParent)
+    videoGrid.removeChild(videoParent);
+    if(videoGrid.childElementCount<4) videoGrid.style.gridTemplateColumns = "1fr 1fr";
 }
 
 /************************************ 채팅 송수신 ************************************/

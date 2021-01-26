@@ -69,7 +69,7 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
     rooms[room].num--
-    rooms[room].members.pop(rooms[room].members.indexOf(name),1)
+    rooms[room].members.splice(rooms[room].members.indexOf(name),1)
     if(rooms[room].num == 0){
       delete rooms[room]
 

@@ -5,7 +5,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import EventIcon from '@material-ui/icons/Event';
 import ScheduleIcon from '@material-ui/icons/Schedule';
-import ScriptIcon from '../Icons/script.png';
+import DescriptionIcon from '@material-ui/icons/Description';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 
 const useStyles = makeStyles((theme) => ({
@@ -27,6 +27,16 @@ const useStyles = makeStyles((theme) => ({
         marginRight:"3%",
         height:"10%"
     },
+    ScriptChip: {
+        backgroundColor: "#aaaaaa",
+        marginTop:"1%",
+        marginRight:"3%",
+        height:"10%",
+        "&:hover": {
+          backgroundColor: "#000000",
+          color: "white"
+        },
+    },
     TagChip: {
         marginRight:"1%",
         marginTop:"1%"
@@ -34,26 +44,11 @@ const useStyles = makeStyles((theme) => ({
     data:{
         backgroundColor:"#ffffff",
         width:"95%",
+        height: "auto",
         margin:"auto",
         borderRadius:10,
         padding:0,
         marginBottom:"3%",
-        height:window.innerHeight>700 ? "24%" : "27%"
-    },
-    scriptBtn:{
-        backgroundColor:"#808080",
-        maxWidth:80,
-        width:"25%", 
-        height:"100%", 
-        borderTopRightRadius:10, 
-        borderBottomRightRadius:10,
-        textAlign: "center"
-    },
-    Icon: {
-        width:"40%",
-        height: "40%",
-        marginTop: "15%",
-        marginBottom: "3%",
     },
     ScheduledName: {
         display: "flex",
@@ -124,6 +119,10 @@ export default function Finished(prop) {
             })
             .catch(error => console.log('error', error))
     }
+
+    const handleClickScript =(meet_id) => {
+        alert("회의 스크립트로 이동");
+    }
    
 
     return (
@@ -135,8 +134,8 @@ export default function Finished(prop) {
                 <div style={{backgroundColor:"#eaeaea", width:"90%", height:"85%",borderRadius:10, margin:"auto"}}>
                 <List className={classes.list}>
                     {list && list.map(data => (
-                        <ListItem key={data.meet_id} className={classes.data}>
-                            <div style={{display:'block', width:"80%", margin:"2%"}}>
+                        <ListItem key={data.meet_id} id='data' className={classes.data}>
+                            <div style={{display:'block', width:"100%", margin:"2%"}}>
                                 <div className={classes.ScheduledName}>
                                 <DeleteForever onClick={()=> handleDeleteIcon(data.meet_id)} style={{marginTop:"-2%"}} color="error"/>
                                 <span style={{fontWeight:"bold"}}>{data.meet_title}</span>
@@ -144,18 +143,13 @@ export default function Finished(prop) {
                                 <Grid>
                                     <Chip className={classes.Chip} id="meet_day" icon={<EventIcon/>} label={data.meet_day}/>
                                     <Chip className={classes.Chip} id="meet_time" icon={<ScheduleIcon/>} label={data.meet_time}/>
+                                    <Chip className={classes.ScriptChip} id="script" onClick={() => handleClickScript(data.meet_id)} icon={<DescriptionIcon/>} label="SCRIPT"/>
                                 </Grid>
-                                <Grid>
-                                    <Chip className={classes.TagChip} variant="outlined" size="small" label="주제 선정"/>
-                                    <Chip className={classes.TagChip} variant="outlined" size="small" label="영어동화"/>
-                                    <Chip className={classes.TagChip} variant="outlined" size="small" label="화상회의"/>
+                                <Grid id='chipgrid'>
+                                    <Chip className={classes.TagChip} variant="outlined" size="small" label="졸업프로젝트"/>
+                                    <Chip className={classes.TagChip} variant="outlined" size="small" label="졸업프로젝트"/>
+                                    <Chip className={classes.TagChip} variant="outlined" size="small" label="졸업프로젝트"/>
                                 </Grid>
-                            </div>
-                            <div className={classes.scriptBtn} onClick={() => handleEnterMeet(data.meet_id)}>
-                                <img src={ScriptIcon} className={classes.Icon} alt='ScriptIcon' />
-                                <Typography variant="button" align="center">
-                                    <span style={{color:"#FFFFFF"}}>Script</span>
-                                </Typography>
                             </div>
                         </ListItem>
                     ))}
