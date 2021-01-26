@@ -118,15 +118,34 @@ function send() {
     document.getElementById('chat_message').value = '' 
 
     // 데이터 담아서 서버로 message 이벤트 emit
-    socket.emit('message', {type: 'mymessage', message: message})
-    socket.emit('message', {type: 'message', message: message})
+    socket.emit('message', {type: 'mymessage', message: message, time: getTime()})
+    socket.emit('message', {type: 'message', message: message, time: getTime()})
   }
+}
+
+function checkTime(i) {
+  if (i < 10) {
+    i = "0" + i;
+  }
+  return i;
+}
+
+function getTime(){
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+  // add a zero in front of numbers<10
+  m = checkTime(m);
+  s = checkTime(s);
+  var time = h + ":" + m + ":" + s + "\n" 
+  return time;
 }
 
 socket.on('updateChat', (data) => {
   var chat = document.getElementById('chat')
   var msg = document.createElement('div')
-  var node = document.createTextNode(`${data.name} : ${data.message}`)
+  var node = document.createTextNode(`${data.name} ${data.time} ${data.message}`)
   var className = ''
 
     // 타입에 따라 적용할 클래스를 다르게 지정
@@ -287,8 +306,8 @@ const setPlayVideo = () => {
     }
 
     // 데이터 담아서 서버로 message 이벤트 emit
-    socket.emit('message', {type: 'mymessage', message: speechContent})
-    socket.emit('message', {type: 'message', message: speechContent})
+    socket.emit('message', {type: 'mymessage', message: speechContent, time: getTime('mymessage')})
+    socket.emit('message', {type: 'message', message: speechContent, time: getTime('message')})
 
     speechContent = '';
   };
