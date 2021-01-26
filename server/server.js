@@ -46,7 +46,7 @@ io.on('connection', socket => {
     rooms[room].members.push(name)
 
     socket.join(room)
-    socket.to(room).broadcast.emit('userConnected', id)
+    socket.to(room).broadcast.emit('userConnected', id, name)
     io.to(room).emit('updateChat', {type: 'system', name: 'SYSTEM', message: name + '님 입장'}) // room 안의 모두에게
     io.to(room).emit('updateMembers', {num: rooms[room].num, members: rooms[room].members}) // room 안의 모두에게
     console.log(rooms)
@@ -69,7 +69,7 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
     rooms[room].num--
-    rooms[room].members.pop(rooms[room].members.indexOf(name),1)
+    rooms[room].members.splice(rooms[room].members.indexOf(name),1)
     if(rooms[room].num == 0){
       delete rooms[room]
 
