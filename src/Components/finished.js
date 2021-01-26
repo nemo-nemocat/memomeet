@@ -144,7 +144,7 @@ export default function Finished(prop) {
                                 <Grid>
                                     <Chip className={classes.Chip} id="meet_day" icon={<EventIcon/>} label={data.meet_day}/>
                                     <Chip className={classes.Chip} id="meet_time" icon={<ScheduleIcon/>} label={data.meet_time}/>
-                                    <Chip className={classes.ScriptChip} id="script" onClick={() => handleClickScript(data.meet_id)} icon={<DescriptionIcon/>} label="SCRIPT"/>
+                                    <Chip className={classes.ScriptChip} id="script" onClick={() => handleClickScript(data.meet_id)} icon={<DescriptionIcon style={{ color: "white" }}/>} label="SCRIPT"/>
                                 </Grid>
                                 <Grid id='chipgrid'>
                                     <Chip className={classes.TagChip} variant="outlined" size="small" label="졸업프로젝트"/>
