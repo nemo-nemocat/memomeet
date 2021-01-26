@@ -37,7 +37,7 @@
     "yarn": "^1.22.10"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "cd server && nodemon server.js",
     "dev": "concurrently  \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "npm start",
     "dev:client": "npm start",
