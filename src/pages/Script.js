@@ -17,48 +17,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function getUrlParams() {
+    var params = {};
+    window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; });
+    return params;
+}
 
 export default function Script() {
   const classes = useStyles();
-  const [groups, setGroups] = useState([]);;
-  const [activeTab, setActiveTab] = useState(sessionStorage.getItem("preTab"));
-  const user_id= sessionStorage.getItem("user_id");
-  
-  useEffect(() => {
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify({ "user_id": user_id});
-
-    var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-    };
-
-    fetch("/group-show", requestOptions)
-      .then(res => res.json())
-      .then(result => {
-        console.log(result);
-        setGroups(result.grouplist);
-      })
-      .catch(error => console.log('error', error));
-  }, [user_id]);
-
-  const clickHandler = (id) => {
-    setActiveTab(id);
-    sessionStorage.setItem("preTab",id);
-  }
+  const meet_id = getUrlParams().meet_id;
 
   return (
     <div style={{ display: "flex" }}>
       <div style={{width: "100%", height:"90%"}}>
-        <ScriptHeader group_id={activeTab}/>
+        <ScriptHeader meet_id={meet_id}/>
             <div className={classes.body}>
-              < ScriptTitle group_id={activeTab} />
-              <div style={{display:"flex", height: "85%", width: "100%", justifyContent:"center"}}>
-              < Summary group_id={activeTab} /> < Meetscript group_id={activeTab} />
+              < ScriptTitle meet_id={meet_id} />
+              <div style={{display:"flex", height: "88%", width: "100%", justifyContent:"center"}}>
+              < Summary meet_id={meet_id} /> < Meetscript meet_id={meet_id} />
               </div>
             </div>
       </div>
