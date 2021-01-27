@@ -15,19 +15,19 @@ app.use(bodyParser.json());
 
 if (process.env.NODE_ENV == 'production') {
   // 정적 파일 제공
-  app.use(express.static(path.join(__dirname, '../build')));
+  app.use(express.static(path.join(__dirname, '../client/build')));
   
   // 라우트 설정
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../build/index.html'));
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
   });
 }
 
 /************************************ 화상채팅용 코드 시작 ************************************/
 
 app.set('view engine', 'ejs')
-app.set('views', path.join(__dirname, 'views'))
-app.use('/meeting', express.static(path.join(__dirname, 'public')));
+app.set('views', path.join(__dirname, '../client/meetingroom_views'))
+app.use('/meeting', express.static(path.join(__dirname, '../client/meetingroom_public')));
 
 app.get('/meeting', (req, res) => {
   res.render('room', { roomId: req.query.meet_id, userId: req.query.user_id, userName: req.query.user_name })
@@ -410,5 +410,5 @@ app.post('/finishedmeet-deletetag', function(req,res){
 
 
 server.listen(AppPort, function () {
-  console.log(`Example app listening on port ${AppPort}!`);
+  console.log(`Example app listening on port ${AppPort}! as ${process.env.NODE_ENV}`);
 });
