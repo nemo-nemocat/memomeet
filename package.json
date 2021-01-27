@@ -46,13 +46,8 @@
     "test": "cd client && react-scripts test",
     "eject": "cd client && react-scripts eject",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-<<<<<<< Updated upstream
-    "dev:server": "npm start",
-    "dev:client": "react-scripts start && yarn start"
-=======
     "dev:server": "cd server && nodemon server.js",
     "dev:client": "cd client && react-scripts start && yarn start"
->>>>>>> Stashed changes
   },
   "eslintConfig": {
     "extends": [
