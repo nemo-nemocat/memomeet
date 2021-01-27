@@ -327,6 +327,76 @@ app.post('/forwardmeet-delete', function(req,res){
   })
 });
 
+//끝난 회의 정보 
+app.post('/finisihedmeet-info', function(req,res){
+  var meet_id = req.body.meet_id;
+  var sql = 'SELECT * FROM FORWARDMEET, FINISHEDMEET WHERE MEET_ID=?';
+  mysqlDB.query(sql, meet_id, function(err, results){
+    if(err) return res.send({code:11, msg:`${err}`});
+    else{
+      if(!results[0]){
+        return res.send({code:31, msq:"meet fail: meet_id not exist"});
+      }
+      else{
+        return res.send({code:0, msg:"request success", data:results[0]})
+      }
+    }
+  })
+});
+
+//태그 추가
+app.post('/finishedmeet-addtag', function(req, res){
+  var meet_id = req.body.meet_id;
+  var tag = req.body.tag;
+  var sql = 'SELECT tag FROM FINISHEDMEET WHERE MEET_ID=?';
+  mysqlDB.query(sql, meet_id, function(err, results){
+    if(err) return res.send({code:11, msg:`${err}`});
+    else{
+      if(!results[0]){
+        return res.send({code:31, msq:"meet fail: meet_id not exist"});
+      }
+      else{
+        var tagString = results[0];
+        var tagList = tagString.split(',');
+        if(tagList.length>5) return res.send({code:32, msq:"meet fail: tag list is full"});
+        else{
+          tagString = tagString + tag + ', ';
+          sql = 'UPDATE FINISHEDMEET SET TAG=? WHERE MEET_ID=?';
+          mysqlDB.query(sql, [tagString, meet_id], function(err, results){
+            if(err) return res.send({code:11, msg:`${err}`});
+            else return res.send({code:0, msg:"request success"});
+          })
+        }
+      }
+    }
+  })
+});
+
+//태그 삭제
+app.post('/finishedmeet-deletetag', function(req,res){
+  var meet_id = req.body.meet_id;
+  var tag = req.body.tag + ',';
+  var sql = 'SELECT tag FROM FINISHEDMEET WHERE MEET_ID=?';
+  mysqlDB.query(sql, meet_id, function(err, results){
+    if(err) return res.send({code:11, msg:`${err}`});
+    else{
+      if(!results[0]){
+        return res.send({code:31, msq:"meet fail: meet_id not exist"});
+      }
+      else{
+        var tagString = results[0];
+        var tagSplit = tagString.split(tag);
+        var updateTag = tagSplit[0] + tagSplit[1];
+        var sql = 'UPDATE FINISHEDMEET SET TAG=? WHERE MEET_ID=?';
+        mysqlDB.query(sql, [updateTag, meet_id], function(err, results){
+          if(err) return res.send({code:11, msg:`${err}`});
+          else return res.send({code:0, msg:"request success"});
+        })
+      }
+    }
+  })
+});
+
 
 server.listen(AppPort, function () {
   console.log(`Example app listening on port ${AppPort}!`);

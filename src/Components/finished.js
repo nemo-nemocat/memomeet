@@ -122,7 +122,7 @@ export default function Finished(prop) {
     }
 
     const handleClickScript =(meet_id) => {
-        alert("회의 스크립트로 이동");
+        window.location.href=`/script?meet_id=${meet_id}`;
     }
    
 
