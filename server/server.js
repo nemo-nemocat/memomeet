@@ -8,7 +8,7 @@ const cors = require('cors');
 const mysqlDB = require("./mysql-db");  //db 연결
 const shortid = require ('shortid'); // unique id 생성
 const path = require('path');
-const PythonShell = require('python-shell'); // python script 실행
+//const PythonShell = require('python-shell'); // python script 실행
 
 app.use(cors());
 app.use(bodyParser.json());

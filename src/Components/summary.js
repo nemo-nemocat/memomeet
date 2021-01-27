@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {Paper, Typography, Chip, Grid} from '@material-ui/core';
+import {Paper, Typography, Chip, Button, Grid} from '@material-ui/core';
 import EventIcon from '@material-ui/icons/Event';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import ChipInput from 'material-ui-chip-input';
+import GetAppIcon from '@material-ui/icons/GetApp';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     },
     TagChip: {
         marginLeft:"1%",
-        marginTop:"0.5%"
+        marginTop:"0.5%",
     },
     data: {
         overflow:"auto",
@@ -34,6 +35,13 @@ const useStyles = makeStyles((theme) => ({
             display : 'none'
         }
     },
+    button: {
+        marginTop:"1%",
+    },
+    grid: {
+        textAlign:"left",
+        marginLeft:"4%"
+    }
 }));
 
 const chipRenderer = ({ chip, className, handleClick, handleDelete }, key) => (
@@ -81,13 +89,16 @@ export default function Script(prop) {
 
     return (
         <div className={classes.root}>
-            <Typography variant="h6" align="left">
-            <span style={{fontWeight:"bold", marginLeft:"5%"}}>회의명</span>
+            <Grid>
+                <Typography variant="h6" align="left" style={{width:"100%"}}>
+                    <span style={{fontWeight:"bold", marginLeft:"5%"}}>졸업 프로젝트</span>
+                </Typography>
+            </Grid>
+            <Grid className={classes.grid}>
                 <Chip className={classes.Chip} id="meet_day" icon={<EventIcon/>} label="2021-01-21" />
                 <Chip className={classes.Chip} id="meet_time" icon={<ScheduleIcon/>} label="13:00"/>
                 <ChipInput className={classes.TagChip} chipRenderer={chipRenderer} defaultValue={defaultValue} />
-            </Typography>
-            
+            </Grid>
             <Paper elevation={3} className={classes.paper}>
                 <Typography variant="h6" align="center">
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Summary</span>   
