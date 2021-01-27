@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {Paper, Typography, Button } from '@material-ui/core';
-import GetAppIcon from '@material-ui/icons/GetApp';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,10 +24,6 @@ const useStyles = makeStyles((theme) => ({
         '&::-webkit-scrollbar' : {
             display : 'none'
         }
-    },
-    button: {
-      float:"right",
-      marginRight:"5%",
     },
 }));
 
@@ -69,9 +64,6 @@ export default function MeetScript(prop) {
                     <Typography variant="h6" style={{marginLeft:"47%"}} >
                         <span style={{fontWeight: "bold", textAlign:"center", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Script</span>
                     </Typography>
-                    <Button className={classes.button} variant="contained" color="primary" size="small" style={{marginLeft:"30%"}}>
-                            <GetAppIcon/>Download
-                            </Button>
                       </div>
                 <div style={{backgroundColor:"#eaeaea", width:"90%", height:"85%",borderRadius:10, margin:"auto", display:"block"}}>
                     <Typography className={classes.data}>
