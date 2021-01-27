@@ -7,7 +7,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const useStyles = makeStyles((theme) => ({
   header: {
-    minWidth:1250,
+    minWidth:850,
     backgroundColor: "#000000",
     width: "100%",
     display: "flex",

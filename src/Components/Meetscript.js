@@ -4,7 +4,6 @@ import {Paper, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        minWidth:500,
         width:"60%",
         height:"90%",
         marginTop:"1%"

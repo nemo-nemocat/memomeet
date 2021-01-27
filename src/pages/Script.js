@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles} from '@material-ui/core/styles';
 import Summary from '../Components/summary';
 import Meetscript from '../Components/Meetscript';
-import ScriptHeader from '../Components/ScriptHeader';
+import ScriptHeader from '../Components/scriptHeader';
 import ScriptTitle from '../Components/ScriptTitle';
 
 const useStyles = makeStyles((theme) => ({
@@ -57,7 +57,7 @@ export default function Script() {
         <ScriptHeader group_id={activeTab}/>
             <div className={classes.body}>
               < ScriptTitle group_id={activeTab} />
-              <div style={{display:"flex", height: "88%", width: "100%", justifyContent:"center"}}>
+              <div style={{display:"flex", height: "85%", width: "100%", justifyContent:"center"}}>
               < Summary group_id={activeTab} /> < Meetscript group_id={activeTab} />
               </div>
             </div>
