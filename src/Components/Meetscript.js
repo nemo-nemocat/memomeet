@@ -1,29 +1,30 @@
 import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {Paper, Typography, Button } from '@material-ui/core';
+import {Paper, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width:"90%",
-        height:"65%",
-        margin:"1%",
+        minWidth:500,
+        width:"60%",
+        height:"90%",
+        marginTop:"1%"
     },
     paper: {
-        marginLeft:"5%",
+        marginLeft:"2%",
         width:"100%",
-        marginTop:"7%",
-        height:"100%", 
+        height:"99%", 
         paddingTop:"1%",
-        display: "block",
-        justifyContent: "center",
-        alignItems: "center"
+        marginTop:"0.5%"
     },
     data: {
         overflow:"auto",
-        height:"100%",
+        height:"97%",
         '&::-webkit-scrollbar' : {
             display : 'none'
-        }
+        },
+        paddingTop:"1%",
+        paddingLeft:"1%",
+        paddingRight:"1%"
     },
 }));
 
@@ -60,12 +61,10 @@ export default function MeetScript(prop) {
     return (
         <div className={classes.root}>
             <Paper elevation={3} className={classes.paper}>
-                <div style={{display:"flex", marginBottom:"1%"}}> 
-                    <Typography variant="h6" style={{marginLeft:"47%"}} >
-                        <span style={{fontWeight: "bold", textAlign:"center", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Script</span>
-                    </Typography>
-                      </div>
-                <div style={{backgroundColor:"#eaeaea", width:"90%", height:"85%",borderRadius:10, margin:"auto", display:"block"}}>
+                <Typography variant="h6" align="center">
+                    <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Script</span>
+                </Typography>
+                <div style={{backgroundColor:"#eaeaea", width:"95%", height:"90%",borderRadius:10, margin:"auto"}}>
                     <Typography className={classes.data}>
                     
                     </Typography>

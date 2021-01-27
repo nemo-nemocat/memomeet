@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Header from '../Components/Header';
 import Summary from '../Components/summary';
 import Meetscript from '../Components/Meetscript';
+import ScriptHeader from '../Components/ScriptHeader';
+import ScriptTitle from '../Components/ScriptTitle';
 
 const useStyles = makeStyles((theme) => ({
   listTitle: {
@@ -17,15 +17,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 function getUrlParams() {
     var params = {};
     window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; });
     return params;
 }
 
-export default function InteractiveList() {
+export default function Script() {
   const classes = useStyles();
+  const [groups, setGroups] = useState([]);;
+  const [activeTab, setActiveTab] = useState(sessionStorage.getItem("preTab"));
+  const user_id= sessionStorage.getItem("user_id");
   
   useEffect(() => {
     var meet_id = (getUrlParams().meet_id);
@@ -55,10 +57,12 @@ export default function InteractiveList() {
   return (
     <div style={{ display: "flex" }}>
       <div style={{width: "100%", height:"90%"}}>
-        <Header/>
+        <ScriptHeader group_id={activeTab}/>
             <div className={classes.body}>
-              <Summary/> 
-              <Meetscript/> 
+              < ScriptTitle group_id={activeTab} />
+              <div style={{display:"flex", height: "88%", width: "100%", justifyContent:"center"}}>
+              < Summary group_id={activeTab} /> < Meetscript group_id={activeTab} />
+              </div>
             </div>
       </div>
     </div>
