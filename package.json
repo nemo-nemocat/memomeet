@@ -43,9 +43,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev:server": "npm start",
-    "dev:client": "react-scripts start && yarn start",
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "dev:client": "react-scripts start && yarn start",
+    "dev:server": "npm start",
     "heroku-postbuild": "npm install && npm run build"
   },
   "eslintConfig": {
