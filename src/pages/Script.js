@@ -18,18 +18,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
+function getUrlParams() {
+    var params = {};
+    window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; });
+    return params;
+}
+
 export default function InteractiveList() {
   const classes = useStyles();
-  const [groups, setGroups] = useState([]);;
-  const [activeTab, setActiveTab] = useState(sessionStorage.getItem("preTab"));
-  const [exitOpen, setExitOpen] = useState(false);
-  const user_id= sessionStorage.getItem("user_id");
   
   useEffect(() => {
+    var meet_id = (getUrlParams().meet_id);
+    console.log(meet_id);
+
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({ "user_id": user_id});
+    var raw = JSON.stringify({ "meet_id": meet_id });
 
     var requestOptions = {
         method: 'POST',
@@ -38,61 +43,22 @@ export default function InteractiveList() {
         redirect: 'follow'
     };
 
-    fetch("/group-show", requestOptions)
+    fetch("/finishedmeet-info", requestOptions)
       .then(res => res.json())
       .then(result => {
         console.log(result);
-        setGroups(result.grouplist);
-      })
-      .catch(error => console.log('error', error));
-  }, [user_id]);
-
-  const clickHandler = (id) => {
-    setActiveTab(id);
-    sessionStorage.setItem("preTab",id);
-  }
-
-  const clickExitOpen = () => {
-    setExitOpen(true);
-  }
-
-  const exitClose = () => {
-    setExitOpen(false);
-  }
-
-  const groupExit = () => {
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify({ "group_id": activeTab, "user_id": user_id });
-
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: raw,
-      redirect: 'follow'
-    };
-
-    fetch("/group-out", requestOptions)
-      .then(res => res.json())
-      .then(result => {
-        console.log(result);
-        if (result.code === 0) {
-          alert("그룹을 탈퇴했습니다.");
-          setExitOpen(false);
-          window.location.reload();
-        }
       })
       .catch(error => console.log('error', error))
-  }
+
+  }, []);
 
   return (
     <div style={{ display: "flex" }}>
       <div style={{width: "100%", height:"90%"}}>
-        <Header group_id={activeTab}/>
+        <Header/>
             <div className={classes.body}>
-              < Summary group_id={activeTab} /> 
-              < Meetscript group_id={activeTab} /> 
+              <Summary/> 
+              <Meetscript/> 
             </div>
       </div>
     </div>
