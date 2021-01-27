@@ -47,7 +47,7 @@
     "eject": "react-scripts eject",
     
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "dev:server": "npm start",
+    "dev:server": "cd server && nodemon server.js",
     "dev:client": "react-scripts start && yarn start"
   },
   "eslintConfig": {
