@@ -13,6 +13,14 @@ const path = require('path');
 app.use(cors());
 app.use(bodyParser.json());
 
+// 리액트 정적 파일 제공
+app.use(express.static(path.join(__dirname, 'build')));
+
+// 라우트 설정
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build/index.html'));
+});
+
 /************************************ 화상채팅용 코드 시작 ************************************/
 
 app.set('view engine', 'ejs')
