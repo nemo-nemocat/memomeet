@@ -46,7 +46,7 @@
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "dev:client": "cd .. && react-scripts start && yarn start",
     "dev:server": "npm start",
-    "heroku-postbuild": "cd .. && npm install && npm run build"
+    "heroku-postbuild": "npm install && npm run build"
   },
   "eslintConfig": {
     "extends": [
