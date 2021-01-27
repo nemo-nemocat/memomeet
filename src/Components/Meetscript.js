@@ -18,13 +18,10 @@ const useStyles = makeStyles((theme) => ({
     },
     data: {
         overflow:"auto",
-        height:"97%",
+        height:"auto",
         '&::-webkit-scrollbar' : {
             display : 'none'
         },
-        paddingTop:"1%",
-        paddingLeft:"1%",
-        paddingRight:"1%"
     },
 }));
 
@@ -64,7 +61,7 @@ export default function MeetScript(prop) {
                 <Typography variant="h6" align="center">
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Script</span>
                 </Typography>
-                <div style={{backgroundColor:"#eaeaea", width:"95%", height:"90%",borderRadius:10, margin:"auto"}}>
+                <div style={{backgroundColor:"#eaeaea", width:"89%", height:"82%",padding: "3%",borderRadius:10, margin:"auto"}}>
                     <Typography className={classes.data}>
                     
                     </Typography>

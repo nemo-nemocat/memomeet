@@ -25,43 +25,16 @@ function getUrlParams() {
 
 export default function Script() {
   const classes = useStyles();
-  const [groups, setGroups] = useState([]);;
-  const [activeTab, setActiveTab] = useState(sessionStorage.getItem("preTab"));
-  const user_id= sessionStorage.getItem("user_id");
-  
-  useEffect(() => {
-    var meet_id = (getUrlParams().meet_id);
-    console.log(meet_id);
-
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify({ "meet_id": meet_id });
-
-    var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-    };
-
-    fetch("/finishedmeet-info", requestOptions)
-      .then(res => res.json())
-      .then(result => {
-        console.log(result);
-      })
-      .catch(error => console.log('error', error))
-
-  }, []);
+  const meet_id = getUrlParams().meet_id;
 
   return (
     <div style={{ display: "flex" }}>
       <div style={{width: "100%", height:"90%"}}>
-        <ScriptHeader group_id={activeTab}/>
+        <ScriptHeader meet_id={meet_id}/>
             <div className={classes.body}>
-              < ScriptTitle group_id={activeTab} />
+              < ScriptTitle meet_id={meet_id} />
               <div style={{display:"flex", height: "88%", width: "100%", justifyContent:"center"}}>
-              < Summary group_id={activeTab} /> < Meetscript group_id={activeTab} />
+              < Summary meet_id={meet_id} /> < Meetscript meet_id={meet_id} />
               </div>
             </div>
       </div>
