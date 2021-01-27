@@ -3,13 +3,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import {Typography, Chip, Grid} from '@material-ui/core';
 import EventIcon from '@material-ui/icons/Event';
 import ScheduleIcon from '@material-ui/icons/Schedule';
-import ChipInput from 'material-ui-chip-input';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         width:"90%",
-        height:"10%",
-        margin:"1%"
+        height:"12%",
+        margin:"auto"
     },
     Chip: {
         backgroundColor: "#ffc31e",
@@ -23,21 +23,14 @@ const useStyles = makeStyles((theme) => ({
         marginTop:"1%",
     },
     grid: {
-        textAlign:"left",
-        marginLeft:"4%"
+        display:"flex",
+        justifyContent:"flex-start",
+        alignItems:"center",
+    },
+    Icon: {
+        marginLeft:"1%",
     }
 }));
-
-const chipRenderer = ({ chip, className, handleClick, handleDelete }, key) => (
-    <Chip
-      className={className}
-      key={key}
-      label={chip}
-      onClick={handleClick}
-      onDelete={handleDelete}
-      size="small"
-    />
-  );
 
 export default function ScriptTitle(prop) {
     const classes = useStyles();
@@ -76,19 +69,26 @@ export default function ScriptTitle(prop) {
             .catch(error => console.log('error', error))
       }, []);
 
+    const handleDelete = () => {
+        console.info('Delete tag.');
+    };
+
     return (
         <div>
           {data ? 
           <div className={classes.root}>
             <Grid>
-                <Typography variant="h6" align="left" style={{width:"100%"}}>
-                    <span style={{fontWeight:"bold", marginLeft:"5%"}}>{data.meet_title}</span>
+                <Typography variant="h6" align="left" style={{width:"100%", marginTop:"1%"}}>
+                    <span style={{fontWeight:"bold", marginLeft:"1%"}}>{data.meet_title}</span>
                 </Typography>
             </Grid>
             <Grid className={classes.grid}>
                 <Chip className={classes.Chip} id="meet_day" icon={<EventIcon/>} label={data.meet_day} />
                 <Chip className={classes.Chip} id="meet_time" icon={<ScheduleIcon/>} label={data.meet_time}/>
-                <ChipInput className={classes.TagChip} chipRenderer={chipRenderer} defaultValue={tagList} />
+                <Chip className={classes.TagChip} size="small" label="주제 선정" onDelete={handleDelete} />
+                <Chip className={classes.TagChip} size="small" label="영어 동화" onDelete={handleDelete} />
+                <Chip className={classes.TagChip} size="small" label="화상 회의" onDelete={handleDelete} />
+                <AddCircleIcon className={classes.Icon} color="primary" fontSize="medium" />
             </Grid>
           </div>
             : <div/>
