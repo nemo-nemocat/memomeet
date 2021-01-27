@@ -1,5 +1,13 @@
 const mysql = require("mysql");
 
+// const connection = mysql.createConnection({
+//     host: 'localhost',
+//     post: 3000,
+//     user: 'root',
+//     password: 'root',
+//     database: 'memomeet'
+// });
+
 const connection = mysql.createConnection({
     host: 'us-cdbr-east-03.cleardb.com',
     post: 3306,
