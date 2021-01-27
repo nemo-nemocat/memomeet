@@ -6,7 +6,7 @@ import ListItem from '@material-ui/core/ListItem';
 import EventIcon from '@material-ui/icons/Event';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import DescriptionIcon from '@material-ui/icons/Description';
-import DeleteForever from '@material-ui/icons/DeleteForever';
+import TagList from './tagList';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Finished(prop) {
     const classes = useStyles();
-    const [list, setList] = useState('');
+    const [list, setList] = useState([]);
 
     useEffect(() => {
         var myHeaders = new Headers();
@@ -76,7 +76,7 @@ export default function Finished(prop) {
             redirect: 'follow'
         };
 
-        fetch("/forwardmeet-list", requestOptions)
+        fetch("/finishedmeet-list", requestOptions)
             .then(res => res.json())
             .then(result => {
                 if(result.code === 0) {
@@ -88,38 +88,6 @@ export default function Finished(prop) {
             })
             .catch(error => console.log('error', error))
       }, [prop]);
-
-    const handleEnterMeet = (meet_id) => {
-        var user_id = localStorage.getItem("user_id");
-        var user_name = localStorage.getItem("user_name");
-        alert("회의에 입장합니다");
-        window.open(`http://localhost:3003/meet_id=${meet_id}&user_id=${user_id}&user_name=${user_name}`, 'Lets MeMoMeet');
-    }
-
-    const handleDeleteIcon =(meet_id) => {
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-    
-        var raw = JSON.stringify({ "meet_id": meet_id });
-    
-        var requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: raw,
-            redirect: 'follow'
-        };
-    
-        fetch("/forwardmeet-delete", requestOptions)
-            .then(res => res.json())
-            .then(result => {
-                console.log(result);
-                if (result.code === 0) {    
-                    alert("예약 회의를 삭제합니다");
-                    window.location.reload();
-                }
-            })
-            .catch(error => console.log('error', error))
-    }
 
     const handleClickScript =(meet_id) => {
         window.location.href=`/script?meet_id=${meet_id}`;
@@ -137,20 +105,13 @@ export default function Finished(prop) {
                     {list && list.map(data => (
                         <ListItem key={data.meet_id} id='data' className={classes.data}>
                             <div style={{display:'block', width:"100%", margin:"2%"}}>
-                                <div className={classes.ScheduledName}>
-                                <DeleteForever onClick={()=> handleDeleteIcon(data.meet_id)} style={{marginTop:"-2%"}} color="error"/>
                                 <span style={{fontWeight:"bold"}}>{data.meet_title}</span>
-                                </div>
                                 <Grid>
                                     <Chip className={classes.Chip} id="meet_day" icon={<EventIcon/>} label={data.meet_day}/>
                                     <Chip className={classes.Chip} id="meet_time" icon={<ScheduleIcon/>} label={data.meet_time}/>
                                     <Chip className={classes.ScriptChip} id="script" onClick={() => handleClickScript(data.meet_id)} icon={<DescriptionIcon style={{ color: "white" }}/>} label="SCRIPT"/>
                                 </Grid>
-                                <Grid id='chipgrid'>
-                                    <Chip className={classes.TagChip} variant="outlined" size="small" label="졸업프로젝트"/>
-                                    <Chip className={classes.TagChip} variant="outlined" size="small" label="졸업프로젝트"/>
-                                    <Chip className={classes.TagChip} variant="outlined" size="small" label="졸업프로젝트"/>
-                                </Grid>
+                                <Grid><TagList data={data}/> </Grid>
                             </div>
                         </ListItem>
                     ))}

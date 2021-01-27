@@ -338,18 +338,55 @@ app.post('/forwardmeet-delete', function(req,res){
   })
 });
 
-//끝난 회의 정보 
-app.post('/finisihedmeet-info', function(req,res){
+//끝난 회의 목록
+app.post('/finishedmeet-list', function(req,res){
+  var group_id = req.body.group_id;
+  var sql = 'SELECT * FROM FORWARDMEET, FINISHEDMEET WHERE GROUP_ID=? AND FORWARDMEET.MEET_ID = FINISHEDMEET.MEET_ID ORDER BY MEET_DAY, MEET_TIME';
+  mysqlDB.query(sql, group_id, function(err, results){
+    if(err) return res.send({code:11, msg:`${err}`});
+    else{
+      if(!results[0]) return res.send({code:35, msg:"finishedmeet not exists"});
+      else{
+        return res.send({code:0, msg:"request success", lists:results});
+      }
+    }
+  })
+});
+
+//회의별 태그리스트
+app.post('/finishedmeet-taglist', function(req,res){
   var meet_id = req.body.meet_id;
-  var sql = 'SELECT * FROM FORWARDMEET, FINISHEDMEET WHERE MEET_ID=?';
+  var sql = 'SELECT tag FROM TAGLIST WHERE MEET_ID=?';
   mysqlDB.query(sql, meet_id, function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
+      if(!results[0]) return res.send({code:33, msg:"tag not exists"});
+      else{
+        return res.send({code:0, msg:"request success", lists:results});
+      }
+    }
+  })
+});
+
+//끝난 회의 정보 
+app.post('/finishedmeet-info', function(req,res){
+  var meet_id = req.body.meet_id;
+  var sql = 'SELECT * FROM FORWARDMEET, FINISHEDMEET WHERE FINISHEDMEET.MEET_ID=? AND FORWARDMEET.MEET_ID=FINISHEDMEET.MEET_ID';
+  mysqlDB.query(sql, [meet_id], function(err, results){
+    if(err) return res.send({code:11, msg:`${err}`});
+    else{
       if(!results[0]){
-        return res.send({code:31, msq:"meet fail: meet_id not exist"});
+        return res.send({code:31, msg:"meet fail: meet_id not exist"});
       }
       else{
-        return res.send({code:0, msg:"request success", data:results[0]})
+        sql = 'SELECT tag FROM TAGLIST WHERE MEET_ID=?';
+        mysqlDB.query(sql, meet_id, function(err, results2){
+          if(err) return res.send({code:11, msg:`${err}`});
+          else{
+            results[0].tag = results2;
+            return res.send({code:0, msg:"request success", data:results[0]})
+          }
+        })
       }
     }
   })
@@ -359,25 +396,17 @@ app.post('/finisihedmeet-info', function(req,res){
 app.post('/finishedmeet-addtag', function(req, res){
   var meet_id = req.body.meet_id;
   var tag = req.body.tag;
-  var sql = 'SELECT tag FROM FINISHEDMEET WHERE MEET_ID=?';
+  var sql = 'SELECT COUNT(*) FROM TAGLIST WHERE MEET_ID=?';
   mysqlDB.query(sql, meet_id, function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
-      if(!results[0]){
-        return res.send({code:31, msq:"meet fail: meet_id not exist"});
-      }
+      if(results[0]>4) return res.send({code:32, msq:"meet fail: tag list is full"});
       else{
-        var tagString = results[0];
-        var tagList = tagString.split(',');
-        if(tagList.length>5) return res.send({code:32, msq:"meet fail: tag list is full"});
-        else{
-          tagString = tagString + tag + ', ';
-          sql = 'UPDATE FINISHEDMEET SET TAG=? WHERE MEET_ID=?';
-          mysqlDB.query(sql, [tagString, meet_id], function(err, results){
-            if(err) return res.send({code:11, msg:`${err}`});
-            else return res.send({code:0, msg:"request success"});
-          })
-        }
+        sql = 'INSERT INTO TAGLIST VALUE(?, ?)';
+        mysqlDB.query(sql, [meet_id, tag], function(err, results){
+          if(err) return res.send({code:11, msg:`${err}`});
+          else  return res.send({code:0, msg:"request success"});
+        })
       }
     }
   })
@@ -386,24 +415,15 @@ app.post('/finishedmeet-addtag', function(req, res){
 //태그 삭제
 app.post('/finishedmeet-deletetag', function(req,res){
   var meet_id = req.body.meet_id;
-  var tag = req.body.tag + ',';
-  var sql = 'SELECT tag FROM FINISHEDMEET WHERE MEET_ID=?';
-  mysqlDB.query(sql, meet_id, function(err, results){
+  var tag = req.body.tag ;
+  var sql = 'DELETE FROM TAGLIST WHERE MEET_ID=? AND TAG=?';
+  mysqlDB.query(sql, [meet_id, tag], function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
       if(!results[0]){
         return res.send({code:31, msq:"meet fail: meet_id not exist"});
       }
-      else{
-        var tagString = results[0];
-        var tagSplit = tagString.split(tag);
-        var updateTag = tagSplit[0] + tagSplit[1];
-        var sql = 'UPDATE FINISHEDMEET SET TAG=? WHERE MEET_ID=?';
-        mysqlDB.query(sql, [updateTag, meet_id], function(err, results){
-          if(err) return res.send({code:11, msg:`${err}`});
-          else return res.send({code:0, msg:"request success"});
-        })
-      }
+      else return res.send({code:0, msg:"request success"});
     }
   })
 });
