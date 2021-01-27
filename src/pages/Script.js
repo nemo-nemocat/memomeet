@@ -17,6 +17,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function getUrlParams() {
+    var params = {};
+    window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; });
+    return params;
+}
 
 export default function Script() {
   const classes = useStyles();
@@ -25,10 +30,13 @@ export default function Script() {
   const user_id= sessionStorage.getItem("user_id");
   
   useEffect(() => {
+    var meet_id = (getUrlParams().meet_id);
+    console.log(meet_id);
+
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({ "user_id": user_id});
+    var raw = JSON.stringify({ "meet_id": meet_id });
 
     var requestOptions = {
         method: 'POST',
@@ -37,19 +45,14 @@ export default function Script() {
         redirect: 'follow'
     };
 
-    fetch("/group-show", requestOptions)
+    fetch("/finishedmeet-info", requestOptions)
       .then(res => res.json())
       .then(result => {
         console.log(result);
-        setGroups(result.grouplist);
       })
-      .catch(error => console.log('error', error));
-  }, [user_id]);
+      .catch(error => console.log('error', error))
 
-  const clickHandler = (id) => {
-    setActiveTab(id);
-    sessionStorage.setItem("preTab",id);
-  }
+  }, []);
 
   return (
     <div style={{ display: "flex" }}>
