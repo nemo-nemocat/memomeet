@@ -18,25 +18,22 @@ const useStyles = makeStyles((theme) => ({
     },
     data: {
         overflow:"auto",
-        height:"97%",
+        height:"100%",
         '&::-webkit-scrollbar' : {
             display : 'none'
         },
-        paddingTop:"1%",
-        paddingLeft:"1%",
-        paddingRight:"1%"
     },
 }));
 
 export default function Script(prop) {
     const classes = useStyles();
-    const [list, setList] = useState('');
+    const [data, setData] = useState('');
 
     useEffect(() => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
-        var raw = JSON.stringify({ "group_id": prop.group_id});
+        var raw = JSON.stringify({ "meet_id": prop.meet_id});
 
         var requestOptions = {
             method: 'POST',
@@ -45,15 +42,10 @@ export default function Script(prop) {
             redirect: 'follow'
         };
 
-        fetch("/forwardmeet-list", requestOptions)
+        fetch("/finishedmeet-info", requestOptions)
             .then(res => res.json())
             .then(result => {
-                if(result.code === 0) {
-                    setList(result.lists);
-                }
-                else{
-                    setList('');
-                }
+                setData(result.data);
             })
             .catch(error => console.log('error', error))
       }, [prop]);
@@ -64,9 +56,9 @@ export default function Script(prop) {
                 <Typography variant="h6" align="center">
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Summary</span>   
                 </Typography>
-                <div style={{backgroundColor:"#eaeaea", width:"90%", height:"90%",borderRadius:10, margin:"auto"}}>
+                <div style={{backgroundColor:"#eaeaea", width:"84%", height:"87%",borderRadius:10, margin:"auto", padding:"3%"}}>
                     <Typography className={classes.data}>
-                    
+                        {data.summary}
                     </Typography>
                 </div>
             </Paper>
