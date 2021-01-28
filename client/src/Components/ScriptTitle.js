@@ -8,8 +8,26 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import LogoutIcon from '@material-ui/icons/LockOpen';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const useStyles = makeStyles((theme) => ({
+    header: {
+        minWidth:850,
+        backgroundColor: "#000000",
+        width: "100%",
+        display: "flex",
+    },
+    leftBtn: {
+        width: "94%",
+        display: "flex",
+        justifyContent: "flex-end",
+        alignItems: "center"
+    },
+        headerBtn: {
+        marginLeft: "5%"
+    },
     root: {
         width:"90%",
         height:"12%",
@@ -33,6 +51,9 @@ const useStyles = makeStyles((theme) => ({
     },
     Icon: {
         marginLeft:"1%",
+        "&:hover": {
+            color: "#ffc31e"
+          },
     }
 }));
 
@@ -154,9 +175,56 @@ export default function ScriptTitle(prop) {
         }
     }
 
+    const handleClickLogout = () => {
+        sessionStorage.setItem("user_id",'');
+        sessionStorage.setItem("user_name",'');
+        sessionStorage.setItem("preTab",-1);
+        alert("로그아웃 되었습니다.");
+        window.location.href = "/";
+    };
+
+    const handleDownload = (meet_id, meet_title) => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({ "meet_id": meet_id, "meet_title": meet_title});
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch("/finishedmeet-download", requestOptions)
+            .then(res => res.json())
+            .then(result => {
+                if(result.code===0){
+                    alert("회의 스크립트를 다운로드 하였습니다. \nD:드라이브를 확인하세요");
+                }
+                console.log(result)
+            })
+            .catch(error => console.log('error', error))
+    };
+
     return (
         <div>
-          {data ? 
+        {data ? 
+        <div>
+        <div className={classes.header}>
+            <Button style={{margin:"1%", width:"6%", minWidth:90, padding:0}} color="primary" variant="contained" href="/main" >
+                <ArrowBackIcon/>&nbsp;Back
+            </Button>
+            <div className={classes.leftBtn}>
+                <Button color="primary" variant="contained" onClick={()=>handleDownload(data.meet_id, data.meet_title)}>
+                    <GetAppIcon/>&nbsp;Download
+                </Button>
+                <Button style={{margin:"1%"}} onClick={handleClickLogout} color="primary" variant="contained">
+                    <LogoutIcon/>&nbsp;LOGOUT
+                </Button>
+                <span style={{color: "#ffffff", fontWeight: "bold", maxWidth: "100%", marginRight:"1%" }}>{sessionStorage.getItem("user_name")}님</span>
+            </div>
+        </div>
           <div className={classes.root}>
             <Grid>
                 <Typography variant="h6" align="left" style={{width:"100%", marginTop:"1%"}}>
@@ -169,9 +237,9 @@ export default function ScriptTitle(prop) {
                 {tagList && tagList.map(tag => (
                     <Chip className={classes.TagChip} key={tag.tag} size="small" label={tag.tag}  onDelete={()=>handleDelete(tag.tag)} />
                 ))}
-                <AddCircleIcon className={classes.Icon} color="primary" fontSize="default" onClick={clickAddOpen} />
+                <AddCircleIcon className={classes.Icon} color="secondary" fontSize="default" onClick={clickAddOpen} />
             </Grid>
-          </div>
+          </div></div>
             : <div/>
           }  
 

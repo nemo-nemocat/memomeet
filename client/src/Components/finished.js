@@ -7,6 +7,7 @@ import EventIcon from '@material-ui/icons/Event';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import DescriptionIcon from '@material-ui/icons/Description';
 import TagList from './tagList';
+import DeleteForever from '@material-ui/icons/DeleteForever';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -94,6 +95,31 @@ export default function Finished(prop) {
     const handleClickScript =(meet_id) => {
         window.location.href=`/script?meet_id=${meet_id}`;
     }
+
+    const handleDeleteIcon =(meet_id) => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+    
+        var raw = JSON.stringify({ "meet_id": meet_id });
+    
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+    
+        fetch("/finishedmeet-delete", requestOptions)
+            .then(res => res.json())
+            .then(result => {
+                console.log(result);
+                if (result.code === 0) {    
+                    alert("회의 정보를 삭제합니다");
+                    window.location.reload();
+                }
+            })
+            .catch(error => console.log('error', error))
+    }
    
 
     return (
@@ -107,7 +133,10 @@ export default function Finished(prop) {
                     {list && list.map(data => (
                         <ListItem key={data.meet_id} id='data' className={classes.data}>
                             <div style={{display:'block', width:"100%", margin:"2%"}}>
+                                <div className={classes.ScheduledName}>
+                                <DeleteForever onClick={()=> handleDeleteIcon(data.meet_id)} color="error"/>
                                 <span style={{fontWeight:"bold"}}>{data.meet_title}</span>
+                                </div>
                                 <Grid>
                                     <Chip className={classes.Chip} id="meet_day" icon={<EventIcon/>} label={data.meet_day}/>
                                     <Chip className={classes.Chip} id="meet_time" icon={<ScheduleIcon/>} label={data.meet_time}/>

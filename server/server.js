@@ -8,6 +8,7 @@ const cors = require('cors');
 const mysqlDB = require("./mysql-db");  //db 연결
 const shortid = require ('shortid'); // unique id 생성
 const path = require('path');
+const fs = require('fs'); //파일 읽고 쓰기 위함
 //const PythonShell = require('python-shell'); // python script 실행
 
 app.use(cors());
@@ -339,7 +340,7 @@ app.post('/forwardmeet-create', function(req,res){
   var meet_title = req.body.meet_title;
   var meet_day = req.body.meet_day;
   var meet_time = req.body.meet_time;
-  var sql = 'INSERT INTO FORWARDMEET VALUE(?, ?, ?, ?, ?)';
+  var sql = 'INSERT INTO FORWARDMEET VALUE(?, ?, ?, ?, ?, 0)';
   mysqlDB.query(sql, [group_id, meet_id, meet_title, meet_day, meet_time], function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
@@ -467,6 +468,46 @@ app.post('/finishedmeet-chat', function(req,res){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
       res.send({code:0, msg:"request success", chat:results[0].chat});
+    }
+  })
+});
+
+//끝난 회의 삭제
+app.post('/finishedmeet-delete', function(req, res){
+  var meet_id = req.body.meet_id;
+  var sql = 'delete a,b,c from finishedmeet as a left join meetscript as b on a.meet_id=b.meet_id left join taglist as c on a.meet_id=c.meet_id where a.meet_id = ?';
+  mysqlDB.query(sql, meet_id, function(err, results){
+    if(err) return res.send({code:11, msg:`${err}`});
+    else{
+      sql = 'DELETE FROM FORWARDMEET WHERE MEET_ID=?';
+      mysqlDB.query(sql, meet_id, function(err, results){
+        if(err) return res.send({code:11, msg:`${err}`});
+        else{
+          res.send({code:0, msg:"request success"});
+        }
+      })
+    }
+  })
+});
+
+
+//회의 스크립트 다운로드
+app.post('/finishedmeet-download', function(req,res){
+  var meet_id = req.body.meet_id;
+  var meet_title = req.body.meet_title;
+  var sql = 'SELECT chat, summary FROM MEETSCRIPT AS M ,FINISHEDMEET AS F WHERE M.MEET_ID =? AND M.MEET_ID=F.MEET_ID';
+  mysqlDB.query(sql, meet_id, function(err, results){
+    if(err) return res.send({code:11, msg:`${err}`});
+    else{
+      var summary = results[0].summary;
+      var chat = results[0].chat.replace(/,/g, '\n')
+      var val = `[Summary]\n${summary}\n\n[Script]\n${chat}`
+      fs.writeFile(`D:/${meet_title}.txt`, val, function(err){
+        if(err) return res.send({code:12, msg:`${err}`});
+        else{
+          res.send({code:0, msg:"request success", data: val});
+        }
+      })
     }
   })
 });
