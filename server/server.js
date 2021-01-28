@@ -17,16 +17,17 @@ app.use(bodyParser.json());
 if (process.env.NODE_ENV == 'production') {
   app.use(express.static(path.join(__dirname, '../client/build'))); 
   
-  app.get('/main', (req, res) => { // 일반 페이지는 react 빌드 파일로 라우트
+  // 일반 페이지는 react 빌드 파일로 라우트
+  app.get('/main', (req, res) => { 
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
   });
-  app.get('/home', (req, res) => { // 일반 페이지는 react 빌드 파일로 라우트
+  app.get('/home', (req, res) => { 
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
   });
-  app.get('/signup', (req, res) => { // 일반 페이지는 react 빌드 파일로 라우트
+  app.get('/signup', (req, res) => { 
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
   });
-  app.get('/script', (req, res) => { // 일반 페이지는 react 빌드 파일로 라우트
+  app.get('/script', (req, res) => { 
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
   });
 
