@@ -56,21 +56,22 @@ io.on('connection', socket => {
     id = userId
     name = userName
 
+    // room에 처음 들어온 멤버라면 (room이 새로 생성됐다면) 멤버, 인원수, 채팅db 초기화
     if (rooms.hasOwnProperty(room)==false) {
       rooms[room] = {}
       rooms[room].members = []
       rooms[room].num = rooms[room].members.length
-      rooms[room].chatArray = [];   //(name: content) 담을 배열
-      rooms[room].contentArray = [];  //content 담을 배열
+      rooms[room].chatArray = []; // (name: content) 담을 배열
+      rooms[room].contentArray = []; // content 담을 배열
     }
 
     rooms[room].members.push(name)
     rooms[room].num = rooms[room].members.length
 
     socket.join(room)
-    socket.to(room).broadcast.emit('userConnected', id)
-    io.to(room).emit('updateChat', {type: 'system', name: '[SYSTEM]', message: name + '님 입장'}) // room 안의 모두에게
-    io.to(room).emit('updateMembers', {num: rooms[room].num, members: rooms[room].members}) // room 안의 모두에게
+    socket.to(room).broadcast.emit('userConnected', {id: id, name: name}) // room 안의 나를 제외한 모두에게 'userConnected' event emit
+    io.to(room).emit('updateChat', {type: 'system', name: '[SYSTEM]', message: name + '님 입장'}) // room 안의 모두에게 입장메시지 전송
+    io.to(room).emit('updateMembers', {num: rooms[room].num, members: rooms[room].members}) // room 안의 모두에게 멤버 업데이트
     console.log(rooms)
   })
 
@@ -78,14 +79,14 @@ io.on('connection', socket => {
 
     data.name = name
     if(data.type == 'mymessage') {
-      socket.emit('updateChat', data) // 나에게만
+      socket.emit('updateChat', data) // 나에게만 메시지 업데이트
     }
     else{
       chat = `${name}: ${data.message}`;
       rooms[room].contentArray.push(data.message);
       rooms[room].chatArray.push(chat);
 
-      socket.to(room).broadcast.emit('updateChat', data) // room 안의 나를 제외한 모두에게
+      socket.to(room).broadcast.emit('updateChat', data) // room 안의 나를 제외한 모두에게 메시지 업데이트
     }
   })
 
@@ -133,9 +134,9 @@ io.on('connection', socket => {
     }
 
     else{
-      socket.to(room).broadcast.emit('userDisconnected', id)
-      io.to(room).emit('updateChat', {type: 'system', name: '[SYSTEM]', message: name + '님 퇴장'}) // room 안의 모두에게
-      io.to(room).emit('updateMembers', {num: rooms[room].num, members: rooms[room].members}) // room 안의 모두에게
+      socket.to(room).broadcast.emit('userDisconnected', id) // room 안의 나를 제외한 모두에게 'userDisconnected' event emit
+      io.to(room).emit('updateChat', {type: 'system', name: '[SYSTEM]', message: name + '님 퇴장'}) // room 안의 모두에게 퇴장메시지 전송
+      io.to(room).emit('updateMembers', {num: rooms[room].num, members: rooms[room].members}) // room 안의 모두에게 멤버 업데이트
     }
     console.log(rooms)
   })
