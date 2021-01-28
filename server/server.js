@@ -503,7 +503,7 @@ app.post('/finishedmeet-download', function(req,res){
       var summary = results[0].summary;
       var chat = results[0].chat.replace(/,/g, '\n')
       var val = `[Summary]\n${summary}\n\n[Script]\n${chat}`
-      fs.writeFile(`D:/${meet_title}.txt`, val, function(err){
+      fs.writeFile(`C:/${meet_title}.txt`, val, function(err){
         if(err) return res.send({code:12, msg:`${err}`});
         else{
           res.send({code:0, msg:"request success", data: val});
