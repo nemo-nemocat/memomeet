@@ -1,19 +1,14 @@
 const socket = io()
-const videoGrid = document.getElementById('video-grid')
-const myVideo = document.createElement('video')
-const myVideoBx = document.createElement('div')
-const myNameTag = document.createElement('div')
-myVideo.muted = true
 
-// 공용으로 PeerServer를 호스팅하는 서비스인 PeerServer cloud를 이용, 최대 50개의 동시연결까지 무료로 가능.
+// 공용으로 PeerServer를 호스팅하는 서비스인 PeerServer cloud를 이용, 최대 50개의 동시연결까지 무료로 가능
 const peer = new Peer(USER_ID, { // peer 고유 id (자동생성) 대신 user id 사용
 });
 
 const peers = {}
 
 let room_id, user_id, user_name
-// peer 서버와 정상적으로 통신이 된 경우 'open' event가 발생.
-// 'open' event가 발생하면 유저를 room에 join시킴.
+// peer서버와 정상적으로 통신이 된 경우 'open' event 발생
+// 'open' event가 발생하면 서버로 'joinRoom' event emit
 peer.on('open', peerid => {
   room_id = ROOM_ID
   user_id = USER_ID
@@ -22,7 +17,6 @@ peer.on('open', peerid => {
   socket.emit('joinRoom', room_id, peerid, user_name)
 })
 
-// 소켓 연결 코드
 socket.on('connect', function() {
   room_id = ROOM_ID
   user_id = USER_ID
@@ -30,57 +24,56 @@ socket.on('connect', function() {
   console.log('[SOCKET CONNECTED] ' + room_id, user_id, user_name)
 })
 
+const videoGrid = document.getElementById('video-grid')
+
+// 내 비디오 요소들
+const myVideoBx = document.createElement('div')
+const myNameTag = document.createElement('div')
+const myVideo = document.createElement('video')
+myVideo.muted = true
+
 let myVideoStream
-// 유저의 브라우저로부터 Media Device들을 받아오는 과정
 navigator.mediaDevices.getUserMedia({ 
     video: true,
     audio: true
-}).then(stream => { // Media Device를 받아오는 데 성공하면 stream을 넘겨받을 수 있음
+}).then(stream => {
     myVideoStream = stream
     user_name = USER_NAME
-    addVideoStream(myVideoBx, myNameTag, myVideo, user_name, stream) // 받아온 stream을 내 브라우저에 추가하는 함수
+    addVideoStream(myVideoBx, myNameTag, myVideo, user_name, stream) // 내 stream을 내 브라우저에 추가
 
-    peer.on('call', call => { // 이후 누군가 나에게 요청을 보내면 받기 위해 event를 on해줌
-      // 나에게 응답을 준 다른 유저의 요청에 수락. 
-      // 이 과정에서 내 stream을 다른 유저에게 보내주고, answer가 발생하면 'stream'이라는 event를 통해 다른 유저의 stream을 받아옴
-      call.answer(stream)
-        const video = document.createElement('video')
-        const videoBx = document.createElement('div')
-        const nameTag = document.createElement('div')
-        call.on('stream', userVideoStream => { // 다른 유저의 stream을 내 브라우저에 추가하는 콜백 함수가 실행됨
-          addVideoStream(videoBx, nameTag, video, "받아온 이름", userVideoStream) 
+    // caller의 call에 대한 응답
+    peer.on('call', call => {
+      call.answer(stream) // call에 응답하면서 내 stream을 제공
+        const callerVideoBx = document.createElement('div')
+        const callerNameTag = document.createElement('div')
+        const callerVideo = document.createElement('video')
+        var callerName = call.metadata.callerName
+        call.on('stream', userVideoStream => { // caller의 stream을 내 브라우저에 추가하는 콜백 함수 실행
+          addVideoStream(callerVideoBx, callerNameTag, callerVideo, callerName, userVideoStream) 
         })
     })
 
-    // 'userConnected' event가 발생하면 서버로부터 새로 접속한 유저의 userId를 받아온 후 call 요청을 보냄
-    socket.on('userConnected', (userId, userName) => {
-      setTimeout(() => {connectToNewUser(userId, userName, stream)}, 1000)
+    // 새로운 유저가 접속하면 서버로부터 그 유저의 userId를 받아온 후 connectToNewUser()
+    socket.on('userConnected', (data) => {
+      setTimeout(() => {connectToNewUser(data.id, data.name, stream)}, 1000)
     })
 })
 
-// 유저가 나가면 socket.io에서는 자동으로 'disconnect' event를 발생시킴. 다른 유저의 stream을 close시킴. 
-socket.on('userDisconnected', userId => {
-    if (peers[userId]) peers[userId].close()
+function connectToNewUser(userId, calleeName, stream) {
+  const call = peer.call(userId, stream, {metadata: {callerName: USER_NAME}}) // 나의 stream과 이름을 제공하면서 call
+  const calleeVideoBx = document.createElement('div') 
+  const calleeNameTag = document.createElement('div') 
+  const calleeVideo = document.createElement('video') 
+  // callee가 응답하면 stream을 받아오고 내 브라우저에 추가
+  call.on('stream', userVideoStream => { 
+      addVideoStream(calleeVideoBx, calleeNameTag, calleeVideo, calleeName, userVideoStream)
+  })
+  // 상대가 나가서 상대의 stream에 대해 'close' event가 발생하면 상대의 video를 제거하는 콜백 함수 실행
+  call.on('close', () => {
+    removeVideoStream(calleeVideo, stream)
   })
 
-// 새로운 유저가 접속하면 그 유저의 stream을 내 브라우저에 추가하기 위해 요청을 보냄 (peer.call)
-function connectToNewUser(userId, userName, stream) {
-    const call = peer.call(userId, stream) 
-    const videoBx = document.createElement('div')
-    const nameTag = document.createElement('div')
-    const video = document.createElement('video') // 다른 유저를 위해 video element를 생성
-    // 상대 유저가 answer했을 때 'stream' event가 발생되는데,
-    // 이를 통해 상대 유저의 stream을 받아오고 내 화면에 추가시킴
-    call.on('stream', userVideoStream => { 
-        addVideoStream(videoBx, nameTag, video, userName, userVideoStream)
-    })
-    // 상대가 나가서 상대의 stream에 대해 'close' event가 발생하면 상대의 video를 제거하는 콜백 함수가 실행됨
-    call.on('close', () => {
-      //video.remove()
-      removeVideoStream(video, stream)
-    })
-
-    peers[userId] = call
+  peers[userId] = call
 }
 
 function addVideoStream(videoBx, nameTag, video, userName, stream){
@@ -109,6 +102,11 @@ function removeVideoStream(video, stream){
     videoGrid.removeChild(videoParent);
     if(videoGrid.childElementCount<4) videoGrid.style.gridTemplateColumns = "1fr 1fr";
 }
+
+// 유저가 나가면 socket.io에서는 자동으로 'disconnect' event를 발생시킴. 다른 유저의 stream을 close시킴. 
+socket.on('userDisconnected', userId => {
+  if (peers[userId]) peers[userId].close()
+})
 
 /************************************ 채팅 송수신 ************************************/
 
