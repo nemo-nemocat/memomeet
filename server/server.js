@@ -15,9 +15,9 @@ app.use(bodyParser.json());
 
 /* 배포 */
 if (process.env.NODE_ENV == 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build'))); // 정적 파일 제공
+  app.use(express.static(path.join(__dirname, '../client/build'))); 
   
-  app.get('^((?!/meeting).)*$', (req, res) => { // 라우트 설정
+  app.get('^(?!/meeting$).*', (req, res) => { // 일반 페이지는 react 빌드 파일로 라우트
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
   });
 }
@@ -28,7 +28,7 @@ app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, '../client/meetingroom_views'))
 app.use('/meeting', express.static(path.join(__dirname, '../client/meetingroom_public')));
 
-app.get('/meeting', (req, res) => {
+app.get('/meeting', (req, res) => { // 회의실 페이지는 res 렌더링으로 라우트
   res.render('room', { roomId: req.query.meet_id, userId: req.query.user_id, userName: req.query.user_name })
 })
 
