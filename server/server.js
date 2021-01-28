@@ -44,8 +44,6 @@ app.get('/meeting', (req, res) => { // 회의실 페이지는 res 렌더링으�
 })
 
 let rooms = {};
-let chatArray=[];   //(name: content) 담을 배열
-let contentArray=[];  //content 담을 배열
 
 io.on('connection', socket => {
 
@@ -61,6 +59,8 @@ io.on('connection', socket => {
       rooms[room] = {}
       rooms[room].members = []
       rooms[room].num = rooms[room].members.length
+      rooms[room].chatArray = [];   //(name: content) 담을 배열
+      rooms[room].contentArray = [];  //content 담을 배열
     }
 
     rooms[room].members.push(name)
@@ -75,15 +75,15 @@ io.on('connection', socket => {
 
   socket.on('message', (data) => {
 
-    chat = `${name}: ${data.message}`;
-    contentArray.push(data.message);
-    chatArray.push(chat);
-
     data.name = name
     if(data.type == 'mymessage') {
       socket.emit('updateChat', data) // 나에게만
     }
     else{
+      chat = `${name}: ${data.message}`;
+      rooms[room].contentArray.push(data.message);
+      rooms[room].chatArray.push(chat);
+
       socket.to(room).broadcast.emit('updateChat', data) // room 안의 나를 제외한 모두에게
     }
   })
@@ -93,17 +93,42 @@ io.on('connection', socket => {
     rooms[room].num = rooms[room].members.length
 
     if(rooms[room].num == 0){
-      delete rooms[room]
-
-      //array DB에 insert
-      var contentInput = contentArray.toString();
-      var chatInput = chatArray.toString();
+      //meetScript DB INPUT
+      var contentInput = rooms[room].contentArray.toString();
+      var chatInput = rooms[room].chatArray.toString();
 
       var sql = 'INSERT INTO  MEETSCRIPT VALUE(?, ?, ?)';
       mysqlDB.query(sql, [room, chatInput, contentInput], function(err, results){
         if(err) console.log(err);
-        else console.log('success input db');
+        else console.log('success input meetscript');
       });
+
+      //finishedmeet DB INPUT
+      var summary = "summary 예시입니당~~~~~~~~"
+      sql = 'INSERT INTO FINISHEDMEET VALUE(?, ?)';
+      mysqlDB.query(sql, [room, summary], function(err, results){
+        if(err) console.log(err);
+        else console.log('success input finishedmeet');
+      });
+
+      //taglist DB INPUT
+      var tag1 = '예시태그1';
+      var tag2 = '예시태그2';
+      var tag3 = '예시태그3';
+      sql = `INSERT INTO TAGLIST VALUES('${room}', ?), ('${room}', ?), ('${room}', ?)`;
+      mysqlDB.query(sql, [tag1, tag2, tag3], function(err, results){
+        if(err) console.log(err);
+        else console.log('success input taglist');
+      });
+
+      //scheduled meet 에서 삭제
+      sql = 'UPDATE FORWARDMEET SET ISFINISH = 1 WHERE MEET_ID=?';
+      mysqlDB.query(sql, room, function(err, results){
+        if(err) console.log(err);
+        else console.log('success delete scheduled meet');
+      });
+
+      delete rooms[room]
     }
 
     else{
@@ -331,8 +356,14 @@ app.post('/forwardmeet-list', function(req,res){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
       if(!results[0]) return res.send({code:34, msg:"forwardmeet not exists"});
-      else return res.send({code:0, msg:"request success", lists:results});
-      }
+      else{
+        var visible = [];
+        results.map(result=>{
+          if(result.isfinish === 0) visible.push(result);
+        })
+        return res.send({code:0, msg:"request success", lists:visible});
+      } 
+    }
   });
 });
 
@@ -389,14 +420,7 @@ app.post('/finishedmeet-info', function(req,res){
         return res.send({code:31, msg:"meet fail: meet_id not exist"});
       }
       else{
-        sql = 'SELECT tag FROM TAGLIST WHERE MEET_ID=?';
-        mysqlDB.query(sql, meet_id, function(err, results2){
-          if(err) return res.send({code:11, msg:`${err}`});
-          else{
-            results[0].tag = results2;
-            return res.send({code:0, msg:"request success", data:results[0]})
-          }
-        })
+        return res.send({code:0, msg:"request success", data:results[0]}) 
       }
     }
   })
@@ -406,11 +430,11 @@ app.post('/finishedmeet-info', function(req,res){
 app.post('/finishedmeet-addtag', function(req, res){
   var meet_id = req.body.meet_id;
   var tag = req.body.tag;
-  var sql = 'SELECT COUNT(*) FROM TAGLIST WHERE MEET_ID=?';
+  var sql = 'SELECT COUNT(*) AS cnt FROM TAGLIST WHERE MEET_ID=?';
   mysqlDB.query(sql, meet_id, function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
-      if(results[0]>4) return res.send({code:32, msq:"meet fail: tag list is full"});
+      if(results[0].cnt>4) return res.send({code:32, msq:"meet fail: tag list is full"});
       else{
         sql = 'INSERT INTO TAGLIST VALUE(?, ?)';
         mysqlDB.query(sql, [meet_id, tag], function(err, results){
@@ -430,10 +454,19 @@ app.post('/finishedmeet-deletetag', function(req,res){
   mysqlDB.query(sql, [meet_id, tag], function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
-      if(!results[0]){
-        return res.send({code:31, msq:"meet fail: meet_id not exist"});
-      }
-      else return res.send({code:0, msg:"request success"});
+      res.send({code:0, msg:"request success"});
+    }
+  })
+});
+
+//회의 chat
+app.post('/finishedmeet-chat', function(req,res){
+  var meet_id = req.body.meet_id;
+  var sql = 'SELECT chat FROM MEETSCRIPT WHERE MEET_ID =?';
+  mysqlDB.query(sql, meet_id, function(err, results){
+    if(err) return res.send({code:11, msg:`${err}`});
+    else{
+      res.send({code:0, msg:"request success", chat:results[0].chat});
     }
   })
 });

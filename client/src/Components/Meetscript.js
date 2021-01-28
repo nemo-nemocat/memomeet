@@ -15,9 +15,15 @@ const useStyles = makeStyles((theme) => ({
         paddingTop:"1%",
         marginTop:"0.5%"
     },
-    data: {
+    scriptContainer: {
+        backgroundColor:"#eaeaea", 
+        width:"89%", 
+        height:"82%",
+        padding: "3%",
+        borderRadius:10, 
+        margin:"auto",
+        textAlign: "left",
         overflow:"auto",
-        height:"auto",
         '&::-webkit-scrollbar' : {
             display : 'none'
         },
@@ -26,13 +32,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MeetScript(prop) {
     const classes = useStyles();
-    const [list, setList] = useState('');
+    const [list, setList] = useState([]);
 
     useEffect(() => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
-        var raw = JSON.stringify({ "group_id": prop.group_id});
+        var raw = JSON.stringify({ "meet_id": prop.meet_id});
 
         var requestOptions = {
             method: 'POST',
@@ -41,15 +47,10 @@ export default function MeetScript(prop) {
             redirect: 'follow'
         };
 
-        fetch("/forwardmeet-list", requestOptions)
+        fetch("/finishedmeet-chat", requestOptions)
             .then(res => res.json())
             .then(result => {
-                if(result.code === 0) {
-                    setList(result.lists);
-                }
-                else{
-                    setList('');
-                }
+                setList(result.chat.split(','));
             })
             .catch(error => console.log('error', error))
       }, [prop]);
@@ -60,10 +61,10 @@ export default function MeetScript(prop) {
                 <Typography variant="h6" align="center">
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Script</span>
                 </Typography>
-                <div style={{backgroundColor:"#eaeaea", width:"89%", height:"82%",padding: "3%",borderRadius:10, margin:"auto"}}>
-                    <Typography className={classes.data}>
-                    
-                    </Typography>
+                <div className={classes.scriptContainer}>
+                    {list && list.map(data => (
+                        <Typography key={data}>{data}</Typography>
+                    ))}
                 </div>
             </Paper> 
         </div>

@@ -79,6 +79,8 @@ export default function Finished(prop) {
         fetch("/finishedmeet-list", requestOptions)
             .then(res => res.json())
             .then(result => {
+                
+                console.log(result)
                 if(result.code === 0) {
                     setList(result.lists);
                 }

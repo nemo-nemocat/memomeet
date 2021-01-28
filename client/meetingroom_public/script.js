@@ -257,6 +257,7 @@ const playStop = () => {
 const exit = () => {
   if (confirm("회의에서 나가시겠습니까?")){
     self.close()
+    opener.location.reload()
   }
 }
   

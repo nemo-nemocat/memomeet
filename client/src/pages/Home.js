@@ -70,7 +70,7 @@ export default function SignIn() {
   };
 
   const onKeyPress = (e) => {
-    if (e.key == 'Enter') {
+    if (e.key === 'Enter') {
       handleClick();
     }
   }
