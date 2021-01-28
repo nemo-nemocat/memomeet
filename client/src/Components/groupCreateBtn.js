@@ -60,7 +60,7 @@ export default function GroupCreateBtn() {
     }
 
     const onKeyPress = (e) => {
-        if (e.key == 'Enter') {
+        if (e.key === 'Enter') {
             groupCreate();
         }
       }

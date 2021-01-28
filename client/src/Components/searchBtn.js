@@ -109,13 +109,13 @@ export default function SearchBtn() {
     }
 
     const onKeyPress = (e) => {
-        if (e.key == 'Enter') {
+        if (e.key === 'Enter') {
             groupSearch();
         }
       }
 
     const enterKeyPress = (e) => {
-        if (e.key == 'Enter') {
+        if (e.key === 'Enter') {
             groupEnter();
         }
     }

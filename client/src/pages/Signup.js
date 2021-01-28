@@ -128,7 +128,7 @@ export default function SignUp() {
   }
 
   const onKeyPress = (e) => {
-    if (e.key == 'Enter') {
+    if (e.key === 'Enter') {
       handleSubmit();
     }
   }
