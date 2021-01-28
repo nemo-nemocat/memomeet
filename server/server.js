@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 if (process.env.NODE_ENV == 'production') {
   app.use(express.static(path.join(__dirname, '../client/build'))); 
   
-  app.get('/'+'^(?!meeting$).*', (req, res) => { // 일반 페이지는 react 빌드 파일로 라우트
+  app.get('(?!^meeting$)', (req, res) => { // 일반 페이지는 react 빌드 파일로 라우트
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
   });
 }
