@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 if (process.env.NODE_ENV == 'production') {
   app.use(express.static(path.join(__dirname, '../client/build'))); // 정적 파일 제공
   
-  app.get('^(?!/meeting).*$', (req, res) => { // 라우트 설정
+  app.get('^((?!/meeting).)*$', (req, res) => { // 라우트 설정
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
   });
 }
