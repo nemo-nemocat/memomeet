@@ -13,12 +13,11 @@ const path = require('path');
 app.use(cors());
 app.use(bodyParser.json());
 
+/* 배포 */
 if (process.env.NODE_ENV == 'production') {
-  // 정적 파일 제공
-  app.use(express.static(path.join(__dirname, '../client/build')));
+  app.use(express.static(path.join(__dirname, '../client/build'))); // 정적 파일 제공
   
-  // 라우트 설정
-  app.get('*', (req, res) => {
+  app.get('*', (req, res) => { // 라우트 설정
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
   });
 }
@@ -430,5 +429,5 @@ app.post('/finishedmeet-deletetag', function(req,res){
 
 
 server.listen(AppPort, function () {
-  console.log(`Example app listening on port ${AppPort}! as ${process.env.NODE_ENV}`);
+  console.log(`Example app listening on port ${AppPort}!`);
 });
