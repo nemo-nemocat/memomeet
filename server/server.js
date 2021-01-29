@@ -25,6 +25,8 @@ if (process.env.NODE_ENV == 'production') {
         password: '0c8450fd',
         database: 'heroku_9c78ff95d911e67'
       };
+      
+      mysqlDB = mysql.createPool(db_config)
   }
   
   /* 개발 */
@@ -36,31 +38,33 @@ if (process.env.NODE_ENV == 'production') {
           password: 'root',
           database: 'memomeet'
         };
+
+        mysqlDB = mysql.createConnection(db_config); 
   }
 
-function handleDisconnect() {
-  console.log('DB 연결 완료');
-  mysqlDB = mysql.createConnection(db_config); 
+// function handleDisconnect() {
+//   console.log('DB 연결 완료');
+//   mysqlDB = mysql.createConnection(db_config); 
 
-  mysqlDB.connect(function(err) {
-    if(err) {                                    
-      console.log('error when connecting to db:', err);
-      setTimeout(handleDisconnect, 2000); 
-    }                                    
-  });                                     
+//   mysqlDB.connect(function(err) {
+//     if(err) {                                    
+//       console.log('error when connecting to db:', err);
+//       setTimeout(handleDisconnect, 2000); 
+//     }                                    
+//   });                                     
   
-  // 도중에 db 연결 끊어지면 다시 연결 
-  mysqlDB.on('error', function(err) {
-    console.log('DB 연결 에러', err);
-    if(err.code === 'PROTOCOL_CONNECTION_LOST') { 
-      handleDisconnect();                        
-    } else {                                      
-     throw err;                                 
-    }
-  });
-}
+//   // 도중에 db 연결 끊어지면 다시 연결 
+//   mysqlDB.on('error', function(err) {
+//     console.log('DB 연결 에러', err);
+//     if(err.code === 'PROTOCOL_CONNECTION_LOST') { 
+//       handleDisconnect();                        
+//     } else {                                      
+//      throw err;                                 
+//     }
+//   });
+// }
 
-handleDisconnect();
+// handleDisconnect();
 
 /************************************************** FRONTEND **************************************************/
 
