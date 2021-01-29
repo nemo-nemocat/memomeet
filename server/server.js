@@ -14,6 +14,8 @@ const PythonShell = require('python-shell'); // python script 실행
 app.use(cors());
 app.use(bodyParser.json());
 
+
+
 /* 배포 */
 if (process.env.NODE_ENV == 'production') {
   app.use(express.static(path.join(__dirname, '../client/build'))); 
@@ -400,7 +402,7 @@ app.post('/forwardmeet-delete', function(req,res){
 //끝난 회의 목록
 app.post('/finishedmeet-list', function(req,res){
   var group_id = req.body.group_id;
-  var sql = 'SELECT * FROM FORWARDMEET, FINISHEDMEET WHERE GROUP_ID=? AND FORWARDMEET.MEET_ID = FINISHEDMEET.MEET_ID ORDER BY MEET_DAY, MEET_TIME';
+  var sql = 'SELECT * FROM FORWARDMEET, FINISHEDMEET WHERE GROUP_ID=? AND FORWARDMEET.MEET_ID = FINISHEDMEET.MEET_ID ORDER BY MEET_DAY, MEET_TIME DESC';
   mysqlDB.query(sql, group_id, function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
@@ -511,7 +513,6 @@ app.post('/finishedmeet-delete', function(req, res){
 //회의 스크립트 다운로드
 app.post('/finishedmeet-download', function(req,res){
   var meet_id = req.body.meet_id;
-  var meet_title = req.body.meet_title;
   var sql = 'SELECT chat, summary FROM MEETSCRIPT AS M ,FINISHEDMEET AS F WHERE M.MEET_ID =? AND M.MEET_ID=F.MEET_ID';
   mysqlDB.query(sql, meet_id, function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
@@ -519,12 +520,7 @@ app.post('/finishedmeet-download', function(req,res){
       var summary = results[0].summary;
       var chat = results[0].chat.replace(/,/g, '\n')
       var val = `[Summary]\n${summary}\n\n[Script]\n${chat}`
-      fs.writeFile(`C:/${meet_title}.txt`, val, function(err){
-        if(err) return res.send({code:12, msg:`${err}`});
-        else{
-          res.send({code:0, msg:"request success", data: val});
-        }
-      })
+      res.send({code:0, msg:"request success", data: val});
     }
   })
 });
