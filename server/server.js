@@ -165,13 +165,10 @@ io.on('connection', socket => {
       });
 
       //taglist DB INPUT
-      //tag_extract(contentInput).then(function(tag_list) {
-        // var tag1 = tag_list[0];
-        // var tag2 = tag_list[1];
-        // var tag3 = tag_list[2];
-        var tag1 = '예시태그1';
-        var tag2 = '예시태그2';
-        var tag3 = '예시태그3';
+      tag_extract(contentInput).then(function(tag_list) {
+        var tag1 = tag_list[0];
+        var tag2 = tag_list[1];
+        var tag3 = tag_list[2];
         sql = `INSERT INTO TAGLIST VALUES('${room}', ?), ('${room}', ?), ('${room}', ?)`;
         mysqlDB.query(sql, [tag1, tag2, tag3], function(err, results){
           if(err) console.log(err);
