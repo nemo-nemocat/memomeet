@@ -40,7 +40,7 @@ if (process.env.NODE_ENV == 'production') {
   }
 
 function handleDisconnect() {
-  console.log('DB 연결 완료', err);
+  console.log('DB 연결 완료');
   mysqlDB = mysql.createConnection(db_config); 
 
   mysqlDB.connect(function(err) {
