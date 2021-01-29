@@ -16,6 +16,18 @@ import Scheduled from '../Components/scheduled';
 import logo from '../Icons/memomeet_logo.png';
 import Header from '../Components/Header';
 import Finished from '../Components/finished';
+import io from 'socket.io-client';
+
+const socket = io("http://localhost:3002",{
+  withCredentials: true,
+  transports: ['websocket']
+});
+
+(() => {
+  socket.on('tagInputFinish', () => {
+    console.log("다해땅!!");
+  })
+})();
 
 const useStyles = makeStyles((theme) => ({
   sideBar: {
