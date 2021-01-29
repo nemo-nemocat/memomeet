@@ -55,7 +55,7 @@ navigator.mediaDevices.getUserMedia({
 
     // 새로운 유저가 접속하면 서버로부터 그 유저의 userId를 받아온 후 connectToNewUser()
     socket.on('userConnected', (data) => {
-      setTimeout(() => {connectToNewUser(data.id, data.name, stream)}, 1000)
+      setTimeout(() => {connectToNewUser(data.id, data.name, stream)}, 2000)
     })
 })
 
