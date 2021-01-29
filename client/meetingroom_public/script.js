@@ -93,14 +93,14 @@ function addVideoStream(videoBx, nameTag, video, userName, stream){
 
     videoGrid.append(videoBx);
 
-    if(videoGrid.childElementCount>4) videoGrid.style.gridTemplateColumns = "1fr 1fr 1fr";
+    if(videoGrid.childElementCount>4) videoGrid.style.gridTemplateColumns = "1fr 1fr 1fr"; 
 }
 
 function removeVideoStream(video, stream){
     video.srcObject = stream;
     const videoParent = video.parentNode;
     videoGrid.removeChild(videoParent);
-    if(videoGrid.childElementCount<4) videoGrid.style.gridTemplateColumns = "1fr 1fr";
+    if(videoGrid.childElementCount<=4) videoGrid.style.gridTemplateColumns = "1fr 1fr";
 }
 
 // 유저가 나가면 socket.io에서는 자동으로 'disconnect' event를 발생시킴. 다른 유저의 stream을 close시킴. 
