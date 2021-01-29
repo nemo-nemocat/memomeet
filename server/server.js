@@ -5,16 +5,64 @@ const io = require('socket.io')(server)
 const bodyParser = require('body-parser');
 const AppPort = process.env.PORT || 3002;
 const cors = require('cors');
-const mysqlDB = require("./mysql-db");  //db 연결
 const shortid = require ('shortid'); // unique id 생성
 const path = require('path');
 const fs = require('fs'); //파일 읽고 쓰기 위함
 const PythonShell = require('python-shell'); // python script 실행
-
+const mysql = require("mysql");
 app.use(cors());
 app.use(bodyParser.json());
 
+/************************************************** DATABASE **************************************************/
 
+var mysqlDB;
+
+/* 배포 */
+if (process.env.NODE_ENV == 'production') {
+  var db_config = {
+        host: 'us-cdbr-east-03.cleardb.com',
+        port: 3306,
+        user: 'b5dfcc92d33e0e',
+        password: '0c8450fd',
+        database: 'heroku_9c78ff95d911e67'
+      };
+  }
+  
+  /* 개발 */
+  else {
+    var db_config = {
+          host: 'localhost',
+          port: 3306,
+          user: 'root',
+          password: 'root',
+          database: 'memomeet'
+        };
+  }
+
+function handleDisconnect() {
+  mysqlDB = mysql.createConnection(db_config); // Recreate the connection, since
+                                                  // the old one cannot be reused.
+
+  mysqlDB.connect(function(err) {              // The server is either down
+    if(err) {                                     // or restarting (takes a while sometimes).
+      console.log('error when connecting to db:', err);
+      setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+    }                                     // to avoid a hot loop, and to allow our node script to
+  });                                     // process asynchronous requests in the meantime.
+                                          // If you're also serving http, display a 503 error.
+  mysqlDB.on('error', function(err) {
+    console.log('db error', err);
+    if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+      handleDisconnect();                         // lost due to either server restart, or a
+    } else {                                      // connnection idle timeout (the wait_timeout
+      throw err;                                  // server variable configures this)
+    }
+  });
+}
+
+handleDisconnect();
+
+/************************************************** FRONTEND **************************************************/
 
 /* 배포 */
 if (process.env.NODE_ENV == 'production') {
@@ -36,7 +84,7 @@ if (process.env.NODE_ENV == 'production') {
 
 }
 
-/************************************ 화상채팅용 코드 시작 ************************************/
+/************************************************** VIDEO CONFERENCE **************************************************/
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, '../client/meetingroom_views'))
@@ -116,21 +164,24 @@ io.on('connection', socket => {
       });
 
       //taglist DB INPUT
-      tag_extract(contentInput).then(function(tag_list) {
-        var tag1 = tag_list[0];
-        var tag2 = tag_list[1];
-        var tag3 = tag_list[2];
+      //tag_extract(contentInput).then(function(tag_list) {
+        // var tag1 = tag_list[0];
+        // var tag2 = tag_list[1];
+        // var tag3 = tag_list[2];
+        var tag1 = '예시태그1';
+        var tag2 = '예시태그2';
+        var tag3 = '예시태그3';
         sql = `INSERT INTO TAGLIST VALUES('${room}', ?), ('${room}', ?), ('${room}', ?)`;
         mysqlDB.query(sql, [tag1, tag2, tag3], function(err, results){
           if(err) console.log(err);
           else console.log('success input taglist');
         });
-      }, function(err){
-        console.log(err);
-      })    
-      tag_extract(contentInput).then().catch(function(err){
-        console.log(err);
-      });
+      // }, function(err){
+      //   console.log(err);
+      // })    
+      // tag_extract(contentInput).then().catch(function(err){
+      //   console.log(err);
+      // });
 
       //scheduled meet 에서 삭제
       sql = 'UPDATE FORWARDMEET SET ISFINISH = 1 WHERE MEET_ID=?';
@@ -158,7 +209,7 @@ function tag_extract(contentInput) {
   return new Promise(function(resolve, reject){
     let options = {
       mode: 'text',
-      //pythonPath: 'C:\\Users\\WINDOWS10\\AppData\\Local\\Programs\\Python\\Python38\\python.exe',
+      pythonPath: 'C:\\ProgramData\\Anaconda3\\python.exe',
       pythonPath: '',
       pythonOptions: ['-u'],
       scriptPath: '',
