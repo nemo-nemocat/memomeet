@@ -187,7 +187,7 @@ export default function ScriptTitle(prop) {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
-        var raw = JSON.stringify({ "meet_id": meet_id, "meet_title": meet_title});
+        var raw = JSON.stringify({ "meet_id": meet_id});
 
         var requestOptions = {
             method: 'POST',
@@ -200,9 +200,14 @@ export default function ScriptTitle(prop) {
             .then(res => res.json())
             .then(result => {
                 if(result.code===0){
-                    alert("회의 스크립트를 다운로드 하였습니다. \nD:드라이브를 확인하세요");
+                    var element = document.createElement("a");
+                    var file = new Blob([result.data], {type : 'text/plain'});
+                    element.href = URL.createObjectURL(file);
+                    element.download = `${meet_title}.txt`;
+                    document.body.appendChild(element);
+                    element.click();
+                    element.remove();
                 }
-                console.log(result)
             })
             .catch(error => console.log('error', error))
     };
