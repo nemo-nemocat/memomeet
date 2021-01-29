@@ -9,7 +9,7 @@ const mysqlDB = require("./mysql-db");  //db 연결
 const shortid = require ('shortid'); // unique id 생성
 const path = require('path');
 const fs = require('fs'); //파일 읽고 쓰기 위함
-//const PythonShell = require('python-shell'); // python script 실행
+const PythonShell = require('python-shell'); // python script 실행
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -113,13 +113,20 @@ io.on('connection', socket => {
       });
 
       //taglist DB INPUT
-      var tag1 = '예시태그1';
-      var tag2 = '예시태그2';
-      var tag3 = '예시태그3';
-      sql = `INSERT INTO TAGLIST VALUES('${room}', ?), ('${room}', ?), ('${room}', ?)`;
-      mysqlDB.query(sql, [tag1, tag2, tag3], function(err, results){
-        if(err) console.log(err);
-        else console.log('success input taglist');
+      tag_extract(contentInput).then(function(tag_list) {
+        var tag1 = tag_list[0];
+        var tag2 = tag_list[1];
+        var tag3 = tag_list[2];
+        sql = `INSERT INTO TAGLIST VALUES('${room}', ?), ('${room}', ?), ('${room}', ?)`;
+        mysqlDB.query(sql, [tag1, tag2, tag3], function(err, results){
+          if(err) console.log(err);
+          else console.log('success input taglist');
+        });
+      }, function(err){
+        console.log(err);
+      })    
+      tag_extract(contentInput).then().catch(function(err){
+        console.log(err);
       });
 
       //scheduled meet 에서 삭제
@@ -143,29 +150,38 @@ io.on('connection', socket => {
 
 /************************************ Python 스크립트 실행 code ************************************/
 
-app.get('/keywordrank', function(req, res){
-  var meet_id="test"
-  var sql = 'SELECT content FROM MEETSCRIPT WHERE meet_id=?';
-  mysqlDB.query(sql, meet_id, function(err, results){
-    if(err) return res.send({code:11, msg:`${err}`});
-
-    else{
-      var options ={
-        mode: "text",
-        pythonPath: '',
-        pythonOptions: ['-u'],
-        scriptPath: '',
-        args: results[0].content
-      }
+function tag_extract(contentInput) {
+  return new Promise(function(resolve, reject){
+    let options = {
+      mode: 'text',
+      //pythonPath: 'C:\\Users\\WINDOWS10\\AppData\\Local\\Programs\\Python\\Python38\\python.exe',
+      pythonPath: '',
+      pythonOptions: ['-u'],
+      scriptPath: '',
+      args: [contentInput],
+      encoding: 'utf8'
+    };
   
-      PythonShell.PythonShell.run('keywordrank.py', options, function (err, results) {
-        if (err) throw err;
-        console.log('results: %j', results);
-      });
-    } 
-  });
-})
+    PythonShell.PythonShell.run('keyword-tag.py', options, function(err, results){
+      if(err) throw err;
+      let data = results[0].replace(`b\'`, '').replace(`\'`, '');
+      let buff = Buffer.from(data, 'base64');
+      let text = buff.toString('utf-8');
+      // console.log('text:', text);
+      // const list = eval('(' + text + ')');
+      // console.log('list.length, list', list.length, list)
+      var tag_list = text.split(' ');
+      //console.log('tag_list:', tag_list);
+      resolve(tag_list);
+      reject ("Failed tagging");
+      // return tag_list;
+    });  
+  })
+    
+}
 
+
+// tag_extract("음성 인식, 텍스트 요약, 요약, 요약");
 
 /************************************ Web server code ************************************/
 
