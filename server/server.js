@@ -72,7 +72,7 @@ io.on('connection', socket => {
     socket.to(room).broadcast.emit('userConnected', {id: id, name: name}) // room 안의 나를 제외한 모두에게 'userConnected' event emit
     io.to(room).emit('updateChat', {type: 'system', name: '[SYSTEM]', message: name + '님 입장'}) // room 안의 모두에게 입장메시지 전송
     io.to(room).emit('updateMembers', {num: rooms[room].num, members: rooms[room].members}) // room 안의 모두에게 멤버 업데이트
-    console.log(rooms)
+    console.log(name + ' 입장,' + ' 현재 멤버 : ' + rooms[room].members)
   })
 
   socket.on('message', (data) => {
@@ -137,8 +137,9 @@ io.on('connection', socket => {
       socket.to(room).broadcast.emit('userDisconnected', id) // room 안의 나를 제외한 모두에게 'userDisconnected' event emit
       io.to(room).emit('updateChat', {type: 'system', name: '[SYSTEM]', message: name + '님 퇴장'}) // room 안의 모두에게 퇴장메시지 전송
       io.to(room).emit('updateMembers', {num: rooms[room].num, members: rooms[room].members}) // room 안의 모두에게 멤버 업데이트
+    
+      console.log(name + ' 퇴장,' + ' 현재 멤버 : ' + rooms[room].members)
     }
-    console.log(rooms)
   })
 })
 
@@ -195,7 +196,6 @@ app.post('/auth-login', function(req, res) {
 
 //회원가입 요청
 app.post('/auth-signup', function(req, res){
-  console.log(req.body.user_id);
   var id = req.body.user_id;
   var pw = req.body.user_pw;
   var name = req.body.user_name;
