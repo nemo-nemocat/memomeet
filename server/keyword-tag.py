@@ -1,4 +1,5 @@
-from konlpy.tag import Okt
+#from konlpy.tag import Okt
+from eunjeon import Mecab
 from collections import Counter
 from nltk.corpus import stopwords
 import sys
@@ -7,8 +8,8 @@ import base64
 def get_noun(news, stopwords):
 # def get_noun(news):
     #okt 객체 생성
-    okt = Okt()
-    noun = okt.nouns(news)
+    mecab = Mecab()
+    noun = mecab.nouns(news)
 
     # 명사 빈도 카운트
     count = Counter(noun)
@@ -30,7 +31,7 @@ with open("stopwords.word.txt", 'r', encoding='utf-8') as f:
 stopwords = [x.strip() for x in stopwords]
 
 
-okt = Okt()
+mecab = Mecab()
 noun_list = get_noun(sys.argv[1], stopwords)
 
 # for v in noun_list:
