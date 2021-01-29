@@ -174,12 +174,12 @@ io.on('connection', socket => {
           if(err) console.log(err);
           else console.log('success input taglist');
         });
-      // }, function(err){
-      //   console.log(err);
-      // })    
-      // tag_extract(contentInput).then().catch(function(err){
-      //   console.log(err);
-      // });
+      }, function(err){
+        console.log(err);
+      })    
+      tag_extract(contentInput).then().catch(function(err){
+        console.log(err);
+      });
 
       //scheduled meet 에서 삭제
       sql = 'UPDATE FORWARDMEET SET ISFINISH = 1 WHERE MEET_ID=?';
@@ -207,7 +207,6 @@ function tag_extract(contentInput) {
   return new Promise(function(resolve, reject){
     let options = {
       mode: 'text',
-      pythonPath: 'C:\\ProgramData\\Anaconda3\\python.exe',
       pythonPath: '',
       pythonOptions: ['-u'],
       scriptPath: '',
