@@ -5,16 +5,65 @@ const io = require('socket.io')(server)
 const bodyParser = require('body-parser');
 const AppPort = process.env.PORT || 3002;
 const cors = require('cors');
-const mysqlDB = require("./mysql-db");  //db 연결
 const shortid = require ('shortid'); // unique id 생성
 const path = require('path');
 const fs = require('fs'); //파일 읽고 쓰기 위함
 const PythonShell = require('python-shell'); // python script 실행
-
+const mysql = require("mysql");
 app.use(cors());
 app.use(bodyParser.json());
 
+/************************************************** DATABASE **************************************************/
 
+var mysqlDB;
+
+/* 배포 */
+if (process.env.NODE_ENV == 'production') {
+  var db_config = {
+        host: 'us-cdbr-east-03.cleardb.com',
+        port: 3306,
+        user: 'b5dfcc92d33e0e',
+        password: '0c8450fd',
+        database: 'heroku_9c78ff95d911e67'
+      };
+  }
+  
+  /* 개발 */
+  else {
+    var db_config = {
+          host: 'localhost',
+          port: 3306,
+          user: 'root',
+          password: 'root',
+          database: 'memomeet'
+        };
+  }
+
+function handleDisconnect() {
+  console.log('DB 연결 완료');
+  mysqlDB = mysql.createConnection(db_config); 
+
+  mysqlDB.connect(function(err) {
+    if(err) {                                    
+      console.log('error when connecting to db:', err);
+      setTimeout(handleDisconnect, 2000); 
+    }                                    
+  });                                     
+  
+  // 도중에 db 연결 끊어지면 다시 연결 
+  mysqlDB.on('error', function(err) {
+    console.log('DB 연결 에러', err);
+    if(err.code === 'PROTOCOL_CONNECTION_LOST') { 
+      handleDisconnect();                        
+    } else {                                      
+     throw err;                                 
+    }
+  });
+}
+
+handleDisconnect();
+
+/************************************************** FRONTEND **************************************************/
 
 /* 배포 */
 if (process.env.NODE_ENV == 'production') {
@@ -36,7 +85,7 @@ if (process.env.NODE_ENV == 'production') {
 
 }
 
-/************************************ 화상채팅용 코드 시작 ************************************/
+/************************************************** VIDEO CONFERENCE **************************************************/
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, '../client/meetingroom_views'))
@@ -125,12 +174,12 @@ io.on('connection', socket => {
           if(err) console.log(err);
           else console.log('success input taglist');
         });
-      }, function(err){
-        console.log(err);
-      })    
-      tag_extract(contentInput).then().catch(function(err){
-        console.log(err);
-      });
+      // }, function(err){
+      //   console.log(err);
+      // })    
+      // tag_extract(contentInput).then().catch(function(err){
+      //   console.log(err);
+      // });
 
       //scheduled meet 에서 삭제
       sql = 'UPDATE FORWARDMEET SET ISFINISH = 1 WHERE MEET_ID=?';
@@ -158,7 +207,7 @@ function tag_extract(contentInput) {
   return new Promise(function(resolve, reject){
     let options = {
       mode: 'text',
-      //pythonPath: 'C:\\Users\\WINDOWS10\\AppData\\Local\\Programs\\Python\\Python38\\python.exe',
+      pythonPath: 'C:\\ProgramData\\Anaconda3\\python.exe',
       pythonPath: '',
       pythonOptions: ['-u'],
       scriptPath: '',
