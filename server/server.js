@@ -8,11 +8,11 @@ const cors = require('cors');
 const mysqlDB = require("./mysql-db");  //db 연결
 const shortid = require ('shortid'); // unique id 생성
 const path = require('path');
-const fs = require('fs'); //파일 읽고 쓰기 위함
 const PythonShell = require('python-shell'); // python script 실행
 
 app.use(cors());
 app.use(bodyParser.json());
+
 
 
 
@@ -123,14 +123,15 @@ io.on('connection', socket => {
         sql = `INSERT INTO TAGLIST VALUES('${room}', ?), ('${room}', ?), ('${room}', ?)`;
         mysqlDB.query(sql, [tag1, tag2, tag3], function(err, results){
           if(err) console.log(err);
-          else console.log('success input taglist');
+          else{
+            console.log('success input taglist');
+          }
         });
       }, function(err){
         console.log(err);
-      })    
-      tag_extract(contentInput).then().catch(function(err){
+      }).catch(function (err){
         console.log(err);
-      });
+      })    
 
       //scheduled meet 에서 삭제
       sql = 'UPDATE FORWARDMEET SET ISFINISH = 1 WHERE MEET_ID=?';
@@ -158,7 +159,7 @@ function tag_extract(contentInput) {
   return new Promise(function(resolve, reject){
     let options = {
       mode: 'text',
-      //pythonPath: 'C:\\Users\\WINDOWS10\\AppData\\Local\\Programs\\Python\\Python38\\python.exe',
+      //pythonPath: 'C:\\Users\\gyals\\AppData\\Local\\Programs\\Python\\Python38-32\\python.exe',
       pythonPath: '',
       pythonOptions: ['-u'],
       scriptPath: '',

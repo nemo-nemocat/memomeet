@@ -255,13 +255,11 @@ const playStop = () => {
 
 $(window).on('beforeunload', function() {
   opener.location.reload()
-  return '회의 나감';
 });
 
 const exit = () => {
   if (confirm("회의에서 나가시겠습니까?")){
     self.close()
-    opener.location.reload()
   }
 }
 
