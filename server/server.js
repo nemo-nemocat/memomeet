@@ -243,6 +243,7 @@ function tag_extract(contentInput) {
 
 // tag_extract("음성 인식, 텍스트 요약, 요약, 요약");
 
+
 /************************************ Web server code ************************************/
 
 //login 요청
@@ -451,6 +452,23 @@ app.post('/forwardmeet-delete', function(req,res){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
       return res.send({code:0, msg:"request success"});
+    }
+  })
+});
+
+//유효한 회의?
+app.post('/forwardmeet-valid', function(req, res){
+  var meet_id = req.body.meet_id;
+  var sql = 'SELECT isfinish FROM FORWARDMEET WHERE MEET_ID=?';
+  mysqlDB.query(sql, meet_id, function(err, results){
+    if(err) return res.send({code:11, msg:`${err}`});
+    else{
+      console.log(results[0].isfinish)
+      if(results[0].isfinish === 1){
+        return res.send({code:36, msg:"meet fail: invalid meet"});
+      }
+      else 
+        return res.send({code:0, msg:"request success"});
     }
   })
 });
