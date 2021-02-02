@@ -92,8 +92,34 @@ export default function Scheduled(prop) {
     const handleEnterMeet = (meet_id) => {
         var user_id = sessionStorage.getItem("user_id");
         var user_name = sessionStorage.getItem("user_name");
-        alert("회의에 입장합니다");
-        window.open(`/meeting?meet_id=${meet_id}&user_id=${user_id}&user_name=${user_name}`, 'Lets MeMoMeet');
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+    
+        var raw = JSON.stringify({ "meet_id": meet_id });
+    
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+    
+        fetch("/forwardmeet-valid", requestOptions)
+            .then(res => res.json())
+            .then(result => {
+                console.log(result);
+                if (result.code === 0) {         
+                    alert("회의에 입장합니다");
+                    window.open(`/meeting?meet_id=${meet_id}&user_id=${user_id}&user_name=${user_name}`, 'Lets MeMoMeet');
+                }
+                else if(result.code === 36){
+                    alert("이미 종료된 회의입니다.");
+                    window.location.reload();
+                }
+            })
+            .catch(error => console.log('error', error))
+
     }
 
     const handleDeleteIcon =(meet_id) => {
