@@ -12,6 +12,21 @@ const mysql = require("mysql");
 app.use(cors());
 app.use(bodyParser.json());
 
+/************************************************** SSL **************************************************/
+
+var forceSsl = function (req, res, next) {
+  if (req.headers['x-forwarded-proto'] !== 'https') {
+      return res.redirect(['https://', req.get('Host'), req.url].join(''));
+  }
+  return next();
+};
+
+app.configure(function () {      
+  if (env === 'production') {
+      app.use(forceSsl);
+  }
+});
+
 /************************************************** DATABASE **************************************************/
 
 var mysqlDB;
