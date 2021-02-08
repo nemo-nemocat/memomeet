@@ -14,9 +14,9 @@ app.use(bodyParser.json());
 
 /************************************************** SSL **************************************************/
 
-app.get("*", function (req, res, next) {
+app.get("*", function (req, res) {
 
-  if ("https" !== req.headers["x-forwarded-proto"] && process.env.NODE_ENV == 'production') {
+  if (process.env.NODE_ENV == 'production' && req.headers["x-forwarded-proto"] != 'https') {
       res.redirect(`https://${req.headers.host}${req.url}`);
   } 
 
