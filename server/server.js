@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.get("*", function (req, res, next) {
 
   if ("https" !== req.headers["x-forwarded-proto"] && process.env.NODE_ENV == 'production') {
-      res.redirect("https://" + req.hostname + req.url);
+      res.redirect(`https://${req.headers.host}${req.url}`);
   } 
 
 });
