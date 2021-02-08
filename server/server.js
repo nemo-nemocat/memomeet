@@ -14,17 +14,12 @@ app.use(bodyParser.json());
 
 /************************************************** SSL **************************************************/
 
-var forceSsl = function (req, res, next) {
-  if (req.headers['x-forwarded-proto'] !== 'https') {
-      return res.redirect(['https://', req.get('Host'), req.url].join(''));
-  }
-  return next();
-};
+app.get("*", function (req, res, next) {
 
-app.configure(function () {      
-  if (env === 'production') {
-      app.use(forceSsl);
-  }
+  if ("https" !== req.headers["x-forwarded-proto"] && process.env.NODE_ENV == 'production') {
+      res.redirect("https://" + req.hostname + req.url);
+  } 
+
 });
 
 /************************************************** DATABASE **************************************************/
