@@ -14,10 +14,13 @@ app.use(bodyParser.json());
 
 /************************************************** SSL **************************************************/
 
-import sslRedirect from 'heroku-ssl-redirect'
-if (process.env.NODE_ENV == 'production') {
-  app.use(sslRedirect());
-}
+app.use((req, res, next) => {
+  if (req.header('x-forwarded-proto') !== 'https') {
+    res.redirect(`https://${req.header('host')}${req.url}`)
+  } else {
+    next();
+  }
+});
 
 /************************************************** DATABASE **************************************************/
 
