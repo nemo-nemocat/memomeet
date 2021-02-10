@@ -4,7 +4,7 @@ import base64
 
 from collections import Counter
 from nltk.corpus import stopwords
-from konlpy.tag import Mecab
+from eunjeon import Mecab
 
 def get_noun(news, stopwords):
 # def get_noun(news):
