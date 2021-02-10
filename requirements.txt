@@ -1,6 +1,6 @@
 click==7.1.2
-eunjeon==0.4.0
 joblib==1.0.0
-nltk==3.5
 regex==2020.11.13
 tqdm==4.56.0
+nltk==3.5
+eunjeon==0.4.0
