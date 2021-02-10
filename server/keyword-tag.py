@@ -1,9 +1,10 @@
 #from konlpy.tag import Okt
-from eunjeon import Mecab
-from collections import Counter
-from nltk.corpus import stopwords
 import sys
 import base64
+
+from collections import Counter
+from nltk.corpus import stopwords
+from eunjeon import Mecab
 
 def get_noun(news, stopwords):
 # def get_noun(news):

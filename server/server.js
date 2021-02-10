@@ -54,30 +54,6 @@ if (process.env.NODE_ENV == 'production') {
         mysqlDB = mysql.createConnection(db_config); 
   }
 
-// function handleDisconnect() {
-//   console.log('DB 연결 완료');
-//   mysqlDB = mysql.createConnection(db_config); 
-
-//   mysqlDB.connect(function(err) {
-//     if(err) {                                    
-//       console.log('error when connecting to db:', err);
-//       setTimeout(handleDisconnect, 2000); 
-//     }                                    
-//   });                                     
-  
-//   // 도중에 db 연결 끊어지면 다시 연결 
-//   mysqlDB.on('error', function(err) {
-//     console.log('DB 연결 에러', err);
-//     if(err.code === 'PROTOCOL_CONNECTION_LOST') { 
-//       handleDisconnect();                        
-//     } else {                                      
-//      throw err;                                 
-//     }
-//   });
-// }
-
-// handleDisconnect();
-
 /************************************************** FRONTEND **************************************************/
 
 
@@ -181,13 +157,10 @@ io.on('connection', socket => {
       });
 
       //taglist DB INPUT
-      //tag_extract(contentInput).then(function(tag_list) {
-        // var tag1 = tag_list[0];
-        // var tag2 = tag_list[1];
-        // var tag3 = tag_list[2];
-        var tag1 = '회의';
-        var tag2 = '일정';
-        var tag3 = '수요일';
+      tag_extract(contentInput).then(function(tag_list) {
+        var tag1 = tag_list[0];
+        var tag2 = tag_list[1];
+        var tag3 = tag_list[2];
         sql = `INSERT INTO TAGLIST VALUES('${room}', ?), ('${room}', ?), ('${room}', ?)`;
         mysqlDB.query(sql, [tag1, tag2, tag3], function(err, results){
           if(err) console.log(err);
@@ -195,11 +168,11 @@ io.on('connection', socket => {
             console.log('success input taglist');
           }
         });
-      // }, function(err){
-      //   console.log(err);
-      // }).catch(function (err){
-      //   console.log(err);
-      // })    
+      }, function(err){
+        console.log(err);
+      }).catch(function (err){
+        console.log(err);
+      })    
 
       //scheduled meet 에서 삭제
       sql = 'UPDATE FORWARDMEET SET ISFINISH = 1 WHERE MEET_ID=?';
