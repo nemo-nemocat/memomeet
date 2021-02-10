@@ -161,9 +161,6 @@ io.on('connection', socket => {
         var tag1 = tag_list[0];
         var tag2 = tag_list[1];
         var tag3 = tag_list[2];
-        var tag1 = '회의';
-        var tag2 = '일정';
-        var tag3 = '수요일';
         sql = `INSERT INTO TAGLIST VALUES('${room}', ?), ('${room}', ?), ('${room}', ?)`;
         mysqlDB.query(sql, [tag1, tag2, tag3], function(err, results){
           if(err) console.log(err);
