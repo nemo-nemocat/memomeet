@@ -46,7 +46,6 @@
     "build": "cd client && react-scripts build",
     "test": "cd client && react-scripts test",
     "eject": "cd client && react-scripts eject",
-    "postinstall": "node_modules/mecab/bin/install-mecab ko",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "cd server && nodemon server.js",
     "dev:client": "cd client && react-scripts start && yarn start"
