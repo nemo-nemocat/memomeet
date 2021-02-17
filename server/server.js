@@ -149,19 +149,13 @@ io.on('connection', socket => {
         else console.log('success input meetscript');
       });
 
-      //finishedmeet DB INPUT
-      var summary = "summary 예시입니당~~~~~~~~"
-      sql = 'INSERT INTO FINISHEDMEET VALUE(?, ?)';
-      mysqlDB.query(sql, [room, summary], function(err, results){
-        if(err) console.log(err);
-        else console.log('success input finishedmeet');
-      });
-
       //taglist DB INPUT
-      tag_extract(contentInput).then(function(tag_list) {
-        var tag1 = tag_list[0];
-        var tag2 = tag_list[1];
-        var tag3 = tag_list[2];
+      tag_extract(contentInput).then(function(pythonData) {
+        console.log(pythonData)
+
+        var tag1 = pythonData.tag1;
+        var tag2 = pythonData.tag2;
+        var tag3 = pythonData.tag3;
         sql = `INSERT INTO TAGLIST VALUES('${room}', ?), ('${room}', ?), ('${room}', ?)`;
         mysqlDB.query(sql, [tag1, tag2, tag3], function(err, results){
           if(err) console.log(err);
@@ -169,6 +163,15 @@ io.on('connection', socket => {
             console.log('success input taglist');
           }
         });
+
+        //finishedmeet DB INPUT
+        var summary = "summary 예시~~~~~~~~~~~";
+        sql = 'INSERT INTO FINISHEDMEET VALUE(?,?,?)';
+        mysqlDB.query(sql, [room, summary, pythonData.imgBuffer.data], function(err, results){
+          if(err) console.log(err);
+          else console.log('success input finishedmeet');
+        });
+
       }, function(err){
         console.log(err);
       }).catch(function (err){
@@ -219,13 +222,16 @@ function tag_extract(contentInput) {
       var tagData = JSON.parse(results).tag;
       let text = tagData.toString('utf-8');
       var tag_list = text.split(' ');
-      resolve(tag_list);
-      reject ("Failed tagging");
+      //resolve(tag_list);
+      // reject ("Failed tagging");
 
       var imgData = JSON.parse(results).img;
-      imgBuffer = new Buffer.from(imgData);
-      var fs = require("fs");
-      fs.writeFileSync("temp.png", imgBuffer);
+      var imgBuffer = new Buffer.from(imgData);
+
+      var pythonData = {"tag1": tag_list[0], "tag2": tag_list[1], "tag3": tag_list[2],"imgBuffer": imgData};
+      resolve(pythonData);
+      // var fs = require("fs");
+      // fs.writeFileSync("temp.png", imgBuffer);
     });  
   })
     
@@ -419,7 +425,7 @@ app.post('/forwardmeet-create', function(req,res){
 //예약 회의 목록
 app.post('/forwardmeet-list', function(req,res){
   var group_id = req.body.group_id;
-  var sql = 'SELECT * FROM FORWARDMEET WHERE GROUP_ID=? ORDER BY MEET_DAY, MEET_TIME';
+  var sql = 'SELECT * FROM FORWARDMEET WHERE GROUP_ID=? ORDER BY MEET_DAY AND MEET_TIME';
   mysqlDB.query(sql, group_id, function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
@@ -467,7 +473,7 @@ app.post('/forwardmeet-valid', function(req, res){
 //끝난 회의 목록
 app.post('/finishedmeet-list', function(req,res){
   var group_id = req.body.group_id;
-  var sql = 'SELECT * FROM FORWARDMEET, FINISHEDMEET WHERE GROUP_ID=? AND FORWARDMEET.MEET_ID = FINISHEDMEET.MEET_ID ORDER BY MEET_DAY, MEET_TIME DESC';
+  var sql = 'SELECT * FROM FORWARDMEET, FINISHEDMEET WHERE GROUP_ID=? AND FORWARDMEET.MEET_ID = FINISHEDMEET.MEET_ID ORDER BY MEET_DAY AND MEET_TIME DESC';
   mysqlDB.query(sql, group_id, function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
