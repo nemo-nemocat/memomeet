@@ -1,1 +1,2 @@
+textrankr==1.0
 eunjeon==0.4.0
