@@ -7,6 +7,8 @@ from collections import Counter
 from nltk.corpus import stopwords
 from eunjeon import Mecab
 
+nltk.data.path.append('./nltk_data/')
+
 def get_noun(news, stopwords):
 # def get_noun(news):
     #okt 객체 생성
