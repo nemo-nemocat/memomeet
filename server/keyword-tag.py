@@ -1,4 +1,3 @@
-#from konlpy.tag import Okt
 import sys
 import base64
 import io
@@ -6,12 +5,11 @@ import json
 
 from wordcloud import WordCloud
 from collections import Counter
-#from nltk.corpus import stopwords
 from eunjeon import Mecab
 
 def get_noun(news, stopwords):
 # def get_noun(news):
-    #okt 객체 생성
+    #okt 객체 생성 
     mecab = Mecab()
     noun = mecab.nouns(news)
 
@@ -46,7 +44,7 @@ def visualize(noun_list):
 #f = open(filename, 'r', encoding='utf-8')
 #news = f.read()
 
-with open("stopwords.word.txt", 'r', encoding='utf-8') as f:
+with open("stopwords.txt", 'r', encoding='utf-8') as f:
     stopwords = f.readlines()
 stopwords = [x.strip() for x in stopwords]
 
