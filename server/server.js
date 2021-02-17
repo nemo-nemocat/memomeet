@@ -210,17 +210,22 @@ function tag_extract(contentInput) {
   
     PythonShell.PythonShell.run('keyword-tag.py', options, function(err, results){
       if(err) throw err;
-      let data = results[0].replace(`b\'`, '').replace(`\'`, '');
-      let buff = Buffer.from(data, 'base64');
-      let text = buff.toString('utf-8');
-      // console.log('text:', text);
-      // const list = eval('(' + text + ')');
-      // console.log('list.length, list', list.length, list)
+      // let data = results[0].replace(`b\'`, '').replace(`\'`, '');
+      // let buff = Buffer.from(data, 'base64');
+      // let text = buff.toString('utf-8');
+      // var tag_list = text.split(' ');
+      // resolve(tag_list);
+      // reject ("Failed tagging");
+      var tagData = JSON.parse(results).tag;
+      let text = tagData.toString('utf-8');
       var tag_list = text.split(' ');
-      //console.log('tag_list:', tag_list);
       resolve(tag_list);
       reject ("Failed tagging");
-      // return tag_list;
+
+      var imgData = JSON.parse(results).img;
+      imgBuffer = new Buffer.from(imgData);
+      var fs = require("fs");
+      fs.writeFileSync("temp.png", imgBuffer);
     });  
   })
     
