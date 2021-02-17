@@ -24,7 +24,7 @@ def get_noun(news, stopwords):
     return noun_list
 
 def visualize(noun_list):
-    wc = WordCloud(font_path='C:\Windows\Fonts\SeoulNamsanB.ttf', \
+    wc = WordCloud(font_path='./SeoulNamsanB.ttf', \
                    background_color="white", \
                    width=1000, \
                    height=1000, \
