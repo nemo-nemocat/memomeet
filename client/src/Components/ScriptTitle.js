@@ -11,6 +11,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import LogoutIcon from '@material-ui/icons/LockOpen';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {jsPDF} from 'jspdf';
+import MyFont from '../font.js';
 
 const useStyles = makeStyles((theme) => ({
     header: {
@@ -200,13 +202,36 @@ export default function ScriptTitle(prop) {
             .then(res => res.json())
             .then(result => {
                 if(result.code===0){
-                    var element = document.createElement("a");
-                    var file = new Blob([result.data], {type : 'text/plain'});
-                    element.href = URL.createObjectURL(file);
-                    element.download = `${meet_title}.txt`;
-                    document.body.appendChild(element);
-                    element.click();
-                    element.remove();
+                    var doc = new jsPDF();
+                    var xPos = 15;
+                    var yPos = 10;
+
+                    doc.addFileToVFS('malgun.ttf', MyFont);
+                    doc.addFont('malgun.ttf', 'malgun', 'normal');
+                    doc.setFont('malgun');
+                    doc.setFontSize(20);
+
+                    doc.line(15, yPos, 195, yPos);
+                    yPos += 10;  
+                    doc.text(85,yPos, "SUMMARY");
+                    yPos += 10;
+                    doc.setFontSize(12);
+
+                    var splitText =  doc.splitTextToSize(result.summary,180)
+                    doc.text(xPos, yPos, splitText);
+                    var blockHeight = doc.getLineHeight(splitText);
+                    yPos += blockHeight;
+
+                    doc.line(15, yPos, 195, yPos);
+                    yPos += 10;  
+                    doc.setFontSize(20);
+                    doc.text(90, yPos, "SCRIPT");
+                    yPos += 10;
+                    doc.setFontSize(12);
+                    splitText =  doc.splitTextToSize(result.chat,180)
+                    doc.text(xPos, yPos, splitText);
+
+                    doc.save(`${meet_title}.pdf`);
                 }
             })
             .catch(error => console.log('error', error))

@@ -52,7 +52,9 @@ if (process.env.NODE_ENV == 'production') {
         };
 
         mysqlDB = mysql.createConnection(db_config); 
+
   }
+
 
 // function handleDisconnect() {
 //   console.log('DB 연결 완료');
@@ -181,13 +183,13 @@ io.on('connection', socket => {
       });
 
       //taglist DB INPUT
-      //tag_extract(contentInput).then(function(tag_list) {
-        // var tag1 = tag_list[0];
-        // var tag2 = tag_list[1];
-        // var tag3 = tag_list[2];
-        var tag1 = '회의';
-        var tag2 = '일정';
-        var tag3 = '수요일';
+      tag_extract(contentInput).then(function(tag_list) {
+        var tag1 = tag_list[0];
+        var tag2 = tag_list[1];
+        var tag3 = tag_list[2];
+        // var tag1 = '회의';
+        // var tag2 = '일정';
+        // var tag3 = '수요일';
         sql = `INSERT INTO TAGLIST VALUES('${room}', ?), ('${room}', ?), ('${room}', ?)`;
         mysqlDB.query(sql, [tag1, tag2, tag3], function(err, results){
           if(err) console.log(err);
@@ -195,11 +197,11 @@ io.on('connection', socket => {
             console.log('success input taglist');
           }
         });
-      // }, function(err){
-      //   console.log(err);
-      // }).catch(function (err){
-      //   console.log(err);
-      // })    
+      }, function(err){
+        console.log(err);
+      }).catch(function (err){
+        console.log(err);
+      })    
 
       //scheduled meet 에서 삭제
       sql = 'UPDATE FORWARDMEET SET ISFINISH = 1 WHERE MEET_ID=?';
@@ -290,7 +292,7 @@ app.post('/auth-signup', function(req, res){
   var sql = 'INSERT INTO USERLIST(user_id, user_pw, user_name, user_email) VALUE(?, ?, ?, ?)';
   mysqlDB.query(sql, [id, pw, name, email], function(err, results){
       if(err){
-        return res.send({code:3, msg:"auth fail: id already exists"});
+        return res.send({code:3, msg:`${err}`});
       }
       else return res.send({code:0, msg:"request success"});
   });
@@ -605,8 +607,7 @@ app.post('/finishedmeet-download', function(req,res){
     else{
       var summary = results[0].summary;
       var chat = results[0].chat.replace(/,/g, '\n')
-      var val = `[Summary]\n${summary}\n\n[Script]\n${chat}`
-      res.send({code:0, msg:"request success", data: val});
+      res.send({code:0, msg:"request success", summary: summary, chat: chat});
     }
   })
 });
