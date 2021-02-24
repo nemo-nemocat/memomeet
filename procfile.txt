@@ -1,0 +1,1 @@
+web: curl -s https://raw.githubusercontent.com/koshort/pyeunjeon/master/scripts/mecab.sh
