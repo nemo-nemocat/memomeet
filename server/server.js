@@ -9,6 +9,7 @@ const shortid = require ('shortid'); // unique id 생성
 const path = require('path');
 const PythonShell = require('python-shell'); // python script 실행
 const mysql = require("mysql");
+
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -152,10 +153,10 @@ io.on('connection', socket => {
 
       //taglist DB INPUT
       tag_extract(contentInput).then(function(pythonData) {
-
         var tag1 = pythonData.tag1;
         var tag2 = pythonData.tag2;
         var tag3 = pythonData.tag3;
+
         sql = `INSERT INTO TAGLIST VALUES('${room}', ?), ('${room}', ?), ('${room}', ?)`;
         mysqlDB.query(sql, [tag1, tag2, tag3], function(err, results){
           if(err) console.log(err);
@@ -167,7 +168,7 @@ io.on('connection', socket => {
         //finishedmeet DB INPUT
         var summary = "summary 예시~~~~~~~~~~~";
         sql = 'INSERT INTO FINISHEDMEET VALUE(?,?,?)';
-        mysqlDB.query(sql, [room, summary, pythonData.imgBuffer.data], function(err, results){
+        mysqlDB.query(sql, [room, summary, pythonData.imgData], function(err, results){
           if(err) console.log(err);
           else console.log('success input finishedmeet');
         });
@@ -231,9 +232,8 @@ function tag_extract(contentInput) {
       // reject ("Failed tagging");
 
       var imgData = JSON.parse(results).img;
-      var imgBuffer = new Buffer.from(imgData);
 
-      var pythonData = {"tag1": tag_list[0], "tag2": tag_list[1], "tag3": tag_list[2],"imgBuffer": imgData};
+      var pythonData = {"tag1": tag_list[0], "tag2": tag_list[1], "tag3": tag_list[2],"imgData": imgData};
       resolve(pythonData);
       // var fs = require("fs");
       // fs.writeFileSync("temp.png", imgBuffer);
@@ -241,10 +241,6 @@ function tag_extract(contentInput) {
   })
     
 }
-
-
-// tag_extract("음성 인식, 텍스트 요약, 요약, 요약");
-
 
 /************************************ Web server code ************************************/
 
@@ -589,13 +585,14 @@ app.post('/finishedmeet-delete', function(req, res){
 //회의 스크립트 다운로드
 app.post('/finishedmeet-download', function(req,res){
   var meet_id = req.body.meet_id;
-  var sql = 'SELECT chat, summary FROM MEETSCRIPT AS M ,FINISHEDMEET AS F WHERE M.MEET_ID =? AND M.MEET_ID=F.MEET_ID';
+  var sql = 'SELECT chat, summary, wordcloud FROM MEETSCRIPT AS M ,FINISHEDMEET AS F WHERE M.MEET_ID =? AND M.MEET_ID=F.MEET_ID';
   mysqlDB.query(sql, meet_id, function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
       var summary = results[0].summary;
       var chat = results[0].chat.replace(/,/g, '\n')
-      res.send({code:0, msg:"request success", summary: summary, chat: chat});
+      var wordcloud = results[0].wordcloud;
+      res.send({code:0, msg:"request success", summary: summary, chat: chat, wc: wordcloud});
     }
   })
 });
