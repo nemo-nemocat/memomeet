@@ -9,7 +9,6 @@ const shortid = require ('shortid'); // unique id 생성
 const path = require('path');
 const PythonShell = require('python-shell'); // python script 실행
 const mysql = require("mysql");
-const b64toBlob = require('b64-to-blob');
 
 app.use(cors());
 app.use(bodyParser.json());
