@@ -211,7 +211,7 @@ function tag_extract(contentInput) {
       encoding: 'utf8'
     };
   
-    PythonShell.PythonShell.run('keyword-tag-pykomoran.py', options, function(err, results){
+    PythonShell.PythonShell.run('keyword-tag.py', options, function(err, results){
       if(err) throw err;
       // let data = results[0].replace(`b\'`, '').replace(`\'`, '');
       // let buff = Buffer.from(data, 'base64');
