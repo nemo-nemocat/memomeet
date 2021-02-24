@@ -1,4 +1,6 @@
 pybind11==2.6.2
+
 wordcloud==1.8.1
 python-mecab-ko==1.0.11
+
 
