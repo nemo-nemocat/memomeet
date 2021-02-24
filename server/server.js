@@ -14,6 +14,7 @@ app.use(bodyParser.json());
 
 /************************************************** SSL **************************************************/
 
+// https를 치지 않아도 자동으로 리다이렉트 시켜서 보안연결되도록
 if (process.env.NODE_ENV == 'production') {
   app.use((req, res, next) => {
     if (req.header('x-forwarded-proto') !== 'https') {
