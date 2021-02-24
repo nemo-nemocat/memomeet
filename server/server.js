@@ -200,7 +200,12 @@ io.on('connection', socket => {
 
 /************************************ Python 스크립트 실행 code ************************************/
 
+// 개발시에는 komoran, 배포시에는 mecab
+tagScript = 'tag-development.py'
+if (process.env.NODE_ENV == 'production') tagScript = 'tag-production.py'
+
 function tag_extract(contentInput) {
+
   return new Promise(function(resolve, reject){
     let options = {
       mode: 'text',
@@ -210,8 +215,8 @@ function tag_extract(contentInput) {
       args: [contentInput],
       encoding: 'utf8'
     };
-  
-    PythonShell.PythonShell.run('keyword-tag.py', options, function(err, results){
+
+    PythonShell.PythonShell.run(tagScript, options, function(err, results){
       if(err) throw err;
       // let data = results[0].replace(`b\'`, '').replace(`\'`, '');
       // let buff = Buffer.from(data, 'base64');

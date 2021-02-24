@@ -5,14 +5,11 @@ import json
 
 from wordcloud import WordCloud
 from collections import Counter
-#from PyKomoran import Komoran, DEFAULT_MODEL
 import mecab
-mecab = mecab.MeCab()
 
 def get_noun(contents, stopwords):
-
-    #komoran = Komoran(DEFAULT_MODEL['FULL'])
-    #nouns = komoran.get_nouns(contents)
+    
+    mecab = mecab.MeCab()
     nouns = mecab.nouns(contents)
 
     # 명사 빈도 카운트
