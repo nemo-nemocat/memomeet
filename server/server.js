@@ -151,7 +151,6 @@ io.on('connection', socket => {
 
       //taglist DB INPUT
       tag_extract(contentInput).then(function(pythonData) {
-        console.log(pythonData)
 
         var tag1 = pythonData.tag1;
         var tag2 = pythonData.tag2;
