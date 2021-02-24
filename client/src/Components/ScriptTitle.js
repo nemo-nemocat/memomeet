@@ -202,9 +202,20 @@ export default function ScriptTitle(prop) {
             .then(res => res.json())
             .then(result => {
                 if(result.code===0){
+                    console.log(result);
+
+                    var image = new Image();
+
+                    image.src = `data:image/png;base64,${result.wc}`;
+                    console.log(image.src);
+
                     var doc = new jsPDF();
                     var xPos = 15;
                     var yPos = 10;
+
+                    doc.addImage(image, 'JPEG', 70, yPos, 70, 70);
+
+                    yPos += 80;
 
                     doc.addFileToVFS('malgun.ttf', MyFont);
                     doc.addFont('malgun.ttf', 'malgun', 'normal');

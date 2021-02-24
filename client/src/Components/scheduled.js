@@ -56,6 +56,12 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "flex-start",
         alignItems: "center",
         verticalAlign: "middle",
+    },
+    deleteBtn:{
+        marginTop:"-2%",
+        "&:hover": {
+            color: "#ffa0a0",
+        },
     }
 }));
 
@@ -160,7 +166,7 @@ export default function Scheduled(prop) {
                         <ListItem key={data.meet_id} className={classes.data}>
                             <div style={{display:'block',width:"81%", margin:"2%"}}>
                                 <div className={classes.ScheduledName}>
-                                <DeleteForever onClick={()=> handleDeleteIcon(data.meet_id)} style={{marginTop:"-2%"}} color="error"/>
+                                <DeleteForever onClick={()=> handleDeleteIcon(data.meet_id)} className={classes.deleteBtn} color="error"/>
                                 <span style={{fontWeight:"bold"}}>{data.meet_title}</span>
                                 </div>
                                 <Grid>
