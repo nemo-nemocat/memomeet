@@ -1,1 +1,3 @@
-soynlp==0.0.493
+wordcloud==1.8.1
+PyKomoran==0.1.5
+

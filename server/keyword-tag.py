@@ -5,16 +5,15 @@ import json
 
 from wordcloud import WordCloud
 from collections import Counter
-from eunjeon import Mecab
+from PyKomoran import Komoran, DEFAULT_MODEL
 
-def get_noun(news, stopwords):
-# def get_noun(news):
-    #okt 객체 생성 
-    mecab = Mecab()
-    noun = mecab.nouns(news)
+def get_noun(contents, stopwords):
+
+    komoran = Komoran(DEFAULT_MODEL['FULL'])
+    nouns = komoran.get_nouns(contents)
 
     # 명사 빈도 카운트
-    count = Counter(noun)
+    count = Counter(nouns)
 
     # 두글자 이상의 명사만 (한글자인 '것', '수', '등' 등 제외)
     remove_char_counter = Counter({x: count[x] for x in count if len(x) > 1})
@@ -40,16 +39,10 @@ def visualize(noun_list):
     img_b64 = base64.b64encode(img.getvalue()).decode()
     return img_b64
 
-#filename = "news.txt"
-#f = open(filename, 'r', encoding='utf-8')
-#news = f.read()
-
 with open("stopwords.txt", 'r', encoding='utf-8') as f:
     stopwords = f.readlines()
 stopwords = [x.strip() for x in stopwords]
 
-
-mecab = Mecab()
 noun_list = get_noun(sys.argv[1], stopwords)
 word_cloud = visualize(noun_list)
 
