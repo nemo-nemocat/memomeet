@@ -6,10 +6,10 @@ import json
 from wordcloud import WordCloud
 from collections import Counter
 import mecab
-mecab = mecab.MeCab()
 
 def get_noun(contents, stopwords):
     
+    mecab = mecab.MeCab()
     nouns = mecab.nouns(contents)
 
     # 명사 빈도 카운트
