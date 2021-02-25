@@ -201,7 +201,7 @@ io.on('connection', socket => {
 
 /************************************ Python 스크립트 실행 code ************************************/
 
-// 개발시에는 komoran, 배포시에는 mecab
+// 개발시에는 eunjeon, 배포시에는 python-mecab-ko
 tagScript = 'tag-development.py'
 if (process.env.NODE_ENV == 'production') tagScript = 'tag-production.py'
 
