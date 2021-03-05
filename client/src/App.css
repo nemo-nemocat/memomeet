@@ -1,4 +1,5 @@
 .App {
+  font-family: 'Nanum Square';
   text-align: center;
 }
 
@@ -35,4 +36,9 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+@font-face{
+  font-family: 'Nanum Square';
+  src: url(font/NanumSquareR.ttf) format('truetype');
 }
