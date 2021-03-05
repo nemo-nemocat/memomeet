@@ -16,6 +16,7 @@ env = os.environ.get("PYTHON_ENV")
 if(env =="production"):
     import mecab
     mecab = mecab.MeCab()
+    print('배포버전배포버전배포버전')
 else :
     from eunjeon import Mecab
     mecab = Mecab()
