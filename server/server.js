@@ -158,12 +158,12 @@ io.on('connection', socket => {
       });   
 
       //finishedmeet DB INPUT
-      var summary = "summary 예시~~~~~~~~~~~";
-      sql = 'INSERT INTO FINISHEDMEET VALUE(?,?,?)';
-      mysqlDB.query(sql, [room, summary, "test"], function(err, results){
-        if(err) console.log(err);
-        else console.log('success input finishedmeet');
-      });
+      // var summary = "summary 예시~~~~~~~~~~~";
+      // sql = 'INSERT INTO FINISHEDMEET VALUE(?,?,?)';
+      // mysqlDB.query(sql, [room, summary, "test"], function(err, results){
+      //   if(err) console.log(err);
+      //   else console.log('success input finishedmeet');
+      // });
 
       //scheduled meet 에서 삭제
       sql = 'UPDATE FORWARDMEET SET ISFINISH = 1 WHERE MEET_ID=?';

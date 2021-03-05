@@ -38,11 +38,29 @@ def index():
         noun_list = remove_char_counter.most_common(100)
         return noun_list
 
+    def visualize(noun_list):
+        wc = WordCloud(font_path='./SeoulNamsanB.ttf', \
+                    background_color="white", \
+                    width=1000, \
+                    height=1000, \
+                    max_words=100, \
+                    max_font_size=300)
+
+        # wc.generate_from_frequencies(dict(noun_list))
+        # wc.to_file('keyword.png')
+        pil_img = wc.generate_from_frequencies(dict(noun_list)).to_image()
+        img = io.BytesIO()
+        pil_img.save(img, "PNG")
+        img.seek(0)
+        img_b64 = base64.b64encode(img.getvalue()).decode()
+        return img_b64
+
     with open("stopwords.txt", 'r', encoding='utf-8') as f:
         stopwords = f.readlines()
     stopwords = [x.strip() for x in stopwords]
 
     noun_list = get_noun(contents[0][0], stopwords)
+    word_cloud = visualize(noun_list)
 
     i = 0
     for v in noun_list:
@@ -51,7 +69,12 @@ def index():
             sql = 'INSERT INTO TAGLIST(meet_id, tag) VALUE(%s, %s)'
             cur.execute(sql, (meet_id, v[0]))
             db.commit()
-            
+
+    summary = "summary 예시 in flask"
+    sql = 'INSERT INTO FINISHEDMEET VALUE(%s,%s,%s)'
+    cur.execute(sql, (meet_id, summary, word_cloud))
+    db.commit()
+
     return "success input taglist"
 
 
