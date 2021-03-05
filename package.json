@@ -44,7 +44,7 @@
     "yarn": "^1.22.10"
   },
   "scripts": {
-    "start": "cd server && node server.js && flask run",
+    "start": "cd server && node server.js",
     "heroku-postbuild": "cd client && npm install && npm run build",
     "build": "cd client && react-scripts build",
     "test": "cd client && react-scripts test",
