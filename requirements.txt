@@ -1,5 +1,6 @@
 pybind11==2.6.2
 Flask==1.1.2
 PyMySQL==1.0.2
+gunicorn==20.0.4
 wordcloud==1.8.1
 python-mecab-ko==1.0.11
