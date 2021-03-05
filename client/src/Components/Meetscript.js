@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     scriptContainer: {
         backgroundColor:"#eaeaea", 
         width:"89%", 
-        height:"82%",
+        height:"80%",
         padding: "3%",
         borderRadius:10, 
         margin:"auto",

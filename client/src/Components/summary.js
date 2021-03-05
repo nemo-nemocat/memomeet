@@ -55,7 +55,7 @@ export default function Script(prop) {
                 <Typography variant="h6" align="center">
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Summary</span>   
                 </Typography>
-                <div style={{backgroundColor:"#eaeaea", width:"84%", height:"87%",borderRadius:10, margin:"auto", padding:"3%"}}>
+                <div style={{backgroundColor:"#eaeaea", width:"84%", height:"85%",borderRadius:10, margin:"auto", padding:"3%"}}>
                     <Typography className={classes.data}>
                         {data.summary}
                     </Typography>
