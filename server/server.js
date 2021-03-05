@@ -157,14 +157,6 @@ io.on('connection', socket => {
           console.log('flask_response:', body); // Print the data received
       });   
 
-      //finishedmeet DB INPUT
-      // var summary = "summary 예시~~~~~~~~~~~";
-      // sql = 'INSERT INTO FINISHEDMEET VALUE(?,?,?)';
-      // mysqlDB.query(sql, [room, summary, "test"], function(err, results){
-      //   if(err) console.log(err);
-      //   else console.log('success input finishedmeet');
-      // });
-
       //scheduled meet 에서 삭제
       sql = 'UPDATE FORWARDMEET SET ISFINISH = 1 WHERE MEET_ID=?';
       mysqlDB.query(sql, room, function(err, results){
@@ -450,7 +442,7 @@ app.post('/forwardmeet-valid', function(req, res){
 //끝난 회의 목록
 app.post('/finishedmeet-list', function(req,res){
   var group_id = req.body.group_id;
-  var sql = 'SELECT * FROM FORWARDMEET, FINISHEDMEET WHERE GROUP_ID=? AND FORWARDMEET.MEET_ID = FINISHEDMEET.MEET_ID ORDER BY MEET_DAY AND MEET_TIME DESC';
+  var sql = 'SELECT * FROM FORWARDMEET, FINISHEDMEET WHERE GROUP_ID=? AND FORWARDMEET.MEET_ID = FINISHEDMEET.MEET_ID ORDER BY MEET_DAY DESC, MEET_TIME DESC';
   mysqlDB.query(sql, group_id, function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
