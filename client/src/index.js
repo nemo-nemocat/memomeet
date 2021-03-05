@@ -8,7 +8,10 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 
 
 const theme = createMuiTheme({
-  palette: {
+   typography: {
+      fontFamily: 'Nanum Square',
+    },
+    palette: {
      primary: {
         main: "#ffc31e" 
      },
