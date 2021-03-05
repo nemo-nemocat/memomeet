@@ -152,40 +152,18 @@ io.on('connection', socket => {
         else console.log('success input meetscript');
       });
 
-
-      request('http://localhost:5000/flask', function (error, response, body) {
-          console.error('error:', error); // Print the error
-          console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-          console.log('body:', body); // Print the data received
+      //taglist input
+      request({method: 'POST', url:'http://localhost:5000/keyword-tag', json: {"meet_id": room}}, function (error, response, body) {
+          console.log('flask_response:', body); // Print the data received
       });   
 
-      //taglist DB INPUT
-      tag_extract(contentInput).then(function(pythonData) {
-        var tag1 = pythonData.tag1;
-        var tag2 = pythonData.tag2;
-        var tag3 = pythonData.tag3;
-
-        sql = `INSERT INTO TAGLIST VALUES('${room}', ?), ('${room}', ?), ('${room}', ?)`;
-        mysqlDB.query(sql, [tag1, tag2, tag3], function(err, results){
-          if(err) console.log(err);
-          else{
-            console.log('success input taglist');
-          }
-        });
-
-        //finishedmeet DB INPUT
-        var summary = "summary 예시~~~~~~~~~~~";
-        sql = 'INSERT INTO FINISHEDMEET VALUE(?,?,?)';
-        mysqlDB.query(sql, [room, summary, pythonData.imgData], function(err, results){
-          if(err) console.log(err);
-          else console.log('success input finishedmeet');
-        });
-
-      }, function(err){
-        console.log(err);
-      }).catch(function (err){
-        console.log(err);
-      })    
+      //finishedmeet DB INPUT
+      var summary = "summary 예시~~~~~~~~~~~";
+      sql = 'INSERT INTO FINISHEDMEET VALUE(?,?,?)';
+      mysqlDB.query(sql, [room, summary, "test"], function(err, results){
+        if(err) console.log(err);
+        else console.log('success input finishedmeet');
+      });
 
       //scheduled meet 에서 삭제
       sql = 'UPDATE FORWARDMEET SET ISFINISH = 1 WHERE MEET_ID=?';
