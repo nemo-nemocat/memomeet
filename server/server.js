@@ -1,4 +1,5 @@
 const express = require("express");
+const request = require("request");
 const app = express();
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
@@ -9,7 +10,6 @@ const shortid = require ('shortid'); // unique id 생성
 const path = require('path');
 const PythonShell = require('python-shell'); // python script 실행
 const mysql = require("mysql");
-const b64toBlob = require('b64-to-blob');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -152,6 +152,13 @@ io.on('connection', socket => {
         else console.log('success input meetscript');
       });
 
+
+      request('http://localhost:5000/flask', function (error, response, body) {
+          console.error('error:', error); // Print the error
+          console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+          console.log('body:', body); // Print the data received
+      });   
+
       //taglist DB INPUT
       tag_extract(contentInput).then(function(pythonData) {
         var tag1 = pythonData.tag1;
@@ -215,24 +222,14 @@ function tag_extract(contentInput) {
   
     PythonShell.PythonShell.run('keyword-tag.py', options, function(err, results){
       if(err) throw err;
-      // let data = results[0].replace(`b\'`, '').replace(`\'`, '');
-      // let buff = Buffer.from(data, 'base64');
-      // let text = buff.toString('utf-8');
-      // var tag_list = text.split(' ');
-      // resolve(tag_list);
-      // reject ("Failed tagging");
       var tagData = JSON.parse(results).tag;
       let text = tagData.toString('utf-8');
       var tag_list = text.split(' ');
-      //resolve(tag_list);
-      // reject ("Failed tagging");
 
       var imgData = JSON.parse(results).img;
 
       var pythonData = {"tag1": tag_list[0], "tag2": tag_list[1], "tag3": tag_list[2],"imgData": imgData};
       resolve(pythonData);
-      // var fs = require("fs");
-      // fs.writeFileSync("temp.png", imgBuffer);
     });  
   })
     
