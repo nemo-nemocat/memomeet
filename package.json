@@ -49,7 +49,8 @@
     "build": "cd client && react-scripts build",
     "test": "cd client && react-scripts test",
     "eject": "cd client && react-scripts eject",
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:flaskServer\" \"npm run dev:client\"",
+    "dev:flaskServer": "cd server && set FLASK_APP=flaskServer.py && flask run",
     "dev:server": "cd server && nodemon server.js",
     "dev:client": "cd client && react-scripts start && yarn start"
   },
