@@ -7,10 +7,10 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from collections import Counter
 from eunjeon import Mecab
+mecab = Mecab()
 
 def get_noun(contents, stopwords):
 
-    mecab = Mecab()
     nouns = mecab.nouns(contents)
 
     # 명사 빈도 카운트
