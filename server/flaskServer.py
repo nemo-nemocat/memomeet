@@ -1,3 +1,4 @@
+import os
 import sys
 import base64
 import io
@@ -5,11 +6,19 @@ import json
 
 from wordcloud import WordCloud
 from collections import Counter
-from eunjeon import Mecab
 
 from flask import Flask
 from flask import request
 import pymysql
+
+env = os.environ.get("PYTHON_ENV")
+
+if(env =="production"):
+    import mecab
+    mecab = mecab.MeCab()
+else :
+    from eunjeon import Mecab
+    mecab = Mecab()
 
 app = Flask(__name__)
 
