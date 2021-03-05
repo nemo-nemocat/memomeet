@@ -47,9 +47,10 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     Icon: {
-        width:"40%",
+        width:"50%",
         height: "40%",
         marginTop: "15%",
+        marginRight: "10%"
     },
     ScheduledName: {
         display: "flex",

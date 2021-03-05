@@ -2,6 +2,7 @@ import sys
 import base64
 import io
 import json
+import matplotlib.pyplot as plt
 
 from wordcloud import WordCloud
 from collections import Counter
@@ -23,21 +24,26 @@ def get_noun(contents, stopwords):
     return noun_list
 
 def visualize(noun_list):
-    wc = WordCloud(font_path='./SeoulNamsanB.ttf', \
-                   background_color="white", \
-                   width=1000, \
-                   height=1000, \
-                   max_words=100, \
-                   max_font_size=300)
+    if len(noun_list) < 3 :
+        with open("./noWordcloud.png", "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read()).decode()
+        return encoded_string
+    else:
+        wc = WordCloud(font_path='./SeoulNamsanB.ttf', \
+                    background_color="white", \
+                    width=1000, \
+                    height=1000, \
+                    max_words=100, \
+                    max_font_size=300)
 
-    # wc.generate_from_frequencies(dict(noun_list))
-    # wc.to_file('keyword.png')
-    pil_img = wc.generate_from_frequencies(dict(noun_list)).to_image()
-    img = io.BytesIO()
-    pil_img.save(img, "PNG")
-    img.seek(0)
-    img_b64 = base64.b64encode(img.getvalue()).decode()
-    return img_b64
+        # wc.generate_from_frequencies(dict(noun_list))
+        # wc.to_file('keyword.png')
+        pil_img = wc.generate_from_frequencies(dict(noun_list)).to_image()
+        img = io.BytesIO()
+        pil_img.save(img, "PNG")
+        img.seek(0)
+        img_b64 = base64.b64encode(img.getvalue()).decode()
+        return img_b64
 
 with open("stopwords.txt", 'r', encoding='utf-8') as f:
     stopwords = f.readlines()
@@ -54,7 +60,7 @@ word_cloud = visualize(noun_list)
 #     result += (v[0] + ' ')
 # print(base64.b64encode(result.encode('utf-8')))
 
-result = []
+# result = []
 
 tags = ''
 i = 0
