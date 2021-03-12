@@ -15,8 +15,8 @@ env = os.environ.get("PYTHON_ENV")
 
 if(env =="production"):
     import mecab
-    mecab = mecab.MeCab()
-else :
+    
+if(env !="production"):
     from eunjeon import Mecab
     mecab = Mecab()
 
