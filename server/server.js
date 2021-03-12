@@ -146,16 +146,10 @@ io.on('connection', socket => {
       var contentInput = rooms[room].contentArray.toString();
       var chatInput = rooms[room].chatArray.toString();
 
-      var sql = 'INSERT INTO  MEETSCRIPT VALUE(?, ?, ?)';
-      mysqlDB.query(sql, [room, chatInput, contentInput], function(err, results){
-        if(err) console.log(err);
-        else console.log('success input meetscript');
-      });
-
-      //taglist input
-      request({method: 'POST', url:'http://localhost:5000/keyword-tag', json: {"meet_id": room}}, function (error, response, body) {
-          console.log('flask_response:', body); // Print the data received
-      });   
+      inputMeetscript(room, chatInput, contentInput).then(
+        request({method: 'POST', url:'http://localhost:5000/keyword-tag', json: {"meet_id": room}}, function (error, response, body) {
+        console.log('flask_response:', body); // Print the data received
+      }));
 
       //scheduled meet 에서 삭제
       sql = 'UPDATE FORWARDMEET SET ISFINISH = 1 WHERE MEET_ID=?';
@@ -178,6 +172,16 @@ io.on('connection', socket => {
 })
 
 /************************************ Python 스크립트 실행 code ************************************/
+
+function inputMeetscript(room, chatInput, contentInput){
+  return new Promise(function(resolved, rejected){
+    var sql = 'INSERT INTO  MEETSCRIPT VALUE(?, ?, ?)';
+    mysqlDB.query(sql, [room, chatInput, contentInput], function(err, results){
+      if(err) console.log(err);
+      else console.log('success input meetscript');
+    });
+  })
+}
 
 // 개발시에는 eunjeon, 배포시에는 python-mecab-ko
 tagScript = 'tag-development.py'
