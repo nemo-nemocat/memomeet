@@ -15,10 +15,12 @@ env = os.environ.get("PYTHON_ENV")
 
 if(env =="production"):
     import mecab
-    
+
+'''   
 if(env !="production"):
     from eunjeon import Mecab
     mecab = Mecab()
+'''
 
 app = Flask(__name__)
 
