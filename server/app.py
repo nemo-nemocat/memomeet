@@ -17,7 +17,7 @@ from krwordrank.word import KRWordRank
 from kss import split_sentences
 
 import logging
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('app')
 logger.propagate = False
 
 env = os.environ.get("ENV")
