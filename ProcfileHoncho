@@ -1,0 +1,2 @@
+node: cd server && node server.js
+python: cd server && gunicorn app:app

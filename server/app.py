@@ -11,14 +11,23 @@ from flask import Flask
 from flask import request
 import pymysql
 
+from krwordrank.sentence import summarize_with_sentences
+from krwordrank.word import summarize_with_keywords
+from krwordrank.word import KRWordRank
+from kss import split_sentences
+
 env = os.environ.get("PYTHON_ENV")
+print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+print(env)
 
 if(env =="production"):
     import mecab
-    mecab = mecab.MeCab()
-else :
+
+'''
+else:
     from eunjeon import Mecab
     mecab = Mecab()
+'''
 
 app = Flask(__name__)
 
@@ -72,13 +81,35 @@ def index():
             img_b64 = base64.b64encode(img.getvalue()).decode()
             return img_b64
 
+
+    def summarize(contents, stopwords):
+        contents = contents.replace(",", "")
+        sentences = split_sentences(contents)
+        penalty = lambda x:0 if (25 <= len(x) <= 80) else 1
+        words, sents = summarize_with_sentences(
+            sentences,
+            penalty=penalty,
+            stopwords = stopwords,
+            diversity=0.7,
+            num_keysents=3,
+            scaling=lambda x:1,
+            verbose=False,
+        )
+        i = 0
+        key_sents = ""
+        while(i<3):
+            key_sents += (sents[i] + " ")
+            i += 1
+        return key_sents
+
     with open("stopwords.txt", 'r', encoding='utf-8') as f:
         stopwords = f.readlines()
     stopwords = [x.strip() for x in stopwords]
 
     noun_list = get_noun(contents[0][0], stopwords)
     word_cloud = visualize(noun_list)
-
+    key_sents = summarize(contents[0][0], stopwords)
+    # 'a b c'
     i = 0
     for v in noun_list:
         if(v[0] and i<3):
@@ -87,13 +118,14 @@ def index():
             cur.execute(sql, (meet_id, v[0]))
             db.commit()
 
-    summary = "summary 예시 in flask"
+    
     sql = 'INSERT INTO FINISHEDMEET VALUE(%s,%s,%s)'
-    cur.execute(sql, (meet_id, summary, word_cloud))
+    cur.execute(sql, (meet_id, key_sents, word_cloud))
     db.commit()
 
     return str(noun_list)
 
 
 if __name__=="__name__":
-    app.run()
+    app.run(host = '0,0,0,0')
+
