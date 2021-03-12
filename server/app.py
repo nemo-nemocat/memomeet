@@ -17,17 +17,13 @@ from krwordrank.word import KRWordRank
 from kss import split_sentences
 
 env = os.environ.get("ENV")
-print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-print(env)
+print('Python 실행 모드 : ' + str(env))
 
 if(env =="production"):
     import mecab
-
-'''
 else:
     from eunjeon import Mecab
     mecab = Mecab()
-'''
 
 app = Flask(__name__)
 
