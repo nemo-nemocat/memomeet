@@ -2,6 +2,8 @@ honcho==1.0.1
 gunicorn==20.0.4
 Flask==1.1.2
 PyMySQL==1.0.2
+krwordrank==1.0.3
+kss==2.5.0
 pybind11==2.6.2
 wordcloud==1.8.1
 python-mecab-ko==1.0.11
