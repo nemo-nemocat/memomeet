@@ -104,7 +104,7 @@ def index():
 
     noun_list = get_noun(contents[0][0], stopwords)
     word_cloud = visualize(noun_list)
-    key_sents = summarize(contents[0][0], stopwords)
+    #key_sents = summarize(contents[0][0], stopwords)
     # 'a b c'
     i = 0
     for v in noun_list:
@@ -114,9 +114,9 @@ def index():
             cur.execute(sql, (meet_id, v[0]))
             db.commit()
 
-    
+    summary = "summary 예시 아직 미완성"
     sql = 'INSERT INTO FINISHEDMEET VALUE(%s,%s,%s)'
-    cur.execute(sql, (meet_id, key_sents, word_cloud))
+    cur.execute(sql, (meet_id, summary, word_cloud))
     db.commit()
 
     return str(noun_list)
