@@ -3,6 +3,7 @@ import sys
 import base64
 import io
 import json
+import logging
 
 from wordcloud import WordCloud
 from collections import Counter
@@ -15,6 +16,10 @@ from krwordrank.sentence import summarize_with_sentences
 from krwordrank.word import summarize_with_keywords
 from krwordrank.word import KRWordRank
 from kss import split_sentences
+
+import logging
+logger = logging.getLogger(__name__)
+logger.propagate = False
 
 env = os.environ.get("ENV")
 print('Python 실행 모드 : ' + str(env))
