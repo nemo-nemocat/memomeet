@@ -1,2 +1,2 @@
-node: cd server && node server.js
-python: cd server && pip install -r requirements.tst && gunicorn app:app
+node: cd server && npm install && node server.js
+python: cd server && pip install -r requirements.txt && gunicorn app:app
