@@ -12,12 +12,14 @@ from flask import request
 import pymysql
 
 env = os.environ.get("PYTHON_ENV")
+print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+print(env)
 
 if(env =="production"):
     import mecab
 
-'''   
-if(env !="production"):
+'''
+else:
     from eunjeon import Mecab
     mecab = Mecab()
 '''
