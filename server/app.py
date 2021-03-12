@@ -16,7 +16,7 @@ from krwordrank.word import summarize_with_keywords
 from krwordrank.word import KRWordRank
 from kss import split_sentences
 
-env = os.environ.get("PYTHON_ENV")
+env = os.environ.get("ENV")
 print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 print(env)
 
