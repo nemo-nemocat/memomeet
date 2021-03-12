@@ -3,7 +3,6 @@ import sys
 import base64
 import io
 import json
-import logging
 
 from wordcloud import WordCloud
 from collections import Counter
