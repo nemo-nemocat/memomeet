@@ -1,2 +1,2 @@
 node: cd server && node server.js
-python: cd server && ENV=production gunicorn app:app
+python: cd server && FLASK_ENV=production gunicorn app:app

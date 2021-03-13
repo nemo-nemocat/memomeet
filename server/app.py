@@ -3,6 +3,7 @@ import sys
 import base64
 import io
 import json
+import logging
 
 from wordcloud import WordCloud
 from collections import Counter
@@ -16,13 +17,10 @@ from krwordrank.word import summarize_with_keywords
 from krwordrank.word import KRWordRank
 from kss import split_sentences
 
-import logging
-logger = logging.getLogger('app')
-logger.propagate = False
-
-env = os.environ.get("ENV")
+env = os.environ.get("FLASK_ENV")
 print('Python 실행 모드 : ' + str(env))
 
+# 개발 시에는 eunjeon import, 배포 시에는 mecab import
 if(env =="production"):
     import mecab
 else:
@@ -30,6 +28,9 @@ else:
     mecab = Mecab()
 
 app = Flask(__name__)
+
+logger = logging.getLogger(__name__)
+logger.propagate = False
 
 db = pymysql.connect(host="localhost", user="root", passwd="root", db="memomeet", charset="utf8")
 cur = db.cursor()
