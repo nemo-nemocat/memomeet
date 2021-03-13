@@ -16,8 +16,8 @@ from krwordrank.word import summarize_with_keywords
 from krwordrank.word import KRWordRank
 from kss import split_sentences
 
-env = os.environ.get("ENV")
-print('Python 실행 모드 : ' + str(env))
+# 개발 시에는 eunjeon import, 배포 시에는 mecab import
+env = os.environ.get("FLASK_ENV")
 
 if(env =="production"):
     import mecab
@@ -27,6 +27,7 @@ else:
 
 app = Flask(__name__)
 
+# 이거 로컬호스트라고 빌드할때부터 여기서 에러남ㅠㅠ 여기 두줄 없애면 에러 안나여
 db = pymysql.connect(host="localhost", user="root", passwd="root", db="memomeet", charset="utf8")
 cur = db.cursor()
 
