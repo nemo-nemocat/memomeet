@@ -29,6 +29,7 @@ else:
 
 app = Flask(__name__)
 
+app.logger.propagate = False
 logger = logging.getLogger(__name__)
 logger.propagate = False
 
