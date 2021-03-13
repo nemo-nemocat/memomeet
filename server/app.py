@@ -27,8 +27,9 @@ else:
 
 app = Flask(__name__)
 
-#db = pymysql.connect(host="localhost", user="root", passwd="root", db="memomeet", charset="utf8")
-#cur = db.cursor()
+# 이거 로컬호스트라고 빌드할때부터 여기서 에러남ㅠㅠ 여기 두줄 없애면 에러 안나여
+db = pymysql.connect(host="localhost", user="root", passwd="root", db="memomeet", charset="utf8")
+cur = db.cursor()
 
 @app.route('/keyword-tag', methods=['POST'])
 def index():
