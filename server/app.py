@@ -27,8 +27,8 @@ else:
 
 app = Flask(__name__)
 
-db = pymysql.connect(host="localhost", user="root", passwd="root", db="memomeet", charset="utf8")
-cur = db.cursor()
+#db = pymysql.connect(host="localhost", user="root", passwd="root", db="memomeet", charset="utf8")
+#cur = db.cursor()
 
 @app.route('/keyword-tag', methods=['POST'])
 def index():
