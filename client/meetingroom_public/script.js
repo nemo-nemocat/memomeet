@@ -11,7 +11,7 @@ const socket = io()
 //   port: '3001'
 // });
 
-// 배포 시 PeerServer
+// 배포 PeerServer
 const peer = new Peer(USER_ID, {
   path: '/peerjs',
   host: '/',
