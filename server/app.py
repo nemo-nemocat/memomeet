@@ -35,7 +35,7 @@ else:
 
 cur = db.cursor()
 
-print('Flask 서버~~~')
+print('플라스크 서버')
 
 @app.route('/keyword-tag', methods=['POST'])
 def index():
