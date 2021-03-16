@@ -10,6 +10,7 @@ const shortid = require ('shortid'); // unique id 생성
 const path = require('path');
 const PythonShell = require('python-shell'); // python script 실행
 const mysql = require("mysql");
+const multer = require("multer");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -216,6 +217,40 @@ function tag_extract(contentInput) {
 
 /************************************ Web server code ************************************/
 
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, '../client/public/uploads/');
+    },
+    filename: function (req, file, cb) {
+      cb(null, new Date().valueOf() + path.extname(file.originalname));
+    }
+  }),
+});
+
+app.post('/profile-upload', upload.single('profile'), (req, res) => {
+  var id = req.body.user_id;
+  var profile_url = "/uploads/"+req.file.filename;
+  var sql = 'UPDATE USERLIST SET PROFILE_URL=? WHERE USER_ID=?';
+  mysqlDB.query(sql, [profile_url, id], function(err, results){
+      if(err){
+        return res.send({code:3, msg:`${err}`});
+      }
+      else return res.send({code:0, msg:"request success", profile_url: profile_url});
+  });
+});
+
+app.post('/profile-remove', (req, res) => {
+  var id = req.body.user_id;
+  var sql = 'UPDATE USERLIST SET PROFILE_URL=? WHERE USER_ID=?';
+  mysqlDB.query(sql, ['', id], function(err, results){
+      if(err){
+        return res.send({code:3, msg:`${err}`});
+      }
+      else return res.send({code:0, msg:"request success"});
+  });
+})
+
 //login 요청
 app.post('/auth-login', function(req, res) {
   var id = req.body.user_id;
@@ -230,7 +265,7 @@ app.post('/auth-login', function(req, res) {
 
     var user = results[0];
     if(user.user_pw === pw) {
-      return res.send({code:0, msg:"request success", user_id:user.user_id, user_name:user.user_name});
+      return res.send({code:0, msg:"request success", user_id:user.user_id, user_name:user.user_name,profile_url: user.profile_url});
     }
     else{
       return res.send({code:2, msg:"auth fail:wrong password"});
