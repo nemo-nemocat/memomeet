@@ -124,8 +124,8 @@ def index():
     cur.execute(sql, (meet_id, summary, word_cloud))
     db.commit()
 
-    return str(noun_list)
-
+    #return str(noun_list)
+    return 'test'
 
 if __name__=="__name__":
     app.run()
