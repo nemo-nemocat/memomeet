@@ -11,6 +11,12 @@ const path = require('path');
 const PythonShell = require('python-shell'); // python script 실행
 const mysql = require("mysql");
 
+const { ExpressPeerServer } = require('peer');
+const peerServer = ExpressPeerServer(server, {
+  debug: true
+});
+app.use('/peerjs', peerServer);
+
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -145,9 +151,9 @@ io.on('connection', socket => {
       //meetScript DB INPUT
       var contentInput = rooms[room].contentArray.toString();
       var chatInput = rooms[room].chatArray.toString();
-
+      
       inputMeetscript(room, chatInput, contentInput).then(
-        request({method: 'POST', url:'http://localhost:5000/keyword-tag', json: {"meet_id": room}}, function (error, response, body) {
+        request({method: 'POST', url: 'http://localhost:5000/keyword-tag', json: {"meet_id": room}}, function (error, response, body) {
         console.log('flask_response:', body); // Print the data received
       }));
 
@@ -571,5 +577,5 @@ app.post('/finishedmeet-download', function(req,res){
 
 
 server.listen(AppPort, function () {
-  console.log(`Example app listening on port ${AppPort}!`);
+  console.log(`익스프레스서버 on port ${AppPort}`);
 });

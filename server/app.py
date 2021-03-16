@@ -16,9 +16,9 @@ from krwordrank.word import summarize_with_keywords
 from krwordrank.word import KRWordRank
 from kss import split_sentences
 
-# 개발 시에는 eunjeon import, 배포 시에는 mecab import
 env = os.environ.get("FLASK_ENV")
 
+# 개발 시에는 eunjeon import, 배포 시에는 mecab import
 if(env =="production"):
     import mecab
 else:
@@ -126,7 +126,6 @@ def index():
 
     return str(noun_list)
 
-
 if __name__=="__name__":
-    app.run(host = '0,0,0,0')
+    app.run()
 
