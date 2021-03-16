@@ -35,10 +35,6 @@ else:
 
 cur = db.cursor()
 
-sql = 'INSERT INTO TAGLIST VALUE(%s,%s)'
-cur.execute(sql, ("test","test"))
-db.commit()
-
 @app.route('/keyword-tag', methods=['POST'])
 def index():
     meet_id = request.json['meet_id']
@@ -128,8 +124,7 @@ def index():
     cur.execute(sql, (meet_id, summary, word_cloud))
     db.commit()
 
-    #return str(noun_list)
-    return 'test'
+    return str(noun_list)
 
 if __name__=="__name__":
     app.run()

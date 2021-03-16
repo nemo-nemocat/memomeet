@@ -6,17 +6,17 @@ const socket = io()
 // });
 
 // 로컬 PeerServer
-const peer = new Peer(USER_ID, {
-  host: '/',
-  port: '3001'
-});
+// const peer = new Peer(USER_ID, {
+//   host: '/',
+//   port: '3001'
+// });
 
 // 배포 PeerServer
-// const peer = new Peer(USER_ID, {
-//   path: '/peerjs',
-//   host: '/',
-//   port: '443'
-// });
+const peer = new Peer(USER_ID, {
+  path: '/peerjs',
+  host: '/',
+  port: '443'
+});
 
 const peers = {}
 
