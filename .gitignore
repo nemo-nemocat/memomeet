@@ -105,4 +105,4 @@ dist
 server/__pycache__
 
 # user profile
-client/src/uploads
+client/public/ploads
