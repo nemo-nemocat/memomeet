@@ -151,11 +151,9 @@ io.on('connection', socket => {
       //meetScript DB INPUT
       var contentInput = rooms[room].contentArray.toString();
       var chatInput = rooms[room].chatArray.toString();
-      //var url_flask = 'http://localhost:5000/keyword-tag'
-      var url_flask = encodeURI("https://memomeet.herokuapp.com" + ":" + (parseInt(process.env.PORT)+100).toString() + "/keyword-tag");
-
+      
       inputMeetscript(room, chatInput, contentInput).then(
-        request({method: 'POST', url: url_flask, json: {"meet_id": room}}, function (error, response, body) {
+        request({method: 'POST', url: 'http://localhost:5000/keyword-tag', json: {"meet_id": room}}, function (error, response, body) {
         console.log('flask_response:', body); // Print the data received
       }));
 
