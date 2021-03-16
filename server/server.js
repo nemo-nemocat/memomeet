@@ -153,7 +153,7 @@ io.on('connection', socket => {
       var chatInput = rooms[room].chatArray.toString();
 
       inputMeetscript(room, chatInput, contentInput).then(
-        request({method: 'POST', url:`http://memomeet.herokuapp.com:${parseInt(AppPort)-100}/keyword-tag`, json: {"meet_id": room}}, function (error, response, body) {
+        request({method: 'POST', url:`http://0.0.0.0:${parseInt(AppPort)-100}/keyword-tag`, json: {"meet_id": room}}, function (error, response, body) {
         console.log('flask_response:', body); // Print the data received
       }));
 
