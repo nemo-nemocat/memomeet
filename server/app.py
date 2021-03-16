@@ -27,8 +27,6 @@ else:
 
 app = Flask(__name__)
 
-print('플라스크')
-
 # db 환경 분리
 if(env =="production"):
     db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="b5dfcc92d33e0e", passwd="0c8450fd", db="heroku_9c78ff95d911e67", charset="utf8")
@@ -36,10 +34,6 @@ else:
     db = pymysql.connect(host="localhost", user="root", passwd="root", db="memomeet", charset="utf8")
 
 cur = db.cursor()
-
-sql = 'INSERT INTO TAGLIST(meet_id, tag) VALUE(%s, %s)'
-cur.execute(sql, ('test', 'test')
-db.commit()
 
 @app.route('/keyword-tag', methods=['POST'])
 def index():
