@@ -35,8 +35,6 @@ else:
 
 cur = db.cursor()
 
-print('플라스크 서버')
-
 @app.route('/keyword-tag', methods=['POST'])
 def index():
     meet_id = request.json['meet_id']
