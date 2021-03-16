@@ -61,6 +61,7 @@ export default function SignIn() {
                 alert(`${result.user_name}님 환영합니다!`);
                 sessionStorage.setItem("user_id", result.user_id);
                 sessionStorage.setItem("user_name", result.user_name);
+                sessionStorage.setItem("user_profile", result.profile_url);
                 sessionStorage.setItem("preTab",-1);
                 window.location.href='/main';  
               }
