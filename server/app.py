@@ -35,6 +35,8 @@ else:
 
 cur = db.cursor()
 
+print('Flask 서버~~~')
+
 @app.route('/keyword-tag', methods=['POST'])
 def index():
     meet_id = request.json['meet_id']
