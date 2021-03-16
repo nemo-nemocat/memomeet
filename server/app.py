@@ -27,8 +27,12 @@ else:
 
 app = Flask(__name__)
 
-# 이거 로컬호스트라고 빌드할때부터 여기서 에러남ㅠㅠ 여기 두줄 없애면 에러 안나여
-db = pymysql.connect(host="localhost", user="root", passwd="root", db="memomeet", charset="utf8")
+# db 환경 분리
+if(env =="production"):
+    db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="b5dfcc92d33e0e", passwd="0c8450fd", db="heroku_9c78ff95d911e67", charset="utf8")
+else:
+    db = pymysql.connect(host="localhost", user="root", passwd="root", db="memomeet", charset="utf8")
+
 cur = db.cursor()
 
 @app.route('/keyword-tag', methods=['POST'])
