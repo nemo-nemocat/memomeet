@@ -11,6 +11,12 @@ const path = require('path');
 const PythonShell = require('python-shell'); // python script 실행
 const mysql = require("mysql");
 
+const { ExpressPeerServer } = require('peer');
+const peerServer = ExpressPeerServer(server, {
+  debug: true
+});
+app.use('/peerjs', peerServer);
+
 app.use(cors());
 app.use(bodyParser.json());
 

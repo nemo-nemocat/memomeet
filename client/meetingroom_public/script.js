@@ -6,10 +6,18 @@ const peer = new Peer(USER_ID, { // peer 고유 id (자동생성) 대신 user id
 });
 */
 
-// 로컬 서버 돌리기
+/*
+// 로컬 피어서버
 const peer = new Peer(USER_ID, {
   host: '/',
   port: '3001'
+});
+*/
+
+const peer = new Peer(USER_ID, {
+  path: '/peerjs',
+  host: '/',
+  port: '443'
 });
 
 const peers = {}
