@@ -1,19 +1,17 @@
 const socket = io()
 
-/*
+
 // 공용으로 PeerServer를 호스팅하는 서비스인 PeerServer cloud를 이용, 최대 50개의 동시연결까지 무료로 가능
-const peer = new Peer(USER_ID, { // peer 고유 id (자동생성) 대신 user id 사용
-});
-*/
+// const peer = new Peer(USER_ID, { // peer 고유 id (자동생성) 대신 user id 사용
+// });
 
-/*
-// 로컬 피어서버
-const peer = new Peer(USER_ID, {
-  host: '/',
-  port: '3001'
-});
-*/
+// 로컬 PeerServer
+// const peer = new Peer(USER_ID, {
+//   host: '/',
+//   port: '3001'
+// });
 
+// 배포 시 PeerServer
 const peer = new Peer(USER_ID, {
   path: '/peerjs',
   host: '/',
