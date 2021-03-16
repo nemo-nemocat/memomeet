@@ -35,6 +35,10 @@ else:
 
 cur = db.cursor()
 
+sql = 'INSERT INTO TAGLIST VALUE(%s,%s)'
+cur.execute(sql, ("test","test"))
+db.commit()
+
 @app.route('/keyword-tag', methods=['POST'])
 def index():
     meet_id = request.json['meet_id']
