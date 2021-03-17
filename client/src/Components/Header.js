@@ -208,7 +208,7 @@ export default function Header(prop) {
         <LogoutIcon/>&nbsp;LOGOUT
       </Button>
       <span style={{color: "#ffffff", fontWeight: "bold", maxWidth: "100%", marginRight:"1%" }}>{sessionStorage.getItem("user_name")}님</span>
-      <img src={(user_profile === undefined || user_profile === '') ? no_profile :  user_profile} className={classes.profile} id="user_profile" alt="user_profile" onClick={()=>changeProfile()}/>
+      <img src={(user_profile === undefined || user_profile === ''|| user_profile === 'null') ? no_profile :  user_profile} className={classes.profile} id="user_profile" alt="user_profile" onClick={()=>changeProfile()}/>
 
       <Dialog open={profileOpen} onClose={createClose} aria-labelledby="change-profile-dialog">
         <DialogTitle id="change-profile-dialog">Change Profile</DialogTitle>
