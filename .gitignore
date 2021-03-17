@@ -107,3 +107,5 @@ server/__pycache__
 # user profile
 client/public/uploads/*
 !client/public/uploads/.keep
+client/build/uploads/*
+!client/build/uploads/.keep
