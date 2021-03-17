@@ -132,7 +132,6 @@ export default function Header(prop) {
   }
 
   const changeBtnClick =()=> {
-    console.log(state.file);
     if(state.file === undefined) alert("사진을 선택해주세요");
     else{
       var formData = new FormData();
@@ -150,6 +149,7 @@ export default function Header(prop) {
         console.log(result);
         setProfile(result.profile_url);
         setProfileOpen(false);
+        sessionStorage.setItem("user_profile",result.profile_url);
         setState({});
       })
       .catch(error => console.error('Error:', error))

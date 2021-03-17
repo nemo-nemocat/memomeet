@@ -11,6 +11,7 @@ const path = require('path');
 const PythonShell = require('python-shell'); // python script 실행
 const mysql = require("mysql");
 const multer = require("multer");
+const fs = require('fs');
 
 const { ExpressPeerServer } = require('peer');
 const peerServer = ExpressPeerServer(server, {
@@ -238,27 +239,62 @@ const upload = multer({
   }),
 });
 
+//프로필 변경 및 업로드
 app.post('/profile-upload', upload.single('profile'), (req, res) => {
   var id = req.body.user_id;
   var profile_url = "/uploads/"+req.file.filename;
-  var sql = 'UPDATE USERLIST SET PROFILE_URL=? WHERE USER_ID=?';
-  mysqlDB.query(sql, [profile_url, id], function(err, results){
-      if(err){
-        return res.send({code:3, msg:`${err}`});
+  var sql = 'SELECT profile_url FROM USERLIST WHERE USER_ID=?';
+  mysqlDB.query(sql, id, function(err, results){
+    if(err){
+      return res.send({code:3, msg:`${err}`});
+    }
+    else{
+      var result = results[0].profile_url;
+      //이전 파일 삭제
+      if(result != null && result !==''){
+        var filename = result.substring(9,result.length);
+        fs.unlink(img_folder+filename, function(err){
+          if(err) console.log('파일 삭제 에러:'+ err);
+        })
       }
-      else return res.send({code:0, msg:"request success", profile_url: profile_url});
+      sql = 'UPDATE USERLIST SET PROFILE_URL=? WHERE USER_ID=?';
+      mysqlDB.query(sql, [profile_url, id], function(err, results){
+          if(err){
+            return res.send({code:3, msg:`${err}`});
+          }
+          else return res.send({code:0, msg:"request success", profile_url: profile_url});
+      });
+    } 
   });
 });
 
+//프로필 삭제 & 기본 이미지로 변경
 app.post('/profile-remove', (req, res) => {
   var id = req.body.user_id;
-  var sql = 'UPDATE USERLIST SET PROFILE_URL=? WHERE USER_ID=?';
-  mysqlDB.query(sql, ['', id], function(err, results){
-      if(err){
-        return res.send({code:3, msg:`${err}`});
+  var sql = 'SELECT profile_url FROM USERLIST WHERE USER_ID=?';
+  mysqlDB.query(sql, id, function(err, results){
+    if(err){
+      return res.send({code:3, msg:`${err}`});
+    }
+    else{
+      var result = results[0].profile_url;
+      //이전 파일 삭제
+      if(result != null && result !==''){
+        var filename = result.substring(9,result.length);
+        fs.unlink(img_folder+filename, function(err){
+          if(err) console.log('파일 삭제 에러:'+ err);
+        })
       }
-      else return res.send({code:0, msg:"request success"});
+      sql = 'UPDATE USERLIST SET PROFILE_URL=? WHERE USER_ID=?';
+      mysqlDB.query(sql, ['', id], function(err, results){
+          if(err){
+            return res.send({code:3, msg:`${err}`});
+          }
+          else return res.send({code:0, msg:"request success"});
+      });
+    } 
   });
+
 })
 
 //login 요청
