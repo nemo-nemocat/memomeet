@@ -226,7 +226,7 @@ function tag_extract(contentInput) {
 const upload = multer({
   storage: multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, '../client/public/uploads/');
+      cb(null, '../client/build/public/uploads/');
     },
     filename: function (req, file, cb) {
       cb(null, new Date().valueOf() + path.extname(file.originalname));
