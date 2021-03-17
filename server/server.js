@@ -223,10 +223,14 @@ function tag_extract(contentInput) {
 
 /************************************ Web server code ************************************/
 
+// 개발 시에는 public폴더, 배포 시에는 build폴더 사용 
+img_folder = '../client/public/uploads/'
+if (process.env.NODE_ENV == 'production') img_folder = '../client/build/uploads/'
+
 const upload = multer({
   storage: multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, '../client/build/uploads/');
+      cb(null, img_folder);
     },
     filename: function (req, file, cb) {
       cb(null, new Date().valueOf() + path.extname(file.originalname));
