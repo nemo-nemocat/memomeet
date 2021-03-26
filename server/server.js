@@ -624,17 +624,11 @@ app.post('/finishedmeet-chat', function(req,res){
 //끝난 회의 삭제
 app.post('/finishedmeet-delete', function(req, res){
   var meet_id = req.body.meet_id;
-  var sql = 'delete a,b,c from finishedmeet as a left join meetscript as b on a.meet_id=b.meet_id left join taglist as c on a.meet_id=c.meet_id where a.meet_id = ?';
+  var sql = 'DELETE FROM FORWARDMEET WHERE MEET_ID=?';
   mysqlDB.query(sql, meet_id, function(err, results){
     if(err) return res.send({code:11, msg:`${err}`});
     else{
-      sql = 'DELETE FROM FORWARDMEET WHERE MEET_ID=?';
-      mysqlDB.query(sql, meet_id, function(err, results){
-        if(err) return res.send({code:11, msg:`${err}`});
-        else{
-          res.send({code:0, msg:"request success"});
-        }
-      })
+      res.send({code:0, msg:"request success"});
     }
   })
 });

@@ -70,7 +70,7 @@ export default function Scheduled(prop) {
     const classes = useStyles();
     const [list, setList] = useState('');
 
-    useEffect(() => {
+    const getList =(prop)=>{
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -94,6 +94,10 @@ export default function Scheduled(prop) {
                 }
             })
             .catch(error => console.log('error', error))
+    }
+
+    useEffect(() => {
+        getList(prop);
       }, [prop]);
 
     const handleEnterMeet = (meet_id) => {
@@ -148,7 +152,7 @@ export default function Scheduled(prop) {
                 console.log(result);
                 if (result.code === 0) {    
                     alert("예약 회의를 삭제합니다");
-                    window.location.reload();
+                    getList(prop);
                 }
             })
             .catch(error => console.log('error', error))

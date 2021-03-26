@@ -8,6 +8,7 @@ import ScheduleIcon from '@material-ui/icons/Schedule';
 import DescriptionIcon from '@material-ui/icons/Description';
 import TagList from './tagList';
 import DeleteForever from '@material-ui/icons/DeleteForever';
+import SearchScript from'./SearchScript';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -69,7 +70,7 @@ export default function Finished(prop) {
     const classes = useStyles();
     const [list, setList] = useState([]);
 
-    useEffect(() => {
+    const getList =(prop)=>{
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -95,6 +96,10 @@ export default function Finished(prop) {
                 }
             })
             .catch(error => console.log('error', error))
+    };
+
+    useEffect(() => {
+        getList(prop);
       }, [prop]);
 
     const handleClickScript =(meet_id) => {
@@ -120,7 +125,7 @@ export default function Finished(prop) {
                 console.log(result);
                 if (result.code === 0) {    
                     alert("회의 정보를 삭제합니다");
-                    window.location.reload();
+                    getList(prop);
                 }
             })
             .catch(error => console.log('error', error))
@@ -134,6 +139,7 @@ export default function Finished(prop) {
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Finished</span>   
                 </Typography>
                 <div style={{backgroundColor:"#eaeaea", width:"90%", height:"85%",borderRadius:10, margin:"auto"}}>
+                    < SearchScript />
                 <List className={classes.list}>
                     {list && list.map(data => (
                         <ListItem key={data.meet_id} id='data' className={classes.data}>
