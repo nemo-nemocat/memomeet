@@ -101,8 +101,8 @@ app.get('/meeting', (req, res) => { // 회의실 페이지는 res 렌더링으�
 })
 
 // flask server request url : 개발시에는 localhost, 배포시에는 0.0.0.0
-let flask_url = 'http://localhost:5000/keyword-tag'
-if (process.env.NODE_ENV == 'production') flask_url = `http://0.0.0.0:${FlaskDeployPort}/keyword-tag`
+let flask_url = 'http://localhost:5000/anaysis'
+if (process.env.NODE_ENV == 'production') flask_url = `http://0.0.0.0:${FlaskDeployPort}/anaysis`
 
 let rooms = {};
 
@@ -165,7 +165,7 @@ io.on('connection', socket => {
         else console.log('success input meetscript');
       });
             
-      request({method: 'POST', url: 'http://localhost:5000/keyword-tag', json: {"contents": contentInput}}, function (error, response, body) {
+      request({method: 'POST', url: flask_url, json: {"contents": contentInput}}, function (error, response, body) {
         console.log('flask_response:', body); // Print the data received
         sql = 'INSERT INTO FINISHEDMEET VALUE(?, ?, ?)';
         mysqlDB.query(sql, [room, body.summary, body.wordcloud], function(err, results){
@@ -233,7 +233,7 @@ function tag_extract(contentInput) {
 
 /************************************ Web server code ************************************/
 
-// 개발 시에는 public폴더, 배포 시에는 build폴더 사용 
+// 프로필 사진 저장 : 개발 시에는 public폴더, 배포 시에는 build폴더 사용 
 img_folder = '../client/public/uploads/'
 if (process.env.NODE_ENV == 'production') img_folder = '../client/build/uploads/'
 
