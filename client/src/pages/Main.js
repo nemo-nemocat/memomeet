@@ -156,7 +156,7 @@ export default function InteractiveList() {
           <span style={{ color: "#000000", fontWeight: "bold", maxWidth: "100%" }}>MEMO-MEET</span>
         </Typography>
         <SearchBtn />
-        <div style={{height:"84%"}}>
+        <div style={{height:"82%"}}>
           <List component="nav" className={classes.list}>
             {groups && groups.map(group => (
               <ListItem button key={group.group_id} onClick={() => clickHandler(group.group_id)} 

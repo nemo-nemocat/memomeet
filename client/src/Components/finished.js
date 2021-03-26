@@ -17,8 +17,10 @@ const useStyles = makeStyles((theme) => ({
         margin:"1%"
     },
     list:{
-        height:"95%",
+        height:"85%",
         overflow: "auto",
+        paddingTop: 0,
+        paddingBottom:0,
         '&::-webkit-scrollbar' : {
             display : 'none'
         }
@@ -51,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
         margin:"auto",
         borderRadius:10,
         padding:0,
-        marginBottom:"3%",
+        marginBottom:"2%",
     },
     ScheduledName: {
         display: "flex",

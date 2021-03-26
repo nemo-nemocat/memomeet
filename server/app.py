@@ -59,7 +59,7 @@ def index():
         if len(noun_list) < 3 :
             with open("./noWordcloud.png", "rb") as image_file:
                 encoded_string = base64.b64encode(image_file.read()).decode()
-            return '%s%s.png' %(tgtdir, noWordcloud)
+            return 'noWordcloud'
         else:
             wc = WordCloud(font_path='./SeoulNamsanB.ttf', \
                         background_color="white", \
@@ -76,7 +76,7 @@ def index():
             # img.seek(0)
             # img_b64 = base64.b64encode(img.getvalue()).decode()
             # return img_b64
-            return '%s%s.png' %(tgtdir, filename)
+            return '%s%s.png' %("/uploads/", filename)
 
     def summarize(contents, stopwords):
         contents = contents.replace(",", "")
@@ -119,8 +119,7 @@ def index():
             tags.append(t[0])
         for _ in range(3 - len(noun_list)):
             tags.append("")
-
-    summary = summarize(contents, stopwords)
+    summary =  summarize(contents, stopwords)
 
     result = {'tag1': tags[0], 'tag2': tags[1], 'tag3': tags[2], 'summary': summary, 'wordcloud': word_cloud}
     res = json.dumps(result, ensure_ascii=False)

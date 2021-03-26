@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        width: "54%",
+        width: "63%",
         margin: "auto",
         borderRadius: 50
     }
@@ -123,8 +123,8 @@ export default function SearchBtn() {
     return (
         <div>
         <div className={classes.searchBtn} onClick={clickSearchOpen}>
-            <SearchIcon style={{ color: "#ffffff", marginTop:"3%", marginLeft:"3%", marginBottom:"3%" }} fontSize="small" />
-            <span className="align-middle" style={{ color: "#ffffff", fontWight: "bold", fontSize: 12 }}>GROUP SEARCH</span>
+            <SearchIcon style={{ color: "#ffffff", marginTop:"3%", marginBottom:"3%" }} fontSize="small" />
+            <span className="align-middle" style={{ color: "#ffffff", fontWight: "bold", fontSize: 14 }}>GROUP SEARCH</span>
         </div>
          
         <Dialog open={searchOpen} onClose={searchClose} aria-labelledby="search-group-dialog">

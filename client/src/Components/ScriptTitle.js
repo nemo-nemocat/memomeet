@@ -13,6 +13,8 @@ import LogoutIcon from '@material-ui/icons/LockOpen';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {jsPDF} from 'jspdf';
 import MyFont from '../font.js';
+import NoWordCloud from '../Icons/noWordcloud.png';
+import no_profile from '../Icons/no_profile.png';
 
 const useStyles = makeStyles((theme) => ({
     header: {
@@ -56,7 +58,13 @@ const useStyles = makeStyles((theme) => ({
         "&:hover": {
             color: "#ffc31e"
           },
-    }
+    },
+    profile:{
+        height:40,
+        width: 40,
+        borderRadius:100,
+        marginRight: 10,
+     }
 }));
 
 function checkName(name) {
@@ -72,6 +80,7 @@ export default function ScriptTitle(prop) {
     const [tagList, setTagList] = useState([]);
     const [addOpen, setAddOpen] = useState(false);
     const [tagName, setTagName] = useState('');
+    const [user_profile, setProfile] = useState(sessionStorage.getItem("user_profile"));
 
     useEffect(() => {
         var myHeaders = new Headers();
@@ -204,16 +213,17 @@ export default function ScriptTitle(prop) {
                 if(result.code===0){
                     console.log(result);
 
-                    var image = new Image();
-
-                    image.src = `data:image/png;base64,${result.wc}`;
-                    console.log(image.src);
 
                     var doc = new jsPDF();
                     var xPos = 15;
                     var yPos = 10;
 
-                    doc.addImage(image, 'JPEG', 70, yPos, 70, 70);
+                    var image = new Image();
+                    if(result.wc === 'noWordcloud') doc.addImage(NoWordCloud, 'JPEG', 70, yPos, 70, 70);
+                    else{
+                        image.src =  result.wc;
+                        doc.addImage(image, 'JPEG', 70, yPos, 70, 70);
+                    } 
 
                     yPos += 80;
 
@@ -264,6 +274,7 @@ export default function ScriptTitle(prop) {
                     <LogoutIcon/>&nbsp;LOGOUT
                 </Button>
                 <span style={{color: "#ffffff", fontWeight: "bold", maxWidth: "100%", marginRight:"1%" }}>{sessionStorage.getItem("user_name")}님</span>
+                <img src={(user_profile === undefined || user_profile === ''|| user_profile === 'null') ? no_profile :  user_profile} className={classes.profile} id="user_profile" alt="user_profile"/>
             </div>
         </div>
           <div className={classes.root}>

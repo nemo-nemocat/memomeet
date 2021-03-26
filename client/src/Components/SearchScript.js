@@ -6,15 +6,13 @@ import SearchIcon from '@material-ui/icons/Search';
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: "1%",
-    paddingTop: "2%"
+    paddingTop: "2%",
+    marginBottom: "2%",
   },
   search: {
     position: 'relative',
-    borderRadius: 5,
-    backgroundColor: "#ffc31e",
-    '&:hover': {
-      backgroundColor: "#e2aa0f",
-    },
+    borderRadius: 20,
+    backgroundColor: "#A9A9A9",
     marginRight: "1%",
     marginLeft: "3%",
     width: '94%',
