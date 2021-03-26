@@ -127,6 +127,6 @@ def index():
 
     return str(noun_list)
 
-if __name__ == "__main__":
-    print(f'********** FLASK SERVER is running on port {port} **********')
-    app.run(debug=True, port=port)
+#if __name__ == "__main__":
+print(f'********** FLASK SERVER is running on port {port} **********')
+app.run(debug=True, port=port)

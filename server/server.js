@@ -100,7 +100,7 @@ app.get('/meeting', (req, res) => { // 회의실 페이지는 res 렌더링으�
   res.render('room', { roomId: req.query.meet_id, userId: req.query.user_id, userName: req.query.user_name })
 })
 
-// 개발시에는 localhost, 배포시에는 0.0.0.0
+// flask server request url : 개발시에는 localhost, 배포시에는 0.0.0.0
 let flask_url = 'http://localhost:5000/keyword-tag'
 if (process.env.NODE_ENV == 'production') flask_url = `http://0.0.0.0:${FlaskDeployPort}/keyword-tag`
 
@@ -196,7 +196,7 @@ function inputMeetscript(room, chatInput, contentInput){
   })
 }
 
-// 개발시에는 eunjeon, 배포시에는 python-mecab-ko
+// 프로필 사진 저장 : 개발시에는 eunjeon, 배포시에는 python-mecab-ko
 tagScript = 'tag-development.py'
 if (process.env.NODE_ENV == 'production') tagScript = 'tag-production.py'
 
