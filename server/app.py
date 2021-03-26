@@ -36,16 +36,13 @@ else:
 
 cur = db.cursor()
 
-sql = 'INSERT INTO TAGLIST VALUE(%s,%s)'
-cur.execute(sql, ("tag","in"))
-db.commit()
-
 @app.route('/keyword-tag', methods=['POST'])
 def index():
     meet_id = request.json['meet_id']
     sql = 'SELECT content FROM MEETSCRIPT WHERE MEET_ID=%s'
     cur.execute(sql, meet_id)
     contents = cur.fetchall()
+    db.close()
     
     def get_noun(contents, stopwords):
 
@@ -123,11 +120,13 @@ def index():
             sql = 'INSERT INTO TAGLIST(meet_id, tag) VALUE(%s, %s)'
             cur.execute(sql, (meet_id, v[0]))
             db.commit()
+            db.close()
 
     summary = "summary 예시 아직 미완성"
     sql = 'INSERT INTO FINISHEDMEET VALUE(%s,%s,%s)'
     cur.execute(sql, (meet_id, summary, word_cloud))
     db.commit()
+    db.close()
 
     return str(noun_list)
 
