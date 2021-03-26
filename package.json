@@ -32,7 +32,7 @@
     "python-shell": "2.0.3",
     "react": "^17.0.1",
     "react-bootstrap": "1.4.3",
-    "react-chartjs-2": "2.11.1",
+    "react-chartjs-2": "^2.11.1",
     "react-datepicker": "3.4.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "5.2.0",
@@ -53,7 +53,7 @@
     "test": "cd client && react-scripts test",
     "eject": "cd client && react-scripts eject",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:flaskServer\" \"npm run dev:client\"",
-    "dev:flaskServer": "cd server && set FLASK_ENV=development && flask run",
+    "dev:flaskServer": "cd server && set FLASK_ENV=development && python app.py",
     "dev:server": "cd server && nodemon server.js",
     "dev:client": "cd client && react-scripts start && yarn start"
   },

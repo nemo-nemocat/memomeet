@@ -17,9 +17,10 @@ from krwordrank.word import KRWordRank
 from kss import split_sentences
 
 env = os.environ.get("FLASK_ENV")
+port = int(os.environ.get('PORT', 5000))
 
 # 개발 시에는 eunjeon import, 배포 시에는 mecab import
-if(env =="production"):
+if env == "production":
     import mecab
 else:
     from eunjeon import Mecab
@@ -28,7 +29,7 @@ else:
 app = Flask(__name__)
 
 # db 환경 분리
-if(env =="production"):
+if env == "production":
     db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="b5dfcc92d33e0e", passwd="0c8450fd", db="heroku_9c78ff95d911e67", charset="utf8")
 else:
     db = pymysql.connect(host="localhost", user="root", passwd="root", db="memomeet", charset="utf8")
@@ -41,6 +42,7 @@ def index():
     sql = 'SELECT content FROM MEETSCRIPT WHERE MEET_ID=%s'
     cur.execute(sql, meet_id)
     contents = cur.fetchall()
+    db.close() 
     
     def get_noun(contents, stopwords):
 
@@ -118,14 +120,21 @@ def index():
             sql = 'INSERT INTO TAGLIST(meet_id, tag) VALUE(%s, %s)'
             cur.execute(sql, (meet_id, v[0]))
             db.commit()
+            db.close()
 
     summary = "summary 예시 아직 미완성"
     sql = 'INSERT INTO FINISHEDMEET VALUE(%s,%s,%s)'
     cur.execute(sql, (meet_id, summary, word_cloud))
     db.commit()
+    db.close()
 
     return str(noun_list)
 
-if __name__=="__name__":
-    app.run()
+# 개발 시에만 debug mode ON, 배포 시에는 외부 서버에서도 접근 가능하게
+if __name__ == "__main__":
+    if env == "production":
+        app.run(host='0.0.0.0', port=port)
+    else: 
+        app.run(debug=True, port=port)
 
+print(f'********** FLASK SERVER is running on port {port} **********')
