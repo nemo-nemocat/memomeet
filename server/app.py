@@ -36,6 +36,7 @@ def index():
     
     def get_noun(contents, stopwords):
 
+        mecab = mecab.MeCab()
         nouns = mecab.nouns(contents)
 
         # 명사 빈도 카운트
