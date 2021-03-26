@@ -23,6 +23,7 @@ port = int(os.environ.get('PORT', 5000))
 # 개발 시에는 eunjeon import, 배포 시에는 mecab import
 if env == "production":
     import mecab
+    mecab = mecab.MeCab()
 else:
     from eunjeon import Mecab
     mecab = Mecab()
@@ -36,7 +37,6 @@ def index():
     
     def get_noun(contents, stopwords):
 
-        mecab = mecab.MeCab()
         nouns = mecab.nouns(contents)
 
         # 명사 빈도 카운트
