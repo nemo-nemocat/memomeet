@@ -165,7 +165,7 @@ io.on('connection', socket => {
         else console.log('success input meetscript');
       });
             
-      request({method: 'POST', url: 'http://localhost:5000/keyword-tag', json: {"contents": contentInput}}, function (error, response, body) {
+      request({method: 'POST', url: flask_url, json: {"contents": contentInput}}, function (error, response, body) {
         console.log('flask_response:', body); // Print the data received
         sql = 'INSERT INTO FINISHEDMEET VALUE(?, ?, ?)';
         mysqlDB.query(sql, [room, body.summary, body.wordcloud], function(err, results){
