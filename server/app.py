@@ -24,7 +24,9 @@ port = int(os.environ.get('PORT', 5000))
 tgtdir = ''
 if env == "production":
     import mecab
+    mecab = mecab.MeCab()
     tgtdir = '../client/build/uploads/'
+
 else:
     from eunjeon import Mecab
     mecab = Mecab()
@@ -33,7 +35,7 @@ else:
 app = Flask(__name__)
 
 
-@app.route('/keyword-tag', methods=['POST'])
+@app.route('/anaysis', methods=['POST'])
 def index():
     contents = request.json['contents']
     
