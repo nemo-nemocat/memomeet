@@ -69,7 +69,7 @@ export default function Finished(prop) {
     const classes = useStyles();
     const [list, setList] = useState([]);
 
-    useEffect(() => {
+    const getList =(prop)=>{
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -95,6 +95,10 @@ export default function Finished(prop) {
                 }
             })
             .catch(error => console.log('error', error))
+    };
+
+    useEffect(() => {
+        getList(prop);
       }, [prop]);
 
     const handleClickScript =(meet_id) => {
@@ -120,7 +124,7 @@ export default function Finished(prop) {
                 console.log(result);
                 if (result.code === 0) {    
                     alert("회의 정보를 삭제합니다");
-                    window.location.reload();
+                    getList();
                 }
             })
             .catch(error => console.log('error', error))

@@ -80,8 +80,8 @@ export default function InteractiveList() {
   const [activeTab, setActiveTab] = useState(sessionStorage.getItem("preTab"));
   const [exitOpen, setExitOpen] = useState(false);
   const user_id= sessionStorage.getItem("user_id");
-  
-  useEffect(() => {
+
+  const getGroups =(user_id)=>{
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -101,6 +101,10 @@ export default function InteractiveList() {
         setGroups(result.grouplist);
       })
       .catch(error => console.log('error', error));
+  }
+  
+  useEffect(() => {
+    getGroups(user_id);
   }, [user_id]);
 
   const clickHandler = (id) => {
@@ -136,6 +140,9 @@ export default function InteractiveList() {
         if (result.code === 0) {
           alert("그룹을 탈퇴했습니다.");
           setExitOpen(false);
+          getGroups(user_id);
+          setActiveTab(-1);
+          sessionStorage.setItem("preTab",-1);
           window.location.reload();
         }
       })
