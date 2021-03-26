@@ -201,17 +201,6 @@ io.on('connection', socket => {
 
 /************************************ Python 스크립트 실행 code ************************************/
 
-function inputMeetscript(room, chatInput, contentInput){
-  return new Promise(function(resolved, rejected){
-    var sql = 'INSERT INTO  MEETSCRIPT VALUE(?, ?, ?)';
-    mysqlDB.query(sql, [room, chatInput, contentInput], function(err, results){
-      if(err) console.log(err);
-      else console.log('success input meetscript');
-    });
-  })
-}
-
-// 프로필 사진 저장 : 개발시에는 eunjeon, 배포시에는 python-mecab-ko
 tagScript = 'tag-development.py'
 if (process.env.NODE_ENV == 'production') tagScript = 'tag-production.py'
 
