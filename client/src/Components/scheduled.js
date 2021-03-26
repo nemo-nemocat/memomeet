@@ -152,7 +152,7 @@ export default function Scheduled(prop) {
                 console.log(result);
                 if (result.code === 0) {    
                     alert("예약 회의를 삭제합니다");
-                    getList();
+                    getList(prop);
                 }
             })
             .catch(error => console.log('error', error))
