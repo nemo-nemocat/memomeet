@@ -8,6 +8,7 @@ import ScheduleIcon from '@material-ui/icons/Schedule';
 import DescriptionIcon from '@material-ui/icons/Description';
 import TagList from './tagList';
 import DeleteForever from '@material-ui/icons/DeleteForever';
+import SearchScript from'./SearchScript';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -134,6 +135,7 @@ export default function Finished(prop) {
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Finished</span>   
                 </Typography>
                 <div style={{backgroundColor:"#eaeaea", width:"90%", height:"85%",borderRadius:10, margin:"auto"}}>
+                    < SearchScript />
                 <List className={classes.list}>
                     {list && list.map(data => (
                         <ListItem key={data.meet_id} id='data' className={classes.data}>
