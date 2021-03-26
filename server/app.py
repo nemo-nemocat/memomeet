@@ -130,8 +130,8 @@ def index():
 
 print(f'********** FLASK SERVER is running on port {port} **********')
 
-# 개발 시에만 debug mode ON
+# 개발 시에만 debug mode ON, 배포 시에는 외부 서버에서도 접근 가능하게
 if env == "production":
-    app.run(port=port)
+    app.run(host='0.0.0.0', port=port)
 else: 
     app.run(debug=True, port=port)
