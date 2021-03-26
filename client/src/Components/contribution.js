@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {Paper, Typography } from '@material-ui/core';
+import Chart from'./Chart';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,11 +55,11 @@ export default function Script(prop) {
         <div className={classes.root}>
             <Paper elevation={3} className={classes.paper}>
                 <Typography variant="h6" align="center">
-                    <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Summary</span>   
+                    <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Contribution</span>   
                 </Typography>
                 <div style={{backgroundColor:"#eaeaea", width:"84%", height:"60%",borderRadius:10, margin:"auto", padding:"3%"}}>
                     <Typography className={classes.data}>
-                        {data.summary}
+                        < Chart />
                     </Typography>
                 </div>
             </Paper>
