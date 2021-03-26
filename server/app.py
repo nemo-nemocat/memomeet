@@ -31,7 +31,7 @@ else:
 app = Flask(__name__)
 
 
-@app.route('/keyword-tag', methods=['POST'])
+@app.route('/anaysis', methods=['POST'])
 def index():
     contents = request.json['contents']
     
