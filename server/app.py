@@ -4,6 +4,7 @@ import base64
 import io
 import json
 
+import shortuuid
 from wordcloud import WordCloud
 from collections import Counter
 
@@ -17,16 +18,16 @@ from krwordrank.word import KRWordRank
 from kss import split_sentences
 
 env = os.environ.get("FLASK_ENV")
+port = int(os.environ.get('PORT', 5000))
 
 # 개발 시에는 eunjeon import, 배포 시에는 mecab import
-if(env =="production"):
+if env == "production":
     import mecab
 else:
     from eunjeon import Mecab
     mecab = Mecab()
 
 app = Flask(__name__)
-
 
 
 @app.route('/keyword-tag', methods=['POST'])
@@ -48,10 +49,12 @@ def index():
         return noun_list
 
     def visualize(noun_list):
+        tgtdir = '../client/public/uploads/'
+        filename = shortuuid.uuid()
         if len(noun_list) < 3 :
             with open("./noWordcloud.png", "rb") as image_file:
                 encoded_string = base64.b64encode(image_file.read()).decode()
-            return encoded_string
+            return '%s%s.png' %(tgtdir, noWordcloud)
         else:
             wc = WordCloud(font_path='./SeoulNamsanB.ttf', \
                         background_color="white", \
@@ -60,33 +63,39 @@ def index():
                         max_words=100, \
                         max_font_size=300)
 
-            pil_img = wc.generate_from_frequencies(dict(noun_list)).to_image()
-            img = io.BytesIO()
-            pil_img.save(img, "PNG")
-            img.seek(0)
-            img_b64 = base64.b64encode(img.getvalue()).decode()
-            return img_b64
-
+            wc.generate_from_frequencies(dict(noun_list))
+            wc.to_file('%s%s.png' %(tgtdir, filename))
+            # pil_img = wc.generate_from_frequencies(dict(noun_list)).to_image()
+            # img = io.BytesIO()
+            # pil_img.save(img, "PNG")
+            # img.seek(0)
+            # img_b64 = base64.b64encode(img.getvalue()).decode()
+            # return img_b64
+            return '%s%s.png' %(tgtdir, filename)
 
     def summarize(contents, stopwords):
         contents = contents.replace(",", "")
         sentences = split_sentences(contents)
-        penalty = lambda x:0 if (25 <= len(x) <= 80) else 1
-        words, sents = summarize_with_sentences(
-            sentences,
-            penalty=penalty,
-            stopwords = stopwords,
-            diversity=0.7,
-            num_keysents=3,
-            scaling=lambda x:1,
-            verbose=False,
-        )
-        i = 0
-        key_sents = ""
-        while(i<3):
-            key_sents += (sents[i] + " ")
-            i += 1
-        return key_sents
+        try:
+            penalty = lambda x:0 if (25 <= len(x) <= 80) else 1
+            words, sents = summarize_with_sentences(
+                sentences,
+                penalty=penalty,
+                stopwords = stopwords,
+                diversity=0.7,
+                num_keysents=3,
+                scaling=lambda x:1,
+                verbose=False,
+            )
+            i = 0
+            key_sents = ""
+            while(i<3):
+                key_sents += (sents[i] + " ")
+                i += 1
+            return key_sents
+        
+        except:
+            return "요약할 대화가 충분하지 않습니다."
 
     with open("stopwords.txt", 'r', encoding='utf-8') as f:
         stopwords = f.readlines()
@@ -114,6 +123,11 @@ def index():
     r = make_response(res)
     return r
 
-if __name__=="__name__":
-    app.run()
+# 개발 시에만 debug mode ON, 배포 시에는 외부 서버에서도 접근 가능하게
+if __name__ == "__main__":
+    if env == "production":
+        app.run(host='0.0.0.0', port=port)
+    else: 
+        app.run(debug=True, port=port)
 
+print(f'********** FLASK SERVER is running on port {port} **********')

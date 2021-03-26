@@ -4,16 +4,17 @@ import {Paper, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width:"30%",
-        height:"90%",
-        marginTop:"1%"
+        width:"85%",
+        height:"45%",
+        marginTop:"1%",
+        marginLeft:"10%",
     },
     paper: {
         marginLeft:"1%",
         width:"100%",
         height:"100%", 
         paddingTop:"1%",
-        marginTop:"1%",
+        marginTop:"3%",
     },
     data: {
         overflow:"auto",
@@ -55,7 +56,7 @@ export default function Script(prop) {
                 <Typography variant="h6" align="center">
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Summary</span>   
                 </Typography>
-                <div style={{backgroundColor:"#eaeaea", width:"84%", height:"85%",borderRadius:10, margin:"auto", padding:"3%"}}>
+                <div style={{backgroundColor:"#eaeaea", width:"84%", height:"60%",borderRadius:10, margin:"auto", padding:"3%"}}>
                     <Typography className={classes.data}>
                         {data.summary}
                     </Typography>

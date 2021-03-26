@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles} from '@material-ui/core/styles';
+import Contribution from '../Components/contribution';
 import Summary from '../Components/summary';
 import Meetscript from '../Components/Meetscript';
 import ScriptTitle from '../Components/ScriptTitle';
@@ -31,9 +32,13 @@ export default function Script() {
       <div style={{width: "100%", height:"90%"}}>
             <div className={classes.body}>
               < ScriptTitle meet_id={meet_id} />
-              <div style={{display:"flex", height: "88%", width: "100%", justifyContent:"center"}}>
-              < Summary meet_id={meet_id} /> < Meetscript meet_id={meet_id} />
+              <div style={{ display: "flex", height: "88%", width: "95%", justifyContent:"center"}}>
+                <div style={{ height: "88%", width: "98%", justifyContent:"center"}}>
+                  < Summary meet_id={meet_id} /> < Contribution meet_id={meet_id} /> 
+                </div>
+                < Meetscript meet_id={meet_id} />
               </div>
+              
             </div>
       </div>
     </div>

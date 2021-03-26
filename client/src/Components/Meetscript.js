@@ -4,14 +4,13 @@ import {Paper, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width:"60%",
-        height:"90%",
-        marginTop:"1%"
+        width:"85%",
+        height:"83%",
+        marginTop:"1%",
     },
     paper: {
-        marginLeft:"2%",
         width:"100%",
-        height:"99%", 
+        height:"100%", 
         paddingTop:"1%",
         marginTop:"0.5%"
     },

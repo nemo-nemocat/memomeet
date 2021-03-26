@@ -123,7 +123,7 @@ export default function SearchBtn() {
     return (
         <div>
         <div className={classes.searchBtn} onClick={clickSearchOpen}>
-            <SearchIcon style={{ color: "#ffffff", marginTop: 5 }} fontSize="small" />
+            <SearchIcon style={{ color: "#ffffff", marginTop:"3%", marginLeft:"3%", marginBottom:"3%" }} fontSize="small" />
             <span className="align-middle" style={{ color: "#ffffff", fontWight: "bold", fontSize: 12 }}>GROUP SEARCH</span>
         </div>
          
