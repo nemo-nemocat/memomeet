@@ -125,7 +125,7 @@ export default function Finished(prop) {
                 console.log(result);
                 if (result.code === 0) {    
                     alert("회의 정보를 삭제합니다");
-                    getList();
+                    getList(prop);
                 }
             })
             .catch(error => console.log('error', error))
