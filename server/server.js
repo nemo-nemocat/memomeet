@@ -100,6 +100,10 @@ app.get('/meeting', (req, res) => { // 회의실 페이지는 res 렌더링으�
   res.render('room', { roomId: req.query.meet_id, userId: req.query.user_id, userName: req.query.user_name })
 })
 
+// 개발시에는 localhost, 배포시에는 0.0.0.0
+let flask_url = 'http://localhost:5000/keyword-tag'
+if (process.env.NODE_ENV == 'production') flask_url = `http://0.0.0.0:${FlaskDeployPort}/keyword-tag`
+
 let rooms = {};
 
 io.on('connection', socket => {
@@ -156,8 +160,7 @@ io.on('connection', socket => {
       var chatInput = rooms[room].chatArray.toString();
       
       inputMeetscript(room, chatInput, contentInput).then(
-        request({method: 'POST', url: `http://0.0.0.0:${FlaskDeployPort}/keyword-tag`, json: {"meet_id": room}}, function (error, response, body) {
-        //request({method: 'POST', url: 'http://localhost:5000/keyword-tag', json: {"meet_id": room}}, function (error, response, body) {
+        request({method: 'POST', url: flask_url, json: {"meet_id": room}}, function (error, response, body) {
         console.log('flask_response:', body); // Print the data received
       }));
 
