@@ -29,10 +29,10 @@ else:
 app = Flask(__name__)
 
 # db 환경 분리
-if env == "production":
-    db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="b5dfcc92d33e0e", passwd="0c8450fd", db="heroku_9c78ff95d911e67", charset="utf8")
-else:
-    db = pymysql.connect(host="localhost", user="root", passwd="root", db="memomeet", charset="utf8")
+#if env == "production":
+db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="b5dfcc92d33e0e", passwd="0c8450fd", db="heroku_9c78ff95d911e67", charset="utf8")
+#else:
+#    db = pymysql.connect(host="localhost", user="root", passwd="root", db="memomeet", charset="utf8")
 
 cur = db.cursor()
 
@@ -127,12 +127,11 @@ def index():
 
     return str(noun_list)
 
-
-print(f'********** FLASK SERVER is running on port {port} **********')
-
 # 개발 시에만 debug mode ON, 배포 시에는 외부 서버에서도 접근 가능하게
 if __name__ == "__main__":
     if env == "production":
         app.run(host='0.0.0.0', port=port)
     else: 
         app.run(debug=True, port=port)
+
+print(f'********** FLASK SERVER is running on port {port} **********')
