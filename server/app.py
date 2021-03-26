@@ -19,6 +19,9 @@ from kss import split_sentences
 env = os.environ.get("FLASK_ENV")
 port = int(os.environ.get('PORT', 5000))
 
+if env == "production":
+    print("*********************PRODUCTION************************")
+
 # 개발 시에는 eunjeon import, 배포 시에는 mecab import
 if env == "production":
     import mecab
@@ -39,7 +42,6 @@ cur = db.cursor()
 @app.route('/keyword-tag', methods=['POST'])
 def index():
     meet_id = request.json['meet_id']
-    print("*****MEET ID is" + meet_id)
     sql = 'SELECT content FROM MEETSCRIPT WHERE MEET_ID=%s'
     cur.execute(sql, meet_id)
     contents = cur.fetchall()
