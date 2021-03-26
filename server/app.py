@@ -127,6 +127,11 @@ def index():
 
     return str(noun_list)
 
-if __name__ == "__main__":
-    print(f'********** FLASK SERVER is running on port {port} **********')
+
+print(f'********** FLASK SERVER is running on port {port} **********')
+
+# 개발 시에만 debug mode ON
+if env == "production":
+    app.run(port=port)
+else: 
     app.run(debug=True, port=port)
