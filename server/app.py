@@ -10,7 +10,7 @@ from collections import Counter
 
 from flask import Flask
 from flask import request
-import pymysql
+from flask import make_response
 
 from krwordrank.sentence import summarize_with_sentences
 from krwordrank.word import summarize_with_keywords
@@ -29,29 +29,14 @@ else:
 
 app = Flask(__name__)
 
-# db 환경 분리
-if env == "production":
-    db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="b5dfcc92d33e0e", passwd="0c8450fd", db="heroku_9c78ff95d911e67", charset="utf8")
-else:
-    db = pymysql.connect(host="localhost", user="root", passwd="root", db="memomeet", charset="utf8")
-
-cur = db.cursor()
 
 @app.route('/keyword-tag', methods=['POST'])
 def index():
-    # meet_id = "HU5uWbVoo"
-    meet_id = request.json['meet_id']
-    sql = 'SELECT content FROM MEETSCRIPT WHERE MEET_ID=%s'
-    cur.execute(sql, meet_id)
-    contents = cur.fetchall()
+    contents = request.json['contents']
     
     def get_noun(contents, stopwords):
 
         nouns = mecab.nouns(contents)
-
-        # for i, v in enumerate(nouns):
-        #     if len(v) < 2:
-        #         nouns.pop(i)
 
         # 명사 빈도 카운트
         count = Counter(nouns)
@@ -78,8 +63,6 @@ def index():
                         max_words=100, \
                         max_font_size=300)
 
-
-
             wc.generate_from_frequencies(dict(noun_list))
             wc.to_file('%s%s.png' %(tgtdir, filename))
             # pil_img = wc.generate_from_frequencies(dict(noun_list)).to_image()
@@ -89,7 +72,6 @@ def index():
             # img_b64 = base64.b64encode(img.getvalue()).decode()
             # return img_b64
             return '%s%s.png' %(tgtdir, filename)
-
 
     def summarize(contents, stopwords):
         contents = contents.replace(",", "")
@@ -119,23 +101,27 @@ def index():
         stopwords = f.readlines()
     stopwords = [x.strip() for x in stopwords]
 
-    noun_list = get_noun(contents[0][0], stopwords)
-    word_cloud = visualize(noun_list)
-    # 'a b c'
-    i = 0
-    for v in noun_list:
-        if(v[0] and i<3):
-            i = i+1
-            sql = 'INSERT INTO TAGLIST(meet_id, tag) VALUE(%s, %s)'
-            cur.execute(sql, (meet_id, v[0]))
-            db.commit()
+    noun_list = get_noun(contents, stopwords)
+    #word_cloud = visualize(noun_list)
+    word_cloud = "wordcloud 예시~"
 
-    summary = summarize(contents[0][0], stopwords)
-    sql = 'INSERT INTO FINISHEDMEET VALUE(%s,%s,%s)'
-    cur.execute(sql, (meet_id, summary, word_cloud))
-    db.commit()
-    
-    return str(noun_list)
+    tags = []
+
+    if len(noun_list) > 3:
+        for i in range(3):
+            tags.append(noun_list[i][0])
+    else:
+        for t in noun_list:
+            tags.append(t[0])
+        for _ in range(3 - len(noun_list)):
+            tags.append("")
+
+    summary = "summary 예시 아직 미완성"
+
+    result = {'tag1': tags[0], 'tag2': tags[1], 'tag3': tags[2], 'summary': summary, 'wordcloud': word_cloud}
+    res = json.dumps(result, ensure_ascii=False)
+    r = make_response(res)
+    return r
 
 # 개발 시에만 debug mode ON, 배포 시에는 외부 서버에서도 접근 가능하게
 if __name__ == "__main__":

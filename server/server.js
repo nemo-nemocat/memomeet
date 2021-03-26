@@ -158,11 +158,26 @@ io.on('connection', socket => {
       //meetScript DB INPUT
       var contentInput = rooms[room].contentArray.toString();
       var chatInput = rooms[room].chatArray.toString();
-      
-      inputMeetscript(room, chatInput, contentInput).then(
-        request({method: 'POST', url: flask_url, json: {"meet_id": room}}, function (error, response, body) {
+
+      var sql = 'INSERT INTO  MEETSCRIPT VALUE(?, ?, ?)';
+      mysqlDB.query(sql, [room, chatInput, contentInput], function(err, results){
+        if(err) console.log(err);
+        else console.log('success input meetscript');
+      });
+            
+      request({method: 'POST', url: 'http://localhost:5000/keyword-tag', json: {"contents": contentInput}}, function (error, response, body) {
         console.log('flask_response:', body); // Print the data received
-      }));
+        sql = 'INSERT INTO FINISHEDMEET VALUE(?, ?, ?)';
+        mysqlDB.query(sql, [room, body.summary, body.wordcloud], function(err, results){
+          if(err) console.log(err);
+          else console.log('success input finishedmeet');
+        });
+        sql = `INSERT INTO TAGLIST VALUES( '${room}', ?), ('${room}', ?),('${room}', ?)`;
+        mysqlDB.query(sql, [body.tag1, body.tag2, body.tag3], function(err, results){
+          if(err) console.log(err);
+          else console.log('success input taglist');
+        }); 
+      });
 
       //scheduled meet 에서 삭제
       sql = 'UPDATE FORWARDMEET SET ISFINISH = 1 WHERE MEET_ID=?';
