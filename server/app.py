@@ -21,11 +21,14 @@ env = os.environ.get("FLASK_ENV")
 port = int(os.environ.get('PORT', 5000))
 
 # 개발 시에는 eunjeon import, 배포 시에는 mecab import
+tgtdir = ''
 if env == "production":
     import mecab
+    tgtdir = '../client/build/uploads/'
 else:
     from eunjeon import Mecab
     mecab = Mecab()
+    tgtdir = '../client/public/uploads/'
 
 app = Flask(__name__)
 
@@ -49,7 +52,7 @@ def index():
         return noun_list
 
     def visualize(noun_list):
-        tgtdir = '../client/public/uploads/'
+        
         filename = shortuuid.uuid()
         if len(noun_list) < 3 :
             with open("./noWordcloud.png", "rb") as image_file:
@@ -102,8 +105,7 @@ def index():
     stopwords = [x.strip() for x in stopwords]
 
     noun_list = get_noun(contents, stopwords)
-    #word_cloud = visualize(noun_list)
-    word_cloud = "wordcloud 예시~"
+    word_cloud = visualize(noun_list)
 
     tags = []
 
@@ -116,7 +118,7 @@ def index():
         for _ in range(3 - len(noun_list)):
             tags.append("")
 
-    summary = "summary 예시 아직 미완성"
+    summary = summarize(contents, stopwords)
 
     result = {'tag1': tags[0], 'tag2': tags[1], 'tag3': tags[2], 'summary': summary, 'wordcloud': word_cloud}
     res = json.dumps(result, ensure_ascii=False)
