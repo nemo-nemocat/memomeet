@@ -39,10 +39,11 @@ cur = db.cursor()
 @app.route('/keyword-tag', methods=['POST'])
 def index():
     meet_id = request.json['meet_id']
+    print("*****MEET ID is" + meet_id)
     sql = 'SELECT content FROM MEETSCRIPT WHERE MEET_ID=%s'
     cur.execute(sql, meet_id)
     contents = cur.fetchall()
-    db.close()
+    db.close() 
     
     def get_noun(contents, stopwords):
 
