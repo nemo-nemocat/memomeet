@@ -211,7 +211,7 @@ function inputMeetscript(room, chatInput, contentInput){
   })
 }
 
-// 프로필 사진 저장 : 개발시에는 eunjeon, 배포시에는 python-mecab-ko
+// 형태소 분석 : 개발시에는 eunjeon, 배포시에는 python-mecab-ko
 tagScript = 'tag-development.py'
 if (process.env.NODE_ENV == 'production') tagScript = 'tag-production.py'
 
@@ -244,7 +244,7 @@ function tag_extract(contentInput) {
 
 /************************************ Web server code ************************************/
 
-// 개발 시에는 public폴더, 배포 시에는 build폴더 사용 
+// 프로필 사진 저장 : 개발 시에는 public폴더, 배포 시에는 build폴더 사용 
 img_folder = '../client/public/uploads/'
 if (process.env.NODE_ENV == 'production') img_folder = '../client/build/uploads/'
 
