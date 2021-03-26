@@ -5,6 +5,7 @@ const server = require('http').Server(app)
 const io = require('socket.io')(server)
 const bodyParser = require('body-parser');
 const AppPort = process.env.PORT || 3002;
+const FlaskDeployPort = parseInt(AppPort) + 100
 const cors = require('cors');
 const shortid = require ('shortid'); // unique id 생성
 const path = require('path');
@@ -155,7 +156,8 @@ io.on('connection', socket => {
       var chatInput = rooms[room].chatArray.toString();
       
       inputMeetscript(room, chatInput, contentInput).then(
-        request({method: 'POST', url: 'http://localhost:5000/keyword-tag', json: {"meet_id": room}}, function (error, response, body) {
+        request({method: 'POST', url: `http://0.0.0.0:${FlaskDeployPort}/keyword-tag`, json: {"meet_id": room}}, function (error, response, body) {
+        //request({method: 'POST', url: 'http://localhost:5000/keyword-tag', json: {"meet_id": room}}, function (error, response, body) {
         console.log('flask_response:', body); // Print the data received
       }));
 
@@ -652,5 +654,5 @@ app.post('/finishedmeet-download', function(req,res){
 
 
 server.listen(AppPort, function () {
-  console.log(`익스프레스서버 on port ${AppPort}`);
+  console.log(`********** EXPRESS SERVER is running on port ${AppPort} **********`);
 });

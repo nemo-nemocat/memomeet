@@ -17,6 +17,7 @@ from krwordrank.word import KRWordRank
 from kss import split_sentences
 
 env = os.environ.get("FLASK_ENV")
+port = int(os.environ.get('PORT', 5000))
 
 # 개발 시에는 eunjeon import, 배포 시에는 mecab import
 if(env =="production"):
@@ -126,6 +127,6 @@ def index():
 
     return str(noun_list)
 
-if __name__=="__name__":
-    app.run()
-
+if __name__ == "__main__":
+    print(f'********** FLASK SERVER is running on port {port} **********')
+    app.run(debug=True, port=port)
