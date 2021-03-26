@@ -19,9 +19,6 @@ from kss import split_sentences
 env = os.environ.get("FLASK_ENV")
 port = int(os.environ.get('PORT', 5000))
 
-if env == "production":
-    print("*********************PRODUCTION************************")
-
 # 개발 시에는 eunjeon import, 배포 시에는 mecab import
 if env == "production":
     import mecab
