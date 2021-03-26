@@ -101,8 +101,8 @@ app.get('/meeting', (req, res) => { // 회의실 페이지는 res 렌더링으�
 })
 
 // flask server request url : 개발시에는 localhost, 배포시에는 0.0.0.0
-let flask_url = 'http://localhost:5000/keyword-tag'
-if (process.env.NODE_ENV == 'production') flask_url = `http://0.0.0.0:${FlaskDeployPort}/keyword-tag`
+let flask_url = 'http://localhost:5000/anaysis'
+if (process.env.NODE_ENV == 'production') flask_url = `http://0.0.0.0:${FlaskDeployPort}/anaysis`
 
 let rooms = {};
 
