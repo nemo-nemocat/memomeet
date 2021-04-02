@@ -9,7 +9,6 @@ const FlaskDeployPort = parseInt(AppPort) + 100
 const cors = require('cors');
 const shortid = require ('shortid'); // unique id 생성
 const path = require('path');
-const PythonShell = require('python-shell'); // python script 실행
 const mysql = require("mysql");
 const multer = require("multer");
 const fs = require('fs');
@@ -198,38 +197,6 @@ io.on('connection', socket => {
     }
   })
 })
-
-/************************************ Python 스크립트 실행 code ************************************/
-
-tagScript = 'tag-development.py'
-if (process.env.NODE_ENV == 'production') tagScript = 'tag-production.py'
-
-function tag_extract(contentInput) {
-
-  return new Promise(function(resolve, reject){
-    let options = {
-      mode: 'text',
-      pythonPath: '',
-      pythonOptions: ['-u'],
-      scriptPath: '',
-      args: [contentInput],
-      encoding: 'utf8'
-    };
-
-    PythonShell.PythonShell.run(tagScript, options, function(err, results){
-      if(err) throw err;
-      var tagData = JSON.parse(results).tag;
-      let text = tagData.toString('utf-8');
-      var tag_list = text.split(' ');
-
-      var imgData = JSON.parse(results).img;
-
-      var pythonData = {"tag1": tag_list[0], "tag2": tag_list[1], "tag3": tag_list[2],"imgData": imgData};
-      resolve(pythonData);
-    });  
-  })
-    
-}
 
 /************************************ Web server code ************************************/
 

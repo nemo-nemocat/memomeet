@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     Chip: {
+        fontSize: 14,
         backgroundColor: "#ffc31e",
         marginTop:"1%",
         marginRight:"3%",

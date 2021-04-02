@@ -4,6 +4,7 @@ import {Chip} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     TagChip: {
+        fontSize: 14,
         marginRight:"1%",
         marginTop:"1%"
     },

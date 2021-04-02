@@ -10,7 +10,7 @@ const data = {
             borderWidth: 1,
             hoverBackgroundColor: '#ffc31e',
             hoverBorderColor: '#ffc31e',
-            data: [25, 15, 20, 23]
+            data: [25, 15, 20, 50]
         }
     ]
 };
@@ -24,7 +24,7 @@ const options = {
             display: false,
             ticks: {
                 min: 0,
-                max: 30,
+                max: 100,
             },
             gridLines: {
                 display: false,

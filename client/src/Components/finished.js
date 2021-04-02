@@ -30,9 +30,11 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "#ffc31e",
         marginTop:"1%",
         marginRight:"3%",
-        height:"10%"
+        height:"10%",
+        fontSize: 14
     },
     ScriptChip: {
+        fontSize: 14,
         backgroundColor: "#000000",
         color: "#ffffff",
         marginTop:"1%",
@@ -42,10 +44,6 @@ const useStyles = makeStyles((theme) => ({
           backgroundColor: "#8c8c8c",
           color: "white"
         },
-    },
-    TagChip: {
-        marginRight:"1%",
-        marginTop:"1%"
     },
     data:{
         backgroundColor:"#ffffff",
