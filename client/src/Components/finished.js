@@ -8,7 +8,8 @@ import ScheduleIcon from '@material-ui/icons/Schedule';
 import DescriptionIcon from '@material-ui/icons/Description';
 import TagList from './tagList';
 import DeleteForever from '@material-ui/icons/DeleteForever';
-import SearchScript from'./SearchScript';
+import InputBase from '@material-ui/core/InputBase';
+import SearchIcon from '@material-ui/icons/Search';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -65,7 +66,38 @@ const useStyles = makeStyles((theme) => ({
         "&:hover": {
             color: "#ffa0a0",
         },
-    }
+    },
+    grow: {
+        flexGrow: "1%",
+        paddingTop: "2%",
+        marginBottom: "2%",
+      },
+      search: {
+        position: 'relative',
+        borderRadius: 20,
+        backgroundColor: "#A9A9A9",
+        marginRight: "1%",
+        marginLeft: "3%",
+        width: '94%',
+      },
+      searchIcon: {
+        marginLeft:"5%",
+        height: '100%',
+        position: 'absolute',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      inputRoot: {
+        color: 'inherit',
+        width: "75%"
+      },
+      inputInput: {
+        paddingTop: "3%",
+        paddingBottom: "3%",
+        paddingLeft: "3%",
+        width: '100%',
+      },
 }));
 
 export default function Finished(prop) {
@@ -141,7 +173,21 @@ export default function Finished(prop) {
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Finished</span>   
                 </Typography>
                 <div style={{backgroundColor:"#eaeaea", width:"90%", height:"85%",borderRadius:10, margin:"auto"}}>
-                    < SearchScript />
+                    <div className={classes.grow}>
+                        <div className={classes.search}>
+                            <div className={classes.searchIcon}>
+                                <SearchIcon />
+                            </div>
+                            <InputBase
+                            placeholder="Search Script..."
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                            inputProps={{ 'aria-label' : 'search'}}
+                            />
+                        </div>
+                    </div>
                 <List className={classes.list}>
                     {list && list.map(data => (
                         <ListItem key={data.meet_id} id='data' className={classes.data}>
