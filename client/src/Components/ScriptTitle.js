@@ -80,7 +80,7 @@ export default function ScriptTitle(prop) {
     const [tagList, setTagList] = useState([]);
     const [addOpen, setAddOpen] = useState(false);
     const [tagName, setTagName] = useState('');
-    const [user_profile, setProfile] = useState(sessionStorage.getItem("user_profile"));
+    const [user_profile] = useState(sessionStorage.getItem("user_profile"));
 
     useEffect(() => {
         var myHeaders = new Headers();

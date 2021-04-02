@@ -29,6 +29,8 @@ const useStyles = makeStyles((theme) => ({
 export default function Script(prop) {
     const classes = useStyles();
     const [data, setData] = useState('');
+    const [userData, setUserData] = useState([]);
+    const [contribution, setContribution] = useState('');
 
     useEffect(() => {
         var myHeaders = new Headers();
@@ -47,6 +49,9 @@ export default function Script(prop) {
             .then(res => res.json())
             .then(result => {
                 setData(result.data);
+                setUserData(result.contributions);
+                setContribution(result.data.contribution_values);
+                console.log(result);
             })
             .catch(error => console.log('error', error))
       }, [prop]);
@@ -69,7 +74,7 @@ export default function Script(prop) {
                 </Typography>
                 <div style={{backgroundColor:"#eaeaea", width:"84%", height:"60%",borderRadius:10, margin:"auto", padding:"3%"}}>
                     <Typography className={classes.data}>
-                        < Chart />
+                        < Chart userData={userData} contribution={contribution}/>
                     </Typography>
                 </div>
             </Paper>
