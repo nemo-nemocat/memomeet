@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {Paper, Typography } from '@material-ui/core';
+import Shortid from "shortid";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -62,7 +63,7 @@ export default function MeetScript(prop) {
                 </Typography>
                 <div className={classes.scriptContainer}>
                     {list && list.map(data => (
-                        <Typography key={data}>{data}</Typography>
+                        <Typography key={Shortid.generate()}>{data}</Typography>
                     ))}
                 </div>
             </Paper> 

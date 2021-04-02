@@ -176,18 +176,19 @@ io.on('connection', socket => {
       }
 
       for (var member in rooms[room].contribution) {
-        rooms[room].contribution[member] = rooms[room].contribution[member] / sum * 100
+        rooms[room].contribution[member] = parseInt(rooms[room].contribution[member] / sum * 100)
       }
       
-      var contribution_str = Object.keys(rooms[room].contribution).join(' ') + ", " + Object.values(rooms[room].contribution).join(' ')
-      console.log(contribution_str)
+      var contribution_keys = Object.keys(rooms[room].contribution).join(' ');
+      var contribution_values = Object.values(rooms[room].contribution).join(' ');
 
       request({method: 'POST', url: flask_url, json: {"contents": contentInput}}, function (error, response, body) {
 
         console.log('flask_response:', body); // Print the data received
-        sql = 'INSERT INTO FINISHEDMEET VALUE(?, ?, ?)';
-        mysqlDB.query(sql, [room, body.summary, body.wordcloud], function (err, results) {
-          if (err) console.log(err);
+
+        sql = 'INSERT INTO FINISHEDMEET VALUE(?, ?, ?, ?, ?)';
+        mysqlDB.query(sql, [room, body.summary, body.wordcloud, contribution_keys, contribution_values], function(err, results){
+          if(err) console.log(err);
           else console.log('success input finishedmeet');
         });
         sql = `INSERT INTO TAGLIST VALUES( '${room}', ?), ('${room}', ?),('${room}', ?)`;
@@ -582,8 +583,18 @@ app.post('/finishedmeet-info', function (req, res) {
       if (!results[0]) {
         return res.send({ code: 31, msg: "meet fail: meet_id not exist" });
       }
-      else {
-        return res.send({ code: 0, msg: "request success", data: results[0] })
+      else{
+        var member_list = results[0].contribution_keys.split(" ");
+        var query = "";
+        member_list.forEach(element => {
+          query += `"${element}",`;
+        })
+        query = query.substr(0, query.length-1);
+        sql = `SELECT user_name, profile_url FROM USERLIST WHERE USER_ID IN (${query}) ORDER BY FIELD(USER_ID, ${query})`
+        mysqlDB.query(sql, function(err, results2){
+          if(err) return res.send({code:11, msg:`${err}`, sql:sql});
+          else  return res.send({code:0, msg:"request success", data:results[0], contributions:results2});
+        })
       }
     }
   })
@@ -660,7 +671,6 @@ app.post('/finishedmeet-download', function (req, res) {
     }
   })
 });
-
 
 server.listen(AppPort, function () {
   console.log(`********** EXPRESS SERVER is running on port ${AppPort} **********`);
