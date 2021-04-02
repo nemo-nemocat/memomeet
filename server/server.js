@@ -120,12 +120,14 @@ io.on('connection', socket => {
       rooms[room] = {}
       rooms[room].members = []
       rooms[room].num = rooms[room].members.length
-      rooms[room].chatArray = []; // (name: content) 담을 배열
-      rooms[room].contentArray = []; // content 담을 배열
+      rooms[room].chatArray = [] // (name: content) 담을 배열
+      rooms[room].contentArray = [] // content 담을 배열
+      rooms[room].contribution = {} // 기여도
     }
 
     rooms[room].members.push(name)
     rooms[room].num = rooms[room].members.length
+    rooms[room].contribution[id] = 0 // 기여도 0으로 초기화
 
     socket.join(room)
     socket.to(room).broadcast.emit('userConnected', {id: id, name: name}) // room 안의 나를 제외한 모두에게 'userConnected' event emit
@@ -144,6 +146,7 @@ io.on('connection', socket => {
       chat = `${name}: ${data.message}`;
       rooms[room].contentArray.push(data.message);
       rooms[room].chatArray.push(chat);
+      rooms[room].contribution[id] += data.message.length // 내가 말하면 내 기여도 추가
 
       socket.to(room).broadcast.emit('updateChat', data) // room 안의 나를 제외한 모두에게 메시지 업데이트
     }
@@ -163,7 +166,22 @@ io.on('connection', socket => {
         if(err) console.log(err);
         else console.log('success input meetscript');
       });
-            
+
+      // 기여도 백분율로 환산
+      var sum = 0
+      for (var member in rooms[room].contribution) {
+        if (rooms[room].contribution.hasOwnProperty(member)) {           
+          sum += rooms[room].contribution[member]
+        }
+      }
+
+      for (var member in rooms[room].contribution) {
+        rooms[room].contribution[member] = rooms[room].contribution[member] / sum * 100
+      }
+      
+      var contribution_str = Object.keys(rooms[room].contribution).join(' ') + ", " + Object.values(rooms[room].contribution).join(' ')
+      console.log(contribution_str)
+
       request({method: 'POST', url: flask_url, json: {"contents": contentInput}}, function (error, response, body) {
         console.log('flask_response:', body); // Print the data received
         sql = 'INSERT INTO FINISHEDMEET VALUE(?, ?, ?)';
