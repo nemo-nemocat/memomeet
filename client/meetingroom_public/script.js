@@ -53,7 +53,8 @@ navigator.mediaDevices.getUserMedia({
 }).then(stream => {
     myVideoStream = stream
     user_name = USER_NAME
-    addVideoStream(myVideoBx, myNameTag, myVideo, user_name, stream) // 내 stream을 내 브라우저에 추가
+    addVideoBox(myVideoBx, myNameTag, myVideo, user_name) // 내 Box를 내 브라우저에 추가 
+    addVideoStream(myVideo, stream) // 내 Box에 내 Stream을 추가
 
     // caller의 call에 대한 응답
     peer.on('call', call => {
@@ -63,13 +64,15 @@ navigator.mediaDevices.getUserMedia({
         const callerVideo = document.createElement('video')
         var callerName = call.metadata.callerName
         call.on('stream', userVideoStream => { // caller의 stream을 내 브라우저에 추가하는 콜백 함수 실행
-          addVideoStream(callerVideoBx, callerNameTag, callerVideo, callerName, userVideoStream) 
+          addVideoBox(callerVideoBx, callerNameTag, callerVideo, callerName) 
+          addVideoStream(callerVideo, userVideoStream)
         })
     })
 
     // 새로운 유저가 접속하면 서버로부터 그 유저의 userId를 받아온 후 connectToNewUser()
     socket.on('userConnected', (data) => {
-      setTimeout(() => {connectToNewUser(data.id, data.name, stream)}, 2000)
+      // 박스는 바로 붙이고 이후에 setTimeout으로 비디오 붙일 것임
+      connectToNewUser(data.id, data.name, stream)
     })
 })
 
@@ -77,11 +80,14 @@ function connectToNewUser(userId, calleeName, stream) {
   const call = peer.call(userId, stream, {metadata: {callerName: USER_NAME}}) // 나의 stream과 이름을 제공하면서 call
   const calleeVideoBx = document.createElement('div') 
   const calleeNameTag = document.createElement('div') 
-  const calleeVideo = document.createElement('video') 
-  // callee가 응답하면 stream을 받아오고 내 브라우저에 추가
+  const calleeVideo = document.createElement('video')
+  
+  // callee가 응답하면
   call.on('stream', userVideoStream => { 
-      addVideoStream(calleeVideoBx, calleeNameTag, calleeVideo, calleeName, userVideoStream)
+    addVideoBox(calleeVideoBx, calleeNameTag, calleeVideo, calleeName) // 우선 box만 추가
+    setTimeout(() => {addVideoStream(calleeVideo, userVideoStream)}, 2000) // 2초 뒤에 stream 받아와서 비디오 추가
   })
+
   // 상대가 나가서 상대의 stream에 대해 'close' event가 발생하면 상대의 video를 제거하는 콜백 함수 실행
   call.on('close', () => {
     removeVideoStream(calleeVideo, stream)
@@ -90,24 +96,28 @@ function connectToNewUser(userId, calleeName, stream) {
   peers[userId] = call
 }
 
-function addVideoStream(videoBx, nameTag, video, userName, stream){
-    videoBx.style.marginRight = '10px';
+function addVideoBox(videoBx, nameTag, video, userName){
+  videoBx.style.marginRight = '10px';
 
-    let nameText = document.createTextNode(userName);
-    nameTag.className = 'nameTag';
-    if(!nameTag.hasChildNodes())nameTag.appendChild(nameText);
+  let nameText = document.createTextNode(userName);
+  nameTag.className = 'nameTag';
+  if(!nameTag.hasChildNodes())nameTag.appendChild(nameText);
 
+  var video;
+
+  videoBx.append(nameTag);
+  videoBx.append(video);
+
+  videoGrid.append(videoBx);
+
+  if(videoGrid.childElementCount>4) videoGrid.style.gridTemplateColumns = "1fr 1fr 1fr"; 
+}
+
+function addVideoStream(video, stream){
     video.srcObject = stream
     video.addEventListener('loadedmetadata', () => {
         video.play()
     })
-
-    videoBx.append(nameTag);
-    videoBx.append(video);
-
-    videoGrid.append(videoBx);
-
-    if(videoGrid.childElementCount>4) videoGrid.style.gridTemplateColumns = "1fr 1fr 1fr"; 
 }
 
 function removeVideoStream(video, stream){
