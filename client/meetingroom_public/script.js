@@ -72,7 +72,7 @@ navigator.mediaDevices.getUserMedia({
     // 새로운 유저가 접속하면 서버로부터 그 유저의 userId를 받아온 후 connectToNewUser()
     socket.on('userConnected', (data) => {
       // 박스는 바로 붙이고 이후에 setTimeout으로 비디오 붙일 것임
-      connectToNewUser(data.id, data.name, stream, peers)
+      connectToNewUser(data.id, data.name, stream)
     })
 })
 
