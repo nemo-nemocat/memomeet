@@ -20,8 +20,8 @@ const useStyles = makeStyles((theme) => ({
         paddingTop:"1%",
     },
     textField: {
+        verticalAlign: "bottom",
         width:"25%",
-        marginTop:"2.7%",
     },
     Button: {
         width:"10%",
@@ -88,9 +88,9 @@ export default function NewMeet(prop) {
                 <Typography variant="h6" align="center">
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>New Meet</span>   
                 </Typography>
-                <div style={{backgroundColor:"#eaeaea", width:"90%", borderRadius:10, margin:"auto"}}>
+                <div style={{backgroundColor:"#eaeaea", width:"90%", borderRadius:10, margin:"auto", paddingBottom:"2%"}}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <TextField className={classes.textField} style={{marginTop:"2.3%", marginRight:"2%"}} id="meet_title" label="Meet Title" value={meet_title} onChange={({ target: { value } }) => setMeetTitle(value)}/>
+                    <TextField className={classes.textField} style={{marginRight:"2%", verticalAlign: "bottom"}} id="meet_title" label="Meet Title" value={meet_title} onChange={({ target: { value } }) => setMeetTitle(value)}/>
                     <KeyboardDatePicker
                         disableToolbar
                         variant="inline"
@@ -103,7 +103,7 @@ export default function NewMeet(prop) {
                         KeyboardButtonProps={{
                             'aria-label': 'change date',
                         }}
-                        style={{width:"25%", marginRight:"2%"}}
+                        style={{width:"25%", marginRight:"2%", marginBottom: "0%",verticalAlign: "bottom"}}
                     />
                     <TextField
                         id="meet_time"
@@ -113,7 +113,6 @@ export default function NewMeet(prop) {
                         className={classes.textField}
                         InputLabelProps={{shrink: true,}}
                         inputProps={{step: 300,}}
-                        style={{marginBottom:"2%"}}
                         value={meet_time} onChange={({ target: { value } }) => setMeetTime(value)}
                         />
                 </MuiPickersUtilsProvider>
