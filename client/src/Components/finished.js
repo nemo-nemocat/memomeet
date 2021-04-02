@@ -10,6 +10,7 @@ import TagList from './tagList';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -72,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: "2%",
         marginBottom: "2%",
       },
-      search: {
+    search: {
         position: 'relative',
         borderRadius: 20,
         backgroundColor: "#A9A9A9",
@@ -80,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: "3%",
         width: '94%',
       },
-      searchIcon: {
+    searchIcon: {
         marginLeft:"5%",
         height: '100%',
         position: 'absolute',
@@ -88,15 +89,15 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
       },
-      inputRoot: {
+    inputRoot: {
         color: 'inherit',
-        width: "75%"
+        width: "75%",
       },
-      inputInput: {
+    inputInput: {
         paddingTop: "3%",
         paddingBottom: "3%",
         paddingLeft: "3%",
-        width: '100%',
+        width: '100%'
       },
 }));
 
@@ -179,13 +180,14 @@ export default function Finished(prop) {
                                 <SearchIcon />
                             </div>
                             <InputBase
-                            placeholder="Search Script..."
+                            placeholder="Search"
                             classes={{
                                 root: classes.inputRoot,
                                 input: classes.inputInput,
                             }}
                             inputProps={{ 'aria-label' : 'search'}}
                             />
+                            <CancelIcon style={{position:"absolute", height:"100%", color:"#eaeaea", alignItems:'center', justifyContent:'center'}} />
                         </div>
                     </div>
                 <List className={classes.list}>
