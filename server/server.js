@@ -548,6 +548,29 @@ app.post('/finishedmeet-list', function(req,res){
   })
 });
 
+//끝난 회의 검색
+app.post('/finishedmeet-search', function(req, res){
+  var group_id = req.body.group_id;
+  var keywords = req.body.keywords.split(" ");
+  var query = "";
+  keywords.forEach(element=>{
+    query += ` AND C.CONTENT LIKE '%${element}%'`;
+  });
+  var sql = "SELECT * FROM FORWARDMEET AS A, FINISHEDMEET AS B, MEETSCRIPT AS C " 
+            + "WHERE GROUP_ID=? AND A.MEET_ID = B.MEET_ID AND A.MEET_ID = C.MEET_ID"
+            + query
+            + "ORDER BY MEET_DAY DESC, MEET_TIME DESC";
+  mysqlDB.query(sql, group_id, function(err, results){
+    if(err) return res.send({code:11, msg:`${err}`, sql:sql});
+    else{
+      if(!results[0]) return res.send({code:36, msg:"no search result"});
+      else{
+        return res.send({code:0, msg:"request success", lists:results});
+      }
+    }
+  })
+})
+
 //회의별 태그리스트
 app.post('/finishedmeet-taglist', function(req,res){
   var meet_id = req.body.meet_id;
@@ -636,7 +659,6 @@ app.post('/finishedmeet-delete', function(req, res){
     }
   })
 });
-
 
 //회의 스크립트 다운로드
 app.post('/finishedmeet-download', function(req,res){
