@@ -2,7 +2,10 @@ const express = require("express");
 const request = require("request");
 const app = express();
 const server = require('http').Server(app)
-const io = require('socket.io')(server)
+const io = require('socket.io')(server).listen(server, {
+  pingTimeout: 5000,
+  pingInterval: 10000
+}); // disconnect event delay 해결용
 const bodyParser = require('body-parser');
 const AppPort = process.env.PORT || 3002;
 const FlaskDeployPort = parseInt(AppPort) + 100
