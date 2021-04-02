@@ -97,6 +97,13 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: "3%",
         width: '100%'
       },
+    cancelBtn:{
+        color:"#eaeaea", 
+        verticalAlign:'middle',
+        "&:hover": {
+            color: "#000000",
+        },
+    }
 }));
 
 export default function Finished(prop) {
@@ -105,6 +112,8 @@ export default function Finished(prop) {
     const [keywords, setKeywords] = useState('');
 
     const getList =(prop)=>{
+        setKeywords('');
+
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -217,10 +226,13 @@ export default function Finished(prop) {
                                 input: classes.inputInput,
                             }}
                             inputProps={{ 'aria-label' : 'search'}}
+                            value = {keywords}
                             onChange={({ target: { value } }) => setKeywords(value)}
                             onKeyPress={onKeyPress}
                             />
-                            <CancelIcon style={{position:"absolute", height:"100%", color:"#eaeaea", alignItems:'center', justifyContent:'center'}} />
+                            {(keywords === '') ? <div/>:
+                            <CancelIcon className={classes.cancelBtn} onClick={()=>getList(prop)} />
+                            }
                         </div>
                     </div>
                 <List className={classes.list}>
