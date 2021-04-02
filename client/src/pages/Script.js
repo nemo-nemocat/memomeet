@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "15%",
   },
   body: {
-    minWidth: 850,
+    minWidth: 1230,
     height: window.innerHeight,
     justifyContent:"center"
   },
@@ -27,7 +27,7 @@ export default function Script() {
   const meet_id = getUrlParams().meet_id;
 
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", minWidth: 1230 }}>
       <div style={{width: "100%", height:"90%"}}>
             <div className={classes.body}>
               < ScriptTitle meet_id={meet_id} />

@@ -72,10 +72,8 @@ export default function Script(prop) {
                 <Typography variant="h6" align="center">
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Contribution</span>   
                 </Typography>
-                <div style={{backgroundColor:"#eaeaea", width:"84%", height:"60%",borderRadius:10, margin:"auto", padding:"3%"}}>
-                    <Typography className={classes.data}>
-                        < Chart userData={userData} contribution={contribution}/>
-                    </Typography>
+                <div style={{backgroundColor:"#eaeaea", width:"84%", height:"70%",borderRadius:10, margin:"auto", padding:"3%", display:"table"}}>
+                    < Chart userData={userData} contribution={contribution}/>
                 </div>
             </Paper>
         </div>

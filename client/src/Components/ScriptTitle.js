@@ -38,11 +38,13 @@ const useStyles = makeStyles((theme) => ({
         margin:"auto"
     },
     Chip: {
+        fontSize: 14,
         backgroundColor: "#ffc31e",
         marginLeft:"1%",
         height:"10%",
     },
     TagChip: {
+        fontSize: 14,
         marginLeft:"1%",
     },
     button: {
