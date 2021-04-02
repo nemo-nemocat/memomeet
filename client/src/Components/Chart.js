@@ -24,7 +24,7 @@ const options = {
             display: false,
             ticks: {
                 min: 0,
-                max: 30,
+                max: 100
             },
             gridLines: {
                 display: false,

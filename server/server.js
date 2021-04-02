@@ -9,7 +9,6 @@ const FlaskDeployPort = parseInt(AppPort) + 100
 const cors = require('cors');
 const shortid = require('shortid'); // unique id 생성
 const path = require('path');
-const PythonShell = require('python-shell'); // python script 실행
 const mysql = require("mysql");
 const multer = require("multer");
 const fs = require('fs');
@@ -121,12 +120,14 @@ io.on('connection', socket => {
       rooms[room] = {}
       rooms[room].members = []
       rooms[room].num = rooms[room].members.length
-      rooms[room].chatArray = []; // (name: content) 담을 배열
-      rooms[room].contentArray = []; // content 담을 배열
+      rooms[room].chatArray = [] // (name: content) 담을 배열
+      rooms[room].contentArray = [] // content 담을 배열
+      rooms[room].contribution = {} // 기여도
     }
 
     rooms[room].members.push(name)
     rooms[room].num = rooms[room].members.length
+    rooms[room].contribution[id] = 0 // 기여도 0으로 초기화
 
     socket.join(room)
     socket.to(room).broadcast.emit('userConnected', { id: id, name: name }) // room 안의 나를 제외한 모두에게 'userConnected' event emit
@@ -145,6 +146,7 @@ io.on('connection', socket => {
       chat = `${name}: ${data.message}`;
       rooms[room].contentArray.push(data.message);
       rooms[room].chatArray.push(chat);
+      rooms[room].contribution[id] += data.message.length // 내가 말하면 내 기여도 추가
 
       socket.to(room).broadcast.emit('updateChat', data) // room 안의 나를 제외한 모두에게 메시지 업데이트
     }
@@ -165,7 +167,23 @@ io.on('connection', socket => {
         else console.log('success input meetscript');
       });
 
-      request({ method: 'POST', url: flask_url, json: { "contents": contentInput } }, function (error, response, body) {
+      // 기여도 백분율로 환산
+      var sum = 0
+      for (var member in rooms[room].contribution) {
+        if (rooms[room].contribution.hasOwnProperty(member)) {           
+          sum += rooms[room].contribution[member]
+        }
+      }
+
+      for (var member in rooms[room].contribution) {
+        rooms[room].contribution[member] = rooms[room].contribution[member] / sum * 100
+      }
+      
+      var contribution_str = Object.keys(rooms[room].contribution).join(' ') + ", " + Object.values(rooms[room].contribution).join(' ')
+      console.log(contribution_str)
+
+      request({method: 'POST', url: flask_url, json: {"contents": contentInput}}, function (error, response, body) {
+
         console.log('flask_response:', body); // Print the data received
         sql = 'INSERT INTO FINISHEDMEET VALUE(?, ?, ?)';
         mysqlDB.query(sql, [room, body.summary, body.wordcloud], function (err, results) {
@@ -198,38 +216,6 @@ io.on('connection', socket => {
     }
   })
 })
-
-/************************************ Python 스크립트 실행 code ************************************/
-
-tagScript = 'tag-development.py'
-if (process.env.NODE_ENV == 'production') tagScript = 'tag-production.py'
-
-function tag_extract(contentInput) {
-
-  return new Promise(function (resolve, reject) {
-    let options = {
-      mode: 'text',
-      pythonPath: '',
-      pythonOptions: ['-u'],
-      scriptPath: '',
-      args: [contentInput],
-      encoding: 'utf8'
-    };
-
-    PythonShell.PythonShell.run(tagScript, options, function (err, results) {
-      if (err) throw err;
-      var tagData = JSON.parse(results).tag;
-      let text = tagData.toString('utf-8');
-      var tag_list = text.split(' ');
-
-      var imgData = JSON.parse(results).img;
-
-      var pythonData = { "tag1": tag_list[0], "tag2": tag_list[1], "tag3": tag_list[2], "imgData": imgData };
-      resolve(pythonData);
-    });
-  })
-
-}
 
 /************************************ Web server code ************************************/
 
@@ -548,6 +534,29 @@ app.post('/finishedmeet-list', function (req, res) {
   })
 });
 
+//끝난 회의 검색
+app.post('/finishedmeet-search', function(req, res){
+  var group_id = req.body.group_id;
+  var keywords = req.body.keywords.split(" ");
+  var query = "";
+  keywords.forEach(element=>{
+    query += ` AND C.CONTENT LIKE '%${element}%'`;
+  });
+  var sql = "SELECT * FROM FORWARDMEET AS A, FINISHEDMEET AS B, MEETSCRIPT AS C " 
+            + "WHERE GROUP_ID=? AND A.MEET_ID = B.MEET_ID AND A.MEET_ID = C.MEET_ID"
+            + query
+            + "ORDER BY MEET_DAY DESC, MEET_TIME DESC";
+  mysqlDB.query(sql, group_id, function(err, results){
+    if(err) return res.send({code:11, msg:`${err}`, sql:sql});
+    else{
+      if(!results[0]) return res.send({code:36, msg:"no search result"});
+      else{
+        return res.send({code:0, msg:"request success", lists:results});
+      }
+    }
+  })
+})
+
 //회의별 태그리스트
 app.post('/finishedmeet-taglist', function (req, res) {
   var meet_id = req.body.meet_id;
@@ -636,7 +645,6 @@ app.post('/finishedmeet-delete', function (req, res) {
     }
   })
 });
-
 
 //회의 스크립트 다운로드
 app.post('/finishedmeet-download', function (req, res) {

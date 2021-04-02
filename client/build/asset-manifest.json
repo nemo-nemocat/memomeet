@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.f7a774db.chunk.css",
-    "main.js": "/static/js/main.5f5e5327.chunk.js",
-    "main.js.map": "/static/js/main.5f5e5327.chunk.js.map",
+    "main.js": "/static/js/main.ce078ac2.chunk.js",
+    "main.js.map": "/static/js/main.ce078ac2.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.dc2eb528.js",
     "runtime-main.js.map": "/static/js/runtime-main.dc2eb528.js.map",
     "static/js/2.fd66198a.chunk.js": "/static/js/2.fd66198a.chunk.js",
@@ -21,12 +21,13 @@
     "static/js/3.50c008e4.chunk.js.LICENSE.txt": "/static/js/3.50c008e4.chunk.js.LICENSE.txt",
     "static/js/4.822d1707.chunk.js.LICENSE.txt": "/static/js/4.822d1707.chunk.js.LICENSE.txt",
     "static/js/5.43f9bd9c.chunk.js.LICENSE.txt": "/static/js/5.43f9bd9c.chunk.js.LICENSE.txt",
-    "static/media/App.css": "/static/media/NanumSquareR.924c33f6.ttf"
+    "static/media/App.css": "/static/media/NanumSquareR.924c33f6.ttf",
+    "static/media/noWordcloud.cdc2a378.png": "/static/media/noWordcloud.cdc2a378.png"
   },
   "entrypoints": [
     "static/js/runtime-main.dc2eb528.js",
     "static/js/3.50c008e4.chunk.js",
     "static/css/main.f7a774db.chunk.css",
-    "static/js/main.5f5e5327.chunk.js"
+    "static/js/main.ce078ac2.chunk.js"
   ]
 }

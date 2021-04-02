@@ -8,7 +8,9 @@ import ScheduleIcon from '@material-ui/icons/Schedule';
 import DescriptionIcon from '@material-ui/icons/Description';
 import TagList from './tagList';
 import DeleteForever from '@material-ui/icons/DeleteForever';
-import SearchScript from'./SearchScript';
+import InputBase from '@material-ui/core/InputBase';
+import SearchIcon from '@material-ui/icons/Search';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,9 +31,11 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "#ffc31e",
         marginTop:"1%",
         marginRight:"3%",
-        height:"10%"
+        height:"10%",
+        fontSize: 14
     },
     ScriptChip: {
+        fontSize: 14,
         backgroundColor: "#000000",
         color: "#ffffff",
         marginTop:"1%",
@@ -41,10 +45,6 @@ const useStyles = makeStyles((theme) => ({
           backgroundColor: "#8c8c8c",
           color: "white"
         },
-    },
-    TagChip: {
-        marginRight:"1%",
-        marginTop:"1%"
     },
     data:{
         backgroundColor:"#ffffff",
@@ -65,12 +65,44 @@ const useStyles = makeStyles((theme) => ({
         "&:hover": {
             color: "#ffa0a0",
         },
-    }
+    },
+    grow: {
+        flexGrow: "1%",
+        paddingTop: "2%",
+        marginBottom: "2%",
+      },
+    search: {
+        position: 'relative',
+        borderRadius: 20,
+        backgroundColor: "#A9A9A9",
+        marginRight: "1%",
+        marginLeft: "3%",
+        width: '94%',
+      },
+    searchIcon: {
+        marginLeft:"5%",
+        height: '100%',
+        position: 'absolute',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+    inputRoot: {
+        color: 'inherit',
+        width: "75%",
+      },
+    inputInput: {
+        paddingTop: "3%",
+        paddingBottom: "3%",
+        paddingLeft: "3%",
+        width: '100%'
+      },
 }));
 
 export default function Finished(prop) {
     const classes = useStyles();
     const [list, setList] = useState([]);
+    const [keywords, setKeywords] = useState('');
 
     const getList =(prop)=>{
         var myHeaders = new Headers();
@@ -132,7 +164,39 @@ export default function Finished(prop) {
             })
             .catch(error => console.log('error', error))
     }
-   
+
+    const searchMeet =(prop)=>{
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({ "group_id": prop.group_id, "keywords": keywords});
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch("/finishedmeet-search", requestOptions)
+            .then(res => res.json())
+            .then(result => {
+                console.log(result)
+                if(result.code === 0) {
+                    setList(result.lists);
+                }
+                else{
+                    setList('');
+                }
+            })
+            .catch(error => console.log('error', error))
+    };
+
+    const onKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            (searchMeet(prop));
+        }
+    } 
 
     return (
         <div className={classes.root}>
@@ -141,7 +205,24 @@ export default function Finished(prop) {
                     <span style={{fontWeight: "bold", textDecoration:"underline overline", textDecorationColor:"#ffc31e"}}>Finished</span>   
                 </Typography>
                 <div style={{backgroundColor:"#eaeaea", width:"90%", height:"85%",borderRadius:10, margin:"auto"}}>
-                    < SearchScript />
+                    <div className={classes.grow}>
+                        <div className={classes.search}>
+                            <div className={classes.searchIcon}>
+                                <SearchIcon />
+                            </div>
+                            <InputBase
+                            placeholder="Search..."
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                            inputProps={{ 'aria-label' : 'search'}}
+                            onChange={({ target: { value } }) => setKeywords(value)}
+                            onKeyPress={onKeyPress}
+                            />
+                            <CancelIcon style={{position:"absolute", height:"100%", color:"#eaeaea", alignItems:'center', justifyContent:'center'}} />
+                        </div>
+                    </div>
                 <List className={classes.list}>
                     {list && list.map(data => (
                         <ListItem key={data.meet_id} id='data' className={classes.data}>
