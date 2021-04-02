@@ -103,6 +103,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Finished(prop) {
     const classes = useStyles();
     const [list, setList] = useState([]);
+    const [keywords, setKeywords] = useState('');
 
     const getList =(prop)=>{
         var myHeaders = new Headers();
@@ -164,7 +165,39 @@ export default function Finished(prop) {
             })
             .catch(error => console.log('error', error))
     }
-   
+
+    const searchMeet =(prop)=>{
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({ "group_id": prop.group_id, "keywords": keywords});
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch("/finishedmeet-search", requestOptions)
+            .then(res => res.json())
+            .then(result => {
+                console.log(result)
+                if(result.code === 0) {
+                    setList(result.lists);
+                }
+                else{
+                    setList('');
+                }
+            })
+            .catch(error => console.log('error', error))
+    };
+
+    const onKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            (searchMeet(prop));
+        }
+    } 
 
     return (
         <div className={classes.root}>
@@ -179,12 +212,14 @@ export default function Finished(prop) {
                                 <SearchIcon />
                             </div>
                             <InputBase
-                            placeholder="Search Script..."
+                            placeholder="Search..."
                             classes={{
                                 root: classes.inputRoot,
                                 input: classes.inputInput,
                             }}
                             inputProps={{ 'aria-label' : 'search'}}
+                            onChange={({ target: { value } }) => setKeywords(value)}
+                            onKeyPress={onKeyPress}
                             />
                         </div>
                     </div>
