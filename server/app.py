@@ -140,18 +140,24 @@ def index():
 
     tags = []
 
-    if len(list(noun_list.keys())) >= 3:
-        for i in range(3):
-            tags.append(list(noun_list.keys())[i])
-    else:
-        for t in list(noun_list.keys()):
+    # if len(list(noun_list.keys())) >= 3:
+    #     for i in range(3):
+    #         tags.append(list(noun_list.keys())[i])
+    # else:
+    #     for t in list(noun_list.keys()):
+    #         tags.append(t)
+    #     #for _ in range(3 - len(list(noun_list.keys()))):
+    #      #   tags.append("")
+
+    i = 0
+    for t in list(noun_list.keys()):
+        if i<3: 
             tags.append(t)
-        for _ in range(3 - len(list(noun_list.keys()))):
-            tags.append("")
+        i = i+1
+
     summary = summarize(contents, stopwords)
 
-    result = {'tag1': tags[0], 'tag2': tags[1], 'tag3': tags[2],
-              'summary': summary, 'wordcloud': word_cloud}
+    result = {'tags': tags, 'summary': summary, 'wordcloud': word_cloud}
     res = json.dumps(result, ensure_ascii=False)
     r = make_response(res)
     return r
