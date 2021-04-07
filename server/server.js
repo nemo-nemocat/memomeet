@@ -181,22 +181,28 @@ io.on('connection', socket => {
       
       var contribution_keys = Object.keys(rooms[room].contribution).join(' ');
       var contribution_values = Object.values(rooms[room].contribution).join(' ');
-
+    
       request({method: 'POST', url: flask_url, json: {"contents": contentInput}}, function (error, response, body) {
 
         console.log('flask_response:', body); // Print the data received
-
+        
+        body.tags.forEach(tag=>{
+          sql = `INSERT INTO TAGLIST VALUE( ?, ?)`;
+          mysqlDB.query(sql, [room, tag], function (err, results) {
+          if (err) console.log(err);
+          else 
+            console.log('success input taglist');
+          });
+        })
         sql = 'INSERT INTO FINISHEDMEET VALUE(?, ?, ?, ?, ?)';
         mysqlDB.query(sql, [room, body.summary, body.wordcloud, contribution_keys, contribution_values], function(err, results){
           if(err) console.log(err);
           else console.log('success input finishedmeet');
         });
-        sql = `INSERT INTO TAGLIST VALUES( '${room}', ?), ('${room}', ?),('${room}', ?)`;
-        mysqlDB.query(sql, [body.tag1, body.tag2, body.tag3], function (err, results) {
-          if (err) console.log(err);
-          else console.log('success input taglist');
-        });
+        
       });
+
+      
 
       //scheduled meet 에서 삭제
       sql = 'UPDATE FORWARDMEET SET ISFINISH = 1 WHERE MEET_ID=?';
