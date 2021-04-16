@@ -121,7 +121,7 @@ def summarize(contents, stopwords, sentences):
         r.publish('server', json.dumps(result, ensure_ascii=False))
 
 if env == "production":
-    r = redis.StrictRedis(host='c2-3-216-2-136.compute-1.amazonaws.com', port=23760, password='f5da025e9988123c29a4f47bdcb0695ced3a181d1bf7625df1a298fa4fb955e4', db=0)
+    r = redis.from_url(os.environ.get("REDIS_URL"))
 else: 
     r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
