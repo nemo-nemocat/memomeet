@@ -38,6 +38,10 @@ socket.on('connect', function() {
   console.log('[SOCKET CONNECTED] ' + room_id, user_id, user_name)
 })
 
+socket.on('disconnect', function(){
+  socket.emit('disconnectDetect', room_id, peerid, user_name)
+})
+
 const videoGrid = document.getElementById('video-grid')
 
 // 내 비디오 요소들
