@@ -2,7 +2,10 @@ const express = require("express");
 const request = require("request");
 const app = express();
 const server = require('http').Server(app)
-const io = require('socket.io')(server)
+const io = require('socket.io')(server, {
+  pingInterval: 1000,
+  pingTimeout: 1000
+})
 const bodyParser = require('body-parser');
 const AppPort = process.env.PORT || 3002;
 const cors = require('cors');
@@ -147,11 +150,8 @@ io.on('connection', socket => {
   })
 
   socket.on('disconnect', () => {
-    console.log('1. disconnect 이벤트 발생')
     rooms[room].members = rooms[room].members.filter((item) => item!=name)
-    console.log('2. 방 멤버 조정')
     rooms[room].num = rooms[room].members.length
-    console.log('3. 방 인원수 조정')
 
     if (rooms[room].num == 0) {
       console.log(name + ' 퇴장,' + ' 분석 및 방 삭제 시작')
