@@ -2,10 +2,12 @@ const express = require("express");
 const request = require("request");
 const app = express();
 const server = require('http').Server(app)
-const io = require('socket.io')(server)
+const io = require('socket.io')(server, {
+  pingInterval: 1000,
+  pingTimeout: 1000
+})
 const bodyParser = require('body-parser');
 const AppPort = process.env.PORT || 3002;
-const FlaskDeployPort = parseInt(AppPort) + 100
 const cors = require('cors');
 const shortid = require('shortid'); // unique id 생성
 const path = require('path');
@@ -68,7 +70,6 @@ else {
 
 /************************************************** FRONTEND **************************************************/
 
-
 /* 배포 */
 if (process.env.NODE_ENV == 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
@@ -98,10 +99,6 @@ app.use('/meeting', express.static(path.join(__dirname, '../client/meetingroom_p
 app.get('/meeting', (req, res) => { // 회의실 페이지는 res 렌더링으로 라우트
   res.render('room', { roomId: req.query.meet_id, userId: req.query.user_id, userName: req.query.user_name })
 })
-
-// flask server request url : 개발시에는 localhost, 배포시에는 0.0.0.0
-let flask_url = 'http://localhost:5000/analysis'
-if (process.env.NODE_ENV == 'production') flask_url = `http://0.0.0.0:${FlaskDeployPort}/analysis`
 
 let rooms = {};
 
@@ -153,10 +150,12 @@ io.on('connection', socket => {
   })
 
   socket.on('disconnect', () => {
-    rooms[room].members.splice(rooms[room].members.indexOf(name), 1)
+    rooms[room].members = rooms[room].members.filter((item) => item!=name)
     rooms[room].num = rooms[room].members.length
 
     if (rooms[room].num == 0) {
+      console.log(name + ' 퇴장,' + ' 분석 및 방 삭제 시작')
+
       //meetScript DB INPUT
       var contentInput = rooms[room].contentArray.toString();
       var chatInput = rooms[room].chatArray.toString();
@@ -233,23 +232,35 @@ io.on('connection', socket => {
 //*********************************Redis************************************* */
 
 const redis = require('redis');
-const pub = redis.createClient({
-  host:'localhost',
-  port: 6379,
-  db: 0
-})
+var pub, sub
 
-//python에서 데이터 받을 때
-const sub = redis.createClient({
-  host:'localhost',
-  port: 6379,
-  db: 0
-})
-sub.subscribe('server');
-sub.on('subscribe',function(){
-  console.log("=== Redis 연결 ===");
-})
+if (process.env.NODE_ENV == 'production'){
+  pub = redis.createClient(process.env.REDIS_URL);
+  sub = redis.createClient(process.env.REDIS_URL);
+  sub.subscribe('server');
+  sub.on('subscribe',function(){
+    console.log("=== Redis 연결 ===");
+  }) 
+}
 
+else {
+  pub = redis.createClient({
+    host:'localhost',
+    port: 6379,
+    db: 0
+  })
+  
+  //python에서 데이터 받을 때
+  sub = redis.createClient({
+    host:'localhost',
+    port: 6379,
+    db: 0
+  })
+  sub.subscribe('server');
+  sub.on('subscribe',function(){
+    console.log("=== Redis 연결 ===");
+  }) 
+}
 
 let room, ck, cv;
 sub.on('message', function(channel, message){
