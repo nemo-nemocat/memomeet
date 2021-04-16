@@ -229,14 +229,14 @@ io.on('connection', socket => {
 
 const redis = require('redis');
 
-const pub = redis.createClient({
+var pub = redis.createClient({
   host:'localhost',
   port: 6379,
   db: 0
 })
 
 //python에서 데이터 받을 때
-const sub = redis.createClient({
+var sub = redis.createClient({
   host:'localhost',
   port: 6379,
   db: 0
