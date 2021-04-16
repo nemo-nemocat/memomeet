@@ -5,7 +5,6 @@ const server = require('http').Server(app)
 const io = require('socket.io')(server)
 const bodyParser = require('body-parser');
 const AppPort = process.env.PORT || 3002;
-const FlaskDeployPort = parseInt(AppPort) + 100
 const cors = require('cors');
 const shortid = require('shortid'); // unique id 생성
 const path = require('path');
@@ -233,6 +232,10 @@ var pub, sub
 if (process.env.NODE_ENV == 'production'){
   pub = redis.createClient(process.env.REDIS_URL);
   sub = redis.createClient(process.env.REDIS_URL);
+  sub.subscribe('server');
+  sub.on('subscribe',function(){
+    console.log("=== Redis 연결 ===");
+  }) 
 }
 
 else {
