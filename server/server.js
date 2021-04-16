@@ -107,7 +107,7 @@ let rooms = {};
 
 io.on('connection', socket => {
 
-  let room, id, name, chat
+  let room, id, name
 
   socket.on('joinRoom', (roomId, userId, userName) => {
 
@@ -179,30 +179,36 @@ io.on('connection', socket => {
         rooms[room].contribution[member] = parseInt(rooms[room].contribution[member] / sum * 100)
       }
       
-      var contribution_keys = Object.keys(rooms[room].contribution).join(' ');
-      var contribution_values = Object.values(rooms[room].contribution).join(' ');
+      var ck = Object.keys(rooms[room].contribution).join(' ');
+      var cv = Object.values(rooms[room].contribution).join(' ');
     
-      request({method: 'POST', url: flask_url, json: {"contents": contentInput}}, function (error, response, body) {
+      console.time('time');
 
-        console.log('flask_response:', body); // Print the data received
-        
-        body.tags.forEach(tag=>{
-          sql = `INSERT INTO TAGLIST VALUE( ?, ?)`;
-          mysqlDB.query(sql, [room, tag], function (err, results) {
-          if (err) console.log(err);
-          else 
-            console.log('success input taglist');
-          });
-        })
-        sql = 'INSERT INTO FINISHEDMEET VALUE(?, ?, ?, ?, ?)';
-        mysqlDB.query(sql, [room, body.summary, body.wordcloud, contribution_keys, contribution_values], function(err, results){
-          if(err) console.log(err);
-          else console.log('success input finishedmeet');
-        });
-        
-      });
+      // request({method: 'POST', url: flask_url, json: {"contents": contentInput}}, function (error, response, body) {
 
-      
+      //   console.log('flask_response:', body); // Print the data received
+        
+      //   body.tags.forEach(tag=>{
+      //     sql = `INSERT INTO TAGLIST VALUE( ?, ?)`;
+      //     mysqlDB.query(sql, [room, tag], function (err, results) {
+      //     if (err) console.log(err);
+      //     else 
+      //       console.log('success input taglist');
+      //     });
+      //   })
+      //   sql = 'INSERT INTO FINISHEDMEET VALUE(?, ?, ?, ?, ?)';
+      //   mysqlDB.query(sql, [room, body.summary, body.wordcloud, ck, cv], function(err, results){
+      //     if(err) console.log(err);
+      //     else {
+      //       console.log('success input finishedmeet');
+      //       console.timeEnd('for');
+      //     }
+      //   });
+        
+      // });
+
+      var msg = {'contents': contentInput, 'room': room, 'ck': ck, 'cv': cv}
+      pub.publish('analysis_channel', JSON.stringify(msg));
 
       //scheduled meet 에서 삭제
       sql = 'UPDATE FORWARDMEET SET ISFINISH = 1 WHERE MEET_ID=?';
@@ -222,6 +228,86 @@ io.on('connection', socket => {
       console.log(name + ' 퇴장,' + ' 현재 멤버 : ' + rooms[room].members)
     }
   })
+})
+
+//*********************************Redis************************************* */
+
+const redis = require('redis');
+const pub = redis.createClient({
+  host:'localhost',
+  port: 6379,
+  db: 0
+})
+
+//python에서 데이터 받을 때
+const sub = redis.createClient({
+  host:'localhost',
+  port: 6379,
+  db: 0
+})
+sub.subscribe('server');
+sub.on('subscribe',function(){
+  console.log("=== Redis 연결 ===");
+})
+
+
+let room, ck, cv;
+sub.on('message', function(channel, message){
+  var msg = JSON.parse(message);
+  switch(msg.type){
+    case 'tags':
+      console.log("[태그] "+ msg.data);
+      tags = msg.data;
+      inputDB(room, ck, cv);
+      break;
+    case 'wordcloud':
+      console.log("[WC] "+ msg.data);
+      wordcloud = msg.data;
+      inputDB(room, ck, cv);
+      break;
+    case 'summary':
+      console.log("[요약] "+ msg.data);
+      summary = msg.data;
+      inputDB(room, ck, cv);
+      break;
+    default:
+      console.log("room, ck, cv 반환")
+      room = msg.room;
+      ck = msg.ck;
+      cv = msg.cv;
+  }
+})
+
+var tags = null, wordcloud = null, summary = null;
+
+var inputDB = function(room, ck, cv){
+  if(tags == null || wordcloud == null || summary == null) return;
+  tags.forEach(tag=>{
+    var sql = `INSERT INTO TAGLIST VALUE( ?, ?)`;
+    mysqlDB.query(sql, [room, tag], function (err, results) {
+      if (err) console.log(err);
+      else 
+        console.log('success input taglist');
+    });
+  })
+  sql = 'INSERT INTO FINISHEDMEET VALUE(?, ?, ?, ?, ?)';
+  mysqlDB.query(sql, [room, summary, wordcloud, ck, cv], function(err, results){
+    if(err) console.log(err);
+    else {
+      console.log('success input finishedmeet');
+      console.timeEnd('time');
+    }
+  });
+  tags = null, wordcloud = null, summary = null;
+}
+app.get('/redis', (req,res)=>{
+  console.log("실행중..")
+  var contentInput = "그렇다면 여기서 천은미 이대목동병원 호흡기내과 교수 모시고, 아스트라제네카 백신을 맞아도 되는 근거, 보다 자세히 살펴봅니다 교수님 일단, 최근 아스트라제네카 백신을 둘러싸고, 혈전 이야기가 많이 나왔죠 유럽 일부 접종자들 에게서 혈전이 발생했다는 건데요 이 혈전이라는 게 정확히 어떤 겁니까 그러면, 혈전이 백신을 맞았을 때 생기는 증상인 건가요 생활과 굉장히 밀접한 질환인 셈인데요 앞서서도 보셨지만, 오늘 유럽의약품청에서도 아스트라제네카 백신과 혈전 반응에 연관 성이 없다고 강조했네요 현지시간으로 내일, 유럽의약품청에서 최종 결론을 내릴 텐데요 오늘 정은경 청장도 아스트라제네카 백 신 맞아도 된다, 확실하게 말했죠 우리 방역당국에서 이렇게 판단한 이유는 뭡니까 그럼 코로나 백신 말고요 다른 독감 백신 등 에서 혈전이 부작용으로 거론된 사례가 있을까요 어쨌든 이 혈전이 연령이나 생활과 굉장히 밀접한 질병이니까요 특히 다음 주부터 65세 이상 요양병원 입원자를 대상으로 아스트라제네카 백신 접종도 다시 시작되고요 관련해서 주의해야 할 점, 어떤 게 있을까요 또 코로나 백신 접종 후에 경미한 이상 반응을 호소하시는 분들도 많죠 그래서 정부도 ‘백신 휴가제’를 검토하는 상황인 데요 백신 휴가, 교수님께서는 어떻게 보십니까 현재 코로나 상황도 안 여쭤볼 수가 없죠 사흘 만에 다시 4백명 댑니다 두 달 넘게 3, 4백명 대라는 박스권에 갇혀있는 모양샌데요 현재 상황 어떻게 봐야 할까요 그래서 오늘부터, 수도권 특별방역대책도 시작됐죠 정부의 목표는 2주 뒤 하루 확진자를 2백 명 대로 줄이겠다는 건데요 가능할까요 | 그렇다면 여기서 천은미 이대목동병원  호흡기내과 교수 모시고, 아스트라제네카 백신을 맞아도 되는 근거, 보다 자세히 살펴봅니다 교수님 일단, 최근 아스트라제네카 백신을 둘러싸고, 혈전 이야기가 많이 나왔죠 유럽 일부 접종자들에게서 혈전이 발생했다는 건데요 이 혈전이라는 게 정확히 어 떤 겁니까 그러면, 혈전이 백신을 맞았을 때 생기는 증상인 건가요 생활과 굉장히 밀접한 질환인 셈인데요 앞서서도 보셨지만,  오늘 유럽의약품청에서도 아스트라제네카 백신과 혈전 반응에 연관성이 없다고 강조했네요 현지시간으로 내일, 유럽의약품청에서 최종 결론을 내릴 텐데요 오늘 정은경 청장도 아스트라제네카 백신 맞아도 된다, 확실하게 말했죠 우리 방역당국에서 이렇게 판단한 이유는 뭡니까 그럼 코로나 백신 말고요 다른 독감 백신 등에서 혈전이 부작용으로 거론된 사례가 있을까요 어쨌든 이 혈전이 연령이나 생활과 굉장히 밀접한 질병이니까요 특히 다음 주부터 65세 이상 요양병원 입원자를 대상으로 아스트라제네카 백신 접종도 다시 시작되고요 관련해서 주의해야 할 점, 어떤 게 있을까요 또 코로나 백신 접종 후에 경미한 이상 반응을 호소하시는 분들도 많죠 그래서 정부도 ‘백신 휴가제’를 검토하는 상황인데요 백신 휴가, 교수님께서는 어떻게 보십니까 현재 코로나 상황도 안 여쭤볼 수가 없죠 사흘 만에 다시 4백명 댑니다 두 달 넘게 3, 4백명 대라는 박스권에 갇혀있는 모양샌데요 현재 상황 어 떻게 봐야 할까요 그래서 오늘부터, 수도권 특별방역대책도 시작됐죠 정부의 목표는 2주 뒤 하루 확진자를 2백 명 대로 줄이겠다는 건데요 가능할까요"
+  var room = "_8PMNN4I1"
+  var ck = "유효민"
+  var cv = "100"
+  var msg = {'contents': contentInput, 'room': room, 'ck': ck, 'cv': cv}
+  pub.publish('analysis_channel', JSON.stringify(msg));
 })
 
 /************************************ Web server code ************************************/

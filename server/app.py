@@ -1,3 +1,4 @@
+#-*-coding:utf-8-*-
 import os
 import sys
 import base64
@@ -37,6 +38,7 @@ app = Flask(__name__)
 
 @app.route('/analysis', methods=['POST'])
 def index():
+    
     contents = request.json['contents']
     contents = contents.replace(",", " ")
     sentences = split_sentences(contents)
@@ -140,15 +142,6 @@ def index():
 
     tags = []
 
-    # if len(list(noun_list.keys())) >= 3:
-    #     for i in range(3):
-    #         tags.append(list(noun_list.keys())[i])
-    # else:
-    #     for t in list(noun_list.keys()):
-    #         tags.append(t)
-    #     #for _ in range(3 - len(list(noun_list.keys()))):
-    #      #   tags.append("")
-
     i = 0
     for t in list(noun_list.keys()):
         if i<3: 
@@ -161,7 +154,6 @@ def index():
     res = json.dumps(result, ensure_ascii=False)
     r = make_response(res)
     return r
-    # return json.dumps(r, ensure_ascii=False).encode('utf8')
 
 
 # 개발 시에만 debug mode ON, 배포 시에는 외부 서버에서도 접근 가능하게
