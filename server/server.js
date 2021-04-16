@@ -147,7 +147,7 @@ io.on('connection', socket => {
   })
 
   socket.on('disconnect', () => {
-    rooms[room].members.splice(rooms[room].members.indexOf(name), 1)
+    rooms[room].members = rooms[room].members.filter((item) => item!=name)
     rooms[room].num = rooms[room].members.length
 
     if (rooms[room].num == 0) {
