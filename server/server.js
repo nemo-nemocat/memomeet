@@ -228,27 +228,30 @@ io.on('connection', socket => {
 //*********************************Redis************************************* */
 
 const redis = require('redis');
-
-var pub = redis.createClient({
-  host:'localhost',
-  port: 6379,
-  db: 0
-})
-
-//python에서 데이터 받을 때
-var sub = redis.createClient({
-  host:'localhost',
-  port: 6379,
-  db: 0
-})
-sub.subscribe('server');
-sub.on('subscribe',function(){
-  console.log("=== Redis 연결 ===");
-})
+var pub, sub
 
 if (process.env.NODE_ENV == 'production'){
   pub = redis.createClient(process.env.REDIS_URL);
   sub = redis.createClient(process.env.REDIS_URL);
+}
+
+else {
+  pub = redis.createClient({
+    host:'localhost',
+    port: 6379,
+    db: 0
+  })
+  
+  //python에서 데이터 받을 때
+  sub = redis.createClient({
+    host:'localhost',
+    port: 6379,
+    db: 0
+  })
+  sub.subscribe('server');
+  sub.on('subscribe',function(){
+    console.log("=== Redis 연결 ===");
+  }) 
 }
 
 let room, ck, cv;
