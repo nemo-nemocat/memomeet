@@ -389,20 +389,16 @@ app.post('/profile-remove', (req, res) => {
 app.post('/auth-login', function (req, res) {
   var id = req.body.user_id;
   var pw = req.body.user_pw;
-  var sql = 'SELECT * FROM USERLIST WHERE user_id=?';
-  mysqlDB.query(sql, [id], function (err, results) {
+  var sql = 'SELECT * FROM USERLIST WHERE user_id=? and user_pw = SHA2(?, 224)';
+  mysqlDB.query(sql, [id,pw], function (err, results) {
     if (err) return res.send({ code: 11, msg: `${err}` });
 
     if (!results[0]) {
-      return res.send({ code: 1, msg: "auth fail: id not exist" });
+      return res.send({ code: 1, msg: "auth fail: id or pw wrong" });
     }
-
-    var user = results[0];
-    if (user.user_pw === pw) {
+    else{
+      var user = results[0];
       return res.send({ code: 0, msg: "request success", user_id: user.user_id, user_name: user.user_name, profile_url: user.profile_url });
-    }
-    else {
-      return res.send({ code: 2, msg: "auth fail:wrong password" });
     }
   });
 }
@@ -410,11 +406,12 @@ app.post('/auth-login', function (req, res) {
 
 //회원가입 요청
 app.post('/auth-signup', function (req, res) {
+  console.log(req.body);
   var id = req.body.user_id;
   var pw = req.body.user_pw;
   var name = req.body.user_name;
   var email = req.body.user_email;
-  var sql = 'INSERT INTO USERLIST(user_id, user_pw, user_name, user_email) VALUE(?, ?, ?, ?)';
+  var sql = 'INSERT INTO USERLIST(user_id, user_pw, user_name, user_email) VALUE(?, SHA2(?,224), ?, ?)';
   mysqlDB.query(sql, [id, pw, name, email], function (err, results) {
     if (err) {
       return res.send({ code: 3, msg: `${err}` });
@@ -740,11 +737,25 @@ app.post('/finishedmeet-chat', function (req, res) {
 //끝난 회의 삭제
 app.post('/finishedmeet-delete', function (req, res) {
   var meet_id = req.body.meet_id;
-  var sql = 'DELETE FROM FORWARDMEET WHERE MEET_ID=?';
+  var sql = 'SELECT * FROM FINISHEDMEET WHERE MEET_ID=?';
   mysqlDB.query(sql, meet_id, function (err, results) {
     if (err) return res.send({ code: 11, msg: `${err}` });
     else {
-      res.send({ code: 0, msg: "request success" });
+      //이전 파일 삭제
+      var wc = results[0].wordcloud;
+      if (wc != null && wc !== 'noWordcloud') {
+        var filename = wc.substring(9, wc.length);
+        fs.unlink(img_folder + filename, function (err) {
+          if (err) console.log('파일 삭제 에러:' + err);
+        })
+      }
+      sql = 'DELETE FROM FORWARDMEET WHERE MEET_ID=?';
+      mysqlDB.query(sql, meet_id, function (err, results2) {
+        if (err) return res.send({ code: 11, msg: `${err}` });
+        else {
+          res.send({ code: 0, msg: "request success"})
+        }
+      })
     }
   })
 });
