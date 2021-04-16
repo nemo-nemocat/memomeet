@@ -38,6 +38,7 @@
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.1",
     "react-window": "^1.8.6",
+    "redis": "^3.1.0",
     "semantic-ui-react": "2.0.2",
     "shortid": "^2.2.16",
     "socket.io": "^3.1.0",
@@ -52,7 +53,8 @@
     "build": "cd client && react-scripts build",
     "test": "cd client && react-scripts test",
     "eject": "cd client && react-scripts eject",
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:flaskServer\" \"npm run dev:client\"",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:python\" \"npm run dev:client\"",
+    "dev:python": "cd server && python analysis.py",
     "dev:flaskServer": "cd server && set FLASK_ENV=development && python app.py",
     "dev:server": "cd server && nodemon server.js",
     "dev:client": "cd client && react-scripts start && yarn start"
