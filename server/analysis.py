@@ -21,7 +21,7 @@ sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding = 'utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding = 'utf-8')
 
 # 개발 시에는 eunjeon import, 배포 시에는 mecab import
-env = os.environ.get("FLASK_ENV")
+env = os.environ.get("PYTHON_ENV")
 tgtdir = ''
 if env == "production":
     import mecab
@@ -120,35 +120,36 @@ def summarize(contents, stopwords, sentences):
         result = {'type': 'summary', 'data': '요약할 대화가 충분하지 않습니다.'}
         r.publish('server', json.dumps(result, ensure_ascii=False))
 
-if __name__ == "__main__":
-
+if env == "production":
+    r = redis.from_url(os.environ.get("redis://:pf5da025e9988123c29a4f47bdcb0695ced3a181d1bf7625df1a298fa4fb955e4@ec2-3-216-2-136.compute-1.amazonaws.com:23759"))
+else: 
     r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
-    sub = r.pubsub()
-    sub.subscribe('analysis_channel')
+sub = r.pubsub()
+sub.subscribe('analysis_channel')
 
-    while True:       
-        message = sub.get_message()
+while True:       
+    message = sub.get_message()
 
-        if message:
-            print("분석 중 ... ")
-            data = message['data']
-            if not data == 1:
-                data = data.decode('utf-8')
-                data = json.loads(data)
+    if message:
+        print("분석 중 ... ")
+        data = message['data']
+        if not data == 1:
+            data = data.decode('utf-8')
+            data = json.loads(data)
 
-                r.publish('server', json.dumps({'room': data['room'], 'ck':data['ck'], 'cv':data['cv']}, ensure_ascii=False))
-                contents = data['contents'].replace(",", " ")
-                sentences = split_sentences(contents)
+            r.publish('server', json.dumps({'room': data['room'], 'ck':data['ck'], 'cv':data['cv']}, ensure_ascii=False))
+            contents = data['contents'].replace(",", " ")
+            sentences = split_sentences(contents)
 
-                th1 = Thread(target=get_noun, args=(contents,stopwords,sentences))
-                th2 = Thread(target=visualize, args=(contents, ))
-                th3 = Thread(target=summarize, args=(contents,stopwords,sentences))
-                
-                th1.start()
-                th2.start()
-                th3.start()
+            th1 = Thread(target=get_noun, args=(contents,stopwords,sentences))
+            th2 = Thread(target=visualize, args=(contents, ))
+            th3 = Thread(target=summarize, args=(contents,stopwords,sentences))
+            
+            th1.start()
+            th2.start()
+            th3.start()
 
-                th1.join()
-                th2.join()
-                th3.join()
+            th1.join()
+            th2.join()
+            th3.join()
