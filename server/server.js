@@ -146,9 +146,12 @@ io.on('connection', socket => {
     }
   })
 
-  socket.on('disconnecting', () => {
+  socket.on('disconnect', () => {
+    console.log('1. disconnect 이벤트 발생')
     rooms[room].members = rooms[room].members.filter((item) => item!=name)
+    console.log('2. 방 멤버 조정')
     rooms[room].num = rooms[room].members.length
+    console.log('3. 방 인원수 조정')
 
     if (rooms[room].num == 0) {
       console.log(name + ' 퇴장,' + ' 분석 및 방 삭제 시작')
