@@ -151,6 +151,8 @@ io.on('connection', socket => {
     rooms[room].num = rooms[room].members.length
 
     if (rooms[room].num == 0) {
+      console.log(name + ' 퇴장,' + ' 분석 및 방 삭제 시작')
+
       //meetScript DB INPUT
       var contentInput = rooms[room].contentArray.toString();
       var chatInput = rooms[room].chatArray.toString();
