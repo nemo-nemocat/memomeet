@@ -146,12 +146,7 @@ io.on('connection', socket => {
     }
   })
 
-  socket.on('disconnectDetect', (roomId, userId, userName) => {
-
-    room = roomId
-    id = userId
-    name = userName
-    
+  socket.on('disconnect', () => {
     rooms[room].members = rooms[room].members.filter((item) => item!=name)
     rooms[room].num = rooms[room].members.length
 
