@@ -231,24 +231,8 @@ const redis = require('redis');
 var pub, sub
 
 if (process.env.NODE_ENV == 'production'){
-  pub = redis.createClient({
-    host:'ec2-3-216-2-136.compute-1.amazonaws.com',
-    port: 23760,
-    password: 'pf5da025e9988123c29a4f47bdcb0695ced3a181d1bf7625df1a298fa4fb955e4',
-    db: 0
-  })
-  
-  //python에서 데이터 받을 때
-  sub = redis.createClient({
-    host:'ec2-3-216-2-136.compute-1.amazonaws.com',
-    port: 23760,
-    password: 'pf5da025e9988123c29a4f47bdcb0695ced3a181d1bf7625df1a298fa4fb955e4',
-    db: 0
-  })
-  sub.subscribe('server');
-  sub.on('subscribe',function(){
-    console.log("=== Redis 연결 ===");
-  }) 
+  pub = redis.createClient(process.env.REDIS_URL);
+  sub = redis.createClient(process.env.REDIS_URL);
 }
 
 else {
