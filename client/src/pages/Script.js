@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
   },
   body: {
     minWidth: 1230,
-    height: window.innerHeight,
+    height: window.innerHeight-60,
     justifyContent:"center"
   },
 }));
