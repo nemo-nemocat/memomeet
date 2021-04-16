@@ -2,10 +2,7 @@ const express = require("express");
 const request = require("request");
 const app = express();
 const server = require('http').Server(app)
-const io = require('socket.io')(server, {
-  pingInterval: 1000,
-  pingTimeout: 1000
-})
+const io = require('socket.io')(server)
 const bodyParser = require('body-parser');
 const AppPort = process.env.PORT || 3002;
 const cors = require('cors');
