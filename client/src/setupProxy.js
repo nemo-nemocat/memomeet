@@ -6,7 +6,7 @@ module.exports = function (app) {
         changeOrigin: true,
     }));
     app.use(["/meeting",'/socket.io'],createProxyMiddleware({
-        target: 'http://localhost:3002',
+        target: 'https://memomeet.herokuapp.com',
         changeOrigin: true,
         ws: true,
     }));
