@@ -5,7 +5,7 @@ import {Paper, Typography } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
     root: {
         width:"85%",
-        height:"84%",
+        height:"93%",
         marginTop:"1%",
     },
     paper: {
