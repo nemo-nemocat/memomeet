@@ -106,6 +106,7 @@ def summarize(contents, stopwords, sentences):
 
         j = 0
         key_sents = ""
+        key_idx= []
         while(j < len(sentences)):
             i = 0
             while(i < 3):

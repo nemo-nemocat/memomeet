@@ -180,29 +180,6 @@ io.on('connection', socket => {
     
       console.time('time');
 
-      // request({method: 'POST', url: flask_url, json: {"contents": contentInput}}, function (error, response, body) {
-
-      //   console.log('flask_response:', body); // Print the data received
-        
-      //   body.tags.forEach(tag=>{
-      //     sql = `INSERT INTO TAGLIST VALUE( ?, ?)`;
-      //     mysqlDB.query(sql, [room, tag], function (err, results) {
-      //     if (err) console.log(err);
-      //     else 
-      //       console.log('success input taglist');
-      //     });
-      //   })
-      //   sql = 'INSERT INTO FINISHEDMEET VALUE(?, ?, ?, ?, ?)';
-      //   mysqlDB.query(sql, [room, body.summary, body.wordcloud, ck, cv], function(err, results){
-      //     if(err) console.log(err);
-      //     else {
-      //       console.log('success input finishedmeet');
-      //       console.timeEnd('for');
-      //     }
-      //   });
-        
-      // });
-
       var msg = {'contents': contentInput, 'room': room, 'ck': ck, 'cv': cv}
       pub.publish('analysis_channel', JSON.stringify(msg));
 

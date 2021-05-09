@@ -23,7 +23,7 @@ export default function Chart(prop) {
                 borderWidth: 1,
                 hoverBackgroundColor: '#ffc31e',
                 hoverBorderColor: '#ffc31e',
-                data: contributionList
+                data: [50]
             }
         ]
     };
