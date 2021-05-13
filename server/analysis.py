@@ -62,9 +62,9 @@ def get_noun(contents, stopwords, sentences, members):
 
     #기여도
     if len(tags) != 0:
-    for t in tags:
-        for c in chat:
-            contribute[c] += ''.join(chat[c]).count(t) * tags[t]
+        for t in tags:
+            for c in chat:
+                contribute[c] += ''.join(chat[c]).count(t) * tags[t]
 
 def visualize(contents):
     nouns = mecab.nouns(contents)
