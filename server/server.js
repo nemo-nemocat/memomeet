@@ -2,7 +2,7 @@ const express = require("express");
 const request = require("request");
 const app = express();
 const server = require('http').Server(app)
-const io = require('socket.io')(server)
+const io = require('socket.io')(server);
 const bodyParser = require('body-parser');
 const AppPort = process.env.PORT || 3002;
 const cors = require('cors');
@@ -154,7 +154,7 @@ io.on('connection', socket => {
     rooms[room].num = rooms[room].members.length
 
     if (rooms[room].num == 0) {
-      console.log(name + ' 퇴장,' + ' 분석 및 방 삭제 시작')
+      console.log(name + ' 퇴장, 분석 및 방 삭제 시작')
 
       //meetScript DB INPUT
       var contentInput = rooms[room].contentArray.toString();
@@ -202,7 +202,7 @@ io.on('connection', socket => {
       io.to(room).emit('updateChat', { type: 'system', name: '[SYSTEM]', message: name + '님 퇴장' }) // room 안의 모두에게 퇴장메시지 전송
       io.to(room).emit('updateMembers', { num: rooms[room].num, members: rooms[room].members }) // room 안의 모두에게 멤버 업데이트
 
-      console.log(name + ' 퇴장,' + ' 현재 멤버 : ' + rooms[room].members)
+      console.log(name + ' 퇴장, 현재 멤버 : ' + rooms[room].members)
     }
   })
 })
