@@ -6,7 +6,7 @@ import Chart from'./Chart';
 const useStyles = makeStyles((theme) => ({
     root: {
         width:"85%",
-        height:"45%",
+        height:"50%",
         marginTop:"1%",
         marginLeft:"10%",
     },

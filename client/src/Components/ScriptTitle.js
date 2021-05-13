@@ -289,7 +289,7 @@ export default function ScriptTitle(prop) {
                 <Chip className={classes.Chip} id="meet_day" icon={<EventIcon/>} label={data.meet_day} />
                 <Chip className={classes.Chip} id="meet_time" icon={<ScheduleIcon/>} label={data.meet_time}/>
                 {tagList && tagList.map(tag => (
-                    <Chip className={classes.TagChip} key={tag.tag} size="small" label={tag.tag}  onDelete={()=>handleDelete(tag.tag)} />
+                    <Chip className={classes.TagChip} key={Math.random()} size="small" label={tag.tag}  onDelete={()=>handleDelete(tag.tag)} />
                 ))}
                 <AddCircleIcon className={classes.Icon} color="secondary" fontSize="default" onClick={clickAddOpen} />
             </Grid>
