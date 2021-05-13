@@ -38,7 +38,7 @@ with open("stopwords.txt", 'r', encoding='utf-8') as f:
 stopwords = [x.strip() for x in stopwords]
 
 
-def get_noun(contents, stopwords, sentences):
+def get_noun(contents, stopwords, sentences, members):
     try:
         wordrank_extractor = KRWordRank(
             min_count=5, max_length=10, verbose=True)
@@ -51,14 +51,23 @@ def get_noun(contents, stopwords, sentences):
     except:
         passwords = {"": 0}
 
-    tags = []
-    i = 0
+    tags = {}
+    i = 3
     for t in list(passwords.keys()):
-        if i<3: 
-            tags.append(t)
-        i = i+1
-    result = {'type':'tags','data': tags}
+        if i>0: 
+            tags[t] = 100*i
+        i = i-1
+    result = {'type':'tags','data': list(tags.keys())}
     r.publish('server', json.dumps(result, ensure_ascii=False))
+
+    #기여도
+    if (len(tags) != 0):
+        for m in members:
+            if m in chat:
+                for c in chat[m]:
+                    for t in list(tags.keys()):
+                        if t in c:
+                            contribute[m] += tags[t]
 
 def visualize(contents):
     nouns = mecab.nouns(contents)
@@ -128,29 +137,51 @@ else:
 
 sub = r.pubsub()
 sub.subscribe('analysis_channel')
+chat = {}
+contribute = {}
 
 while True:       
     message = sub.get_message()
 
     if message:
-        print("분석 중 ... ")
         data = message['data']
         if not data == 1:
             data = data.decode('utf-8')
             data = json.loads(data)
+            if (data['type'] == "analysis"):
+                contents = data['contents'].replace(",", " ")
+                sentences = split_sentences(contents)
+                members = data['members']
 
-            r.publish('server', json.dumps({'room': data['room'], 'ck':data['ck'], 'cv':data['cv']}, ensure_ascii=False))
-            contents = data['contents'].replace(",", " ")
-            sentences = split_sentences(contents)
+                th1 = Thread(target=get_noun, args=(contents,stopwords,sentences, members ))
+                th2 = Thread(target=visualize, args=(contents, ))
+                th3 = Thread(target=summarize, args=(contents,stopwords,sentences))
+                
+                th1.start()
+                th2.start()
+                th3.start()
 
-            th1 = Thread(target=get_noun, args=(contents,stopwords,sentences))
-            th2 = Thread(target=visualize, args=(contents, ))
-            th3 = Thread(target=summarize, args=(contents,stopwords,sentences))
-            
-            th1.start()
-            th2.start()
-            th3.start()
+                th1.join()
+                th2.join()
+                th3.join()
 
-            th1.join()
-            th2.join()
-            th3.join()
+                sum = 0
+                con = {}
+                for m in members:
+                    if m in chat:
+                        sum += contribute[m]
+
+                for m in members:
+                    con[m] = int(contribute[m]/sum*100)
+                    del(contribute[m])
+                    del(chat[m])
+
+                r.publish('server', json.dumps({'type': 'contribute','room': data['room'], 'contribute': con}, ensure_ascii=False))
+
+            if (data['type'] == "chat"):
+                if data['key'] in chat:
+                    chat[data['key']].append(data['value'])
+                    contribute[data['key']] += len(data['value'])
+                else: 
+                    chat[data['key']] = [data['value']]
+                    contribute[data['key']] = 0

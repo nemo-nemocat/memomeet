@@ -62,7 +62,7 @@ export default function MeetScript(prop) {
                 </Typography>
                 <div className={classes.scriptContainer}>
                     {list && list.map(data => (
-                        <Typography key={data}>{data}</Typography>
+                        <Typography key={Math.random()}>{data}</Typography>
                     ))}
                 </div>
             </Paper> 
