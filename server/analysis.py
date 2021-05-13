@@ -52,22 +52,19 @@ def get_noun(contents, stopwords, sentences, members):
         passwords = {"": 0}
 
     tags = {}
-    i = 3
-    for t in list(passwords.keys()):
-        if i>0: 
-            tags[t] = 100*i
-        i = i-1
+
+    for i, t in enumerate(list(passwords.keys()), start=1):
+        if i <= 3:
+            tags[t] = 100 * i
+
     result = {'type':'tags','data': list(tags.keys())}
     r.publish('server', json.dumps(result, ensure_ascii=False))
 
     #기여도
-    if (len(tags) != 0):
-        for m in members:
-            if m in chat:
-                for c in chat[m]:
-                    for t in list(tags.keys()):
-                        if t in c:
-                            contribute[m] += tags[t]
+    if len(tags) != 0:
+    for t in tags:
+        for c in chat:
+            contribute[c] += ''.join(chat[c]).count(t) * tags[t]
 
 def visualize(contents):
     nouns = mecab.nouns(contents)
