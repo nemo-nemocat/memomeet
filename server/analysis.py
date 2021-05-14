@@ -38,7 +38,7 @@ with open("stopwords.txt", 'r', encoding='utf-8') as f:
 stopwords = [x.strip() for x in stopwords]
 
 
-def get_noun(contents, stopwords, sentences, members):
+def get_noun(contents, stopwords, sentences, members, roomId):
     try:
         wordrank_extractor = KRWordRank(
             min_count=5, max_length=10, verbose=True)
@@ -55,7 +55,7 @@ def get_noun(contents, stopwords, sentences, members):
 
     for i, t in enumerate(list(passwords.keys()), start=1):
         if i <= 3:
-            tags[t] = 100 * i
+            tags[t] = length[roomId]*0.01* i
 
     result = {'type':'tags','data': list(tags.keys())}
     r.publish('server', json.dumps(result, ensure_ascii=False))
@@ -63,8 +63,8 @@ def get_noun(contents, stopwords, sentences, members):
     #기여도
     if len(tags) != 0:
         for t in tags:
-            for c in chat:
-                contribute[c] += ''.join(chat[c]).count(t) * tags[t]
+            for m in [x for x in chat if x in members]:
+                contribute[m] += ''.join(chat[m]).count(t) * tags[t]
 
 def visualize(contents):
     nouns = mecab.nouns(contents)
@@ -136,6 +136,7 @@ sub = r.pubsub()
 sub.subscribe('analysis_channel')
 chat = {}
 contribute = {}
+length = {}
 
 while True:       
     message = sub.get_message()
@@ -149,8 +150,9 @@ while True:
                 contents = data['contents'].replace(",", " ")
                 sentences = split_sentences(contents)
                 members = data['members']
+                roomId = data['room']
 
-                th1 = Thread(target=get_noun, args=(contents,stopwords,sentences, members ))
+                th1 = Thread(target=get_noun, args=(contents,stopwords,sentences, members, roomId))
                 th2 = Thread(target=visualize, args=(contents, ))
                 th3 = Thread(target=summarize, args=(contents,stopwords,sentences))
                 
@@ -172,13 +174,16 @@ while True:
                     con[m] = int(contribute[m]/sum*100)
                     del(contribute[m])
                     del(chat[m])
+                del(length[roomId])
 
-                r.publish('server', json.dumps({'type': 'contribute','room': data['room'], 'contribute': con}, ensure_ascii=False))
+                r.publish('server', json.dumps({'type': 'contribute','room': roomId, 'contribute': con}, ensure_ascii=False))
 
             if (data['type'] == "chat"):
                 if data['key'] in chat:
                     chat[data['key']].append(data['value'])
                     contribute[data['key']] += len(data['value'])
+                    length[data['room']] += len(data['value'])
                 else: 
                     chat[data['key']] = [data['value']]
-                    contribute[data['key']] = 0
+                    contribute[data['key']] = len(data['value'])
+                    length[data['room']] = len(data['value'])

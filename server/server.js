@@ -142,7 +142,7 @@ io.on('connection', socket => {
       rooms[room].chatArray.push(chat);
       rooms[room].contribution[id] += data.message.length // 내가 말하면 내 기여도 추가
       
-      var pubmsg = {"type": "chat", "key": id, "value": data.message};
+      var pubmsg = {"type": "chat", "room":room, "key": id, "value": data.message};
       pub.publish("analysis_channel",JSON.stringify(pubmsg))
 
       socket.to(room).broadcast.emit('updateChat', data) // room 안의 나를 제외한 모두에게 메시지 업데이트
@@ -165,21 +165,6 @@ io.on('connection', socket => {
         if (err) console.log(err);
         else console.log('success input meetscript');
       });
-
-      // 기여도 백분율로 환산
-      // var sum = 0
-      // for (var member in rooms[room].contribution) {
-      //   if (rooms[room].contribution.hasOwnProperty(member)) {           
-      //     sum += rooms[room].contribution[member]
-      //   }
-      // }
-
-      // for (var member in rooms[room].contribution) {
-      //   rooms[room].contribution[member] = parseInt(rooms[room].contribution[member] / sum * 100)
-      // }
-      
-      // var cv = Object.values(rooms[room].contribution).join(' ');
-
       
       var mm = Object.keys(rooms[room].contribution);
       console.time('time');
