@@ -175,6 +175,7 @@ export default function Header(prop) {
           console.log(result);
           setProfile(undefined);
           setProfileOpen(false);
+          sessionStorage.setItem("user_profile", '');
           setState({});
           alert("기본 이미지로 변경합니다");
       })
