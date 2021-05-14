@@ -116,12 +116,12 @@ io.on('connection', socket => {
       rooms[room].num = rooms[room].members.length
       rooms[room].chatArray = [] // (name: content) 담을 배열
       rooms[room].contentArray = [] // content 담을 배열
-      rooms[room].contribution = {} // 기여도
+      rooms[room].chatDict = {} // 멤버별 말한거 전부 이어붙인 string 딕셔너리
     }
 
     rooms[room].members.push(name)
     rooms[room].num = rooms[room].members.length
-    rooms[room].contribution[id] = 0 // 기여도 0으로 초기화
+    rooms[room].chatDict[id] = '' // ''으로 초기화
 
     socket.join(room)
     socket.to(room).broadcast.emit('userConnected', { id: id, name: name }) // room 안의 나를 제외한 모두에게 'userConnected' event emit
@@ -140,10 +140,7 @@ io.on('connection', socket => {
       chat = `${name}: ${data.message}`;
       rooms[room].contentArray.push(data.message);
       rooms[room].chatArray.push(chat);
-      rooms[room].contribution[id] += data.message.length // 내가 말하면 내 기여도 추가
-      
-      var pubmsg = {"type": "chat", "room":room, "key": id, "value": data.message};
-      pub.publish("analysis_channel",JSON.stringify(pubmsg))
+      rooms[room].chatDict[id] += data.message // 내가 말하면 내 기여도 string에 추가
 
       socket.to(room).broadcast.emit('updateChat', data) // room 안의 나를 제외한 모두에게 메시지 업데이트
     }
@@ -166,10 +163,9 @@ io.on('connection', socket => {
         else console.log('success input meetscript');
       });
       
-      var mm = Object.keys(rooms[room].contribution);
       console.time('time');
 
-      var msg = {'type': 'analysis', 'contents': contentInput, 'members': mm,'room': room}
+      var msg = {'contents': contentInput, 'chat': rooms[room].chatDict, 'room': room} // members는 말한 적 있는 사람만
       pub.publish('analysis_channel', JSON.stringify(msg));
 
       //scheduled meet 에서 삭제
@@ -246,6 +242,7 @@ sub.on('message', function(channel, message){
       var ck = Object.keys(msg.contribute).join(' ');
       var cv = Object.values(msg.contribute).join(' ');
       inputDB(msg.room, ck, cv)
+      break;
   }
 })
 
