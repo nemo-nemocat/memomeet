@@ -136,7 +136,7 @@ def summarize(contents, stopwords, sentences):
             i = 0
             while(i < 3):
                 if(j == i):
-                    key_sents += (sents[i] + " ")
+                    key_sents += (sents[i] + ",")
                 i += 1
             j += 1
         result = {'type': 'summary', 'data': key_sents}
