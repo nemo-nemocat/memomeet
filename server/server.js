@@ -556,7 +556,7 @@ app.post('/forwardmeet-valid', function (req, res) {
   mysqlDB.query(sql, meet_id, function (err, results) {
     if (err) return res.send({ code: 11, msg: `${err}` });
     else {
-      console.log(results[0].isfinish)
+      console.log(meet_id, results[0].isfinish)
       if (results[0].isfinish === 1) {
         return res.send({ code: 36, msg: "meet fail: invalid meet" });
       }
