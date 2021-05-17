@@ -245,7 +245,11 @@ sub.on('message', function(channel, message){
       console.log("[기여도]"+ msg);
       var ck = Object.keys(msg.contribute).join(' ');
       var cv = Object.values(msg.contribute).join(' ');
-      inputDB(msg.room, ck, cv)
+      inputDB(msg.room, ck, cv);
+      break;
+
+    default:
+      console.log(msg);
   }
 })
 
@@ -559,7 +563,6 @@ app.post('/forwardmeet-valid', function (req, res) {
   mysqlDB.query(sql, meet_id, function (err, results) {
     if (err) return res.send({ code: 11, msg: `${err}` });
     else {
-      console.log(results[0].isfinish)
       if (results[0].isfinish === 1) {
         return res.send({ code: 36, msg: "meet fail: invalid meet" });
       }
