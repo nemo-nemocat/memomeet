@@ -36,7 +36,7 @@ with open("stopwords.txt", 'r', encoding='utf-8') as f:
 stopwords = [x.strip() for x in stopwords]
 
 
-def get_noun(contents, stopwords, sentences, chat, roomId):
+def get_noun(contents, stopwords, sentences, chat):
     try:
         wordrank_extractor = KRWordRank(
             min_count=5, max_length=10, verbose=True)
@@ -81,7 +81,7 @@ def get_noun(contents, stopwords, sentences, chat, roomId):
         for m in members:
             contribute_percent[m] = 0 if contribute_sum == 0 else round(contribute[m] / contribute_sum * 100, 2)
 
-    r.publish('server', json.dumps({'type': 'contribute','room': roomId, 'contribute':contribute_percent}, ensure_ascii=False))
+    r.publish('server', json.dumps({'type': 'contribute', 'contribute':contribute_percent}, ensure_ascii=False))
 
 def visualize(contents):
     nouns = mecab.nouns(contents)
@@ -167,7 +167,7 @@ while True:
             members = list(chat.keys())
             roomId = data['room']
 
-            th1 = Thread(target=get_noun, args=(contents,stopwords,sentences,chat,roomId))
+            th1 = Thread(target=get_noun, args=(contents,stopwords,sentences,chat))
             th2 = Thread(target=visualize, args=(contents, ))
             th3 = Thread(target=summarize, args=(contents,stopwords,sentences))
             
@@ -178,3 +178,5 @@ while True:
             th1.join()
             th2.join()
             th3.join()
+
+            r.publish('server', json.dumps({"type": "finish", "room": roomId}, ensure_ascii=False))

@@ -226,29 +226,28 @@ sub.on('message', function(channel, message){
   var msg = JSON.parse(message);
   switch(msg.type){
     case 'tags':
-      console.log("[태그] "+ msg.data);
       tags = msg.data;
       break;
     case 'wordcloud':
-      console.log("[WC] "+ msg.data);
       wordcloud = msg.data;
       break;
     case 'summary':
-      console.log("[요약] "+ msg.data);
       summary = msg.data;
       break;
     case 'contribute':
-      console.log("[기여도]"+ msg);
-      var ck = Object.keys(msg.contribute).join(' ');
-      var cv = Object.values(msg.contribute).join(' ');
-      inputDB(msg.room, ck, cv)
+      ck = Object.keys(msg.contribute).join(' ');
+      cv = Object.values(msg.contribute).join(' ');
+      break;
+    case 'finish':
+      console.log("DB INPUT \n[태그]: "+tags+"\n[wc]: "+wordcloud+"\n[summary]: "+summary+"\n[기여도]: "+cv);
+      inputDB(msg.room);
       break;
   }
 })
 
-var tags = null, wordcloud = null, summary = null;
+var tags = null, wordcloud = null, summary = null, ck = null, cv = null;
 
-var inputDB = function(room, ck, cv){
+var inputDB = function(room){
   tags.forEach(tag=>{
     var sql = `INSERT INTO TAGLIST VALUE( ?, ?)`;
     mysqlDB.query(sql, [room, tag], function (err, results) {
