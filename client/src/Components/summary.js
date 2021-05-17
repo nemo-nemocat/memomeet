@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Script(prop) {
     const classes = useStyles();
-    const [data, setData] = useState('');
+    const [data, setData] = useState([]);
     const [userData, setUserData] = useState([]);
     const [contribution, setContribution] = useState('');
 
@@ -48,7 +48,7 @@ export default function Script(prop) {
         fetch("/finishedmeet-info", requestOptions)
             .then(res => res.json())
             .then(result => {
-                setData(result.data);
+                setData(result.data.split(','));
                 setUserData(result.contributions);
                 setContribution(result.data.contribution_values);
                 console.log(result);
@@ -64,7 +64,9 @@ export default function Script(prop) {
                 </Typography>
                 <div style={{backgroundColor:"#eaeaea", width:"84%", height:"60%",borderRadius:10, margin:"auto", padding:"3%", textAlign: "left" }}>
                     <Typography className={classes.data}>
-                        {data.summary}
+                        {data && data.map(element =>(
+                            <Typography key={Math.random()}>{element}</Typography>
+                        ))}
                     </Typography>
                 </div>
             </Paper>

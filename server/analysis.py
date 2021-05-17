@@ -2,7 +2,6 @@
 import sys
 import io
 import redis
-import base64
 import io
 import json
 import os
@@ -12,7 +11,6 @@ from wordcloud import WordCloud
 from collections import Counter
 
 from krwordrank.sentence import summarize_with_sentences
-from krwordrank.word import summarize_with_keywords
 from krwordrank.word import KRWordRank
 from kss import split_sentences
 from threading import Thread
