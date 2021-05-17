@@ -48,10 +48,10 @@ export default function Script(prop) {
         fetch("/finishedmeet-info", requestOptions)
             .then(res => res.json())
             .then(result => {
-                setData(result.data.split(','));
+                console.log(result);
+                setData(result.data.summary.split(','));
                 setUserData(result.contributions);
                 setContribution(result.data.contribution_values);
-                console.log(result);
             })
             .catch(error => console.log('error', error))
       }, [prop]);
