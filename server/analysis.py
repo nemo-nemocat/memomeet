@@ -81,7 +81,7 @@ def get_noun(contents, stopwords, sentences, chat, roomId):
 
     if contribute_sum != 0: # 말 안하고 종료하는 경우 zero division error 때문에 처리해줌
         for m in members:
-            contribute_percent[m] = 0 if contribute_sum == 0 else round(contribute[m] / contribute_sum, 2) * 100
+            contribute_percent[m] = 0 if contribute_sum == 0 else round(contribute[m] / contribute_sum * 100, 2)
 
     r.publish('server', json.dumps({'type': 'contribute','room': roomId, 'contribute':contribute_percent}, ensure_ascii=False))
 
