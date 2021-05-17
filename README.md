@@ -2,12 +2,13 @@
 📹 Video conferencing platform using NLP, STT
 
 ## Data Structure
+<p align="center"><img src="https://user-images.githubusercontent.com/53828411/118216311-3e738780-b4ae-11eb-8836-18d29e41b80d.JPG" width="700"></p>
 
 
-## Software Architecture
-<img src="https://user-images.githubusercontent.com/53828411/117390984-0efed100-af2a-11eb-9b4d-df3f8fb3c92a.png" width="500" height="250">
-
+## System Architecture
+<p align="center"><img src="https://user-images.githubusercontent.com/53828411/118216732-0587e280-b4af-11eb-85e1-796a74daedd4.JPG" width="700"></p>
 
 ## Web UI
 ![image](https://user-images.githubusercontent.com/53828411/114295543-d57ca680-9ae0-11eb-8dc5-35cb9b9a70d6.png)
+
 

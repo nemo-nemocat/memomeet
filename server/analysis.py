@@ -36,7 +36,7 @@ with open("stopwords.txt", 'r', encoding='utf-8') as f:
 stopwords = [x.strip() for x in stopwords]
 
 
-def get_noun(contents, stopwords, sentences, members, roomId):
+def get_noun(contents, stopwords, sentences, chat, roomId):
     try:
         wordrank_extractor = KRWordRank(
             min_count=5, max_length=10, verbose=True)
@@ -49,20 +49,39 @@ def get_noun(contents, stopwords, sentences, members, roomId):
     except:
         passwords = {"": 0}
 
-    tags = {}
+    length = 0 # 방마다 전체 글자수
+    for x in list(chat.values()):
+        length += len(x)
 
+    tags = {}
     for i, t in enumerate(list(passwords.keys()), start=1):
         if i <= 3:
-            tags[t] = length[roomId]*0.01* i
+            tags[t] = length * 0.01 * i
 
     result = {'type':'tags','data': list(tags.keys())}
     r.publish('server', json.dumps(result, ensure_ascii=False))
 
-    #기여도
+    members = list(chat.keys()) # 채팅에 참여한 멤버들 리스트
+    contribute = {} # 멤버별 기여도 점수 딕셔너리
+
+    # 기여도를 글자수로 초기화
+    for m in members:
+        contribute[m] = len(chat[m])
+
+    # 기여도에 태그 가중치 추가
     if len(tags) != 0:
-        for t in tags:
-            for m in [x for x in chat if x in members]:
-                contribute[m] += ''.join(chat[m]).count(t) * tags[t]
+        for m in members:
+            for t in tags:
+                contribute[m] += chat[m].count(t) * tags[t]
+
+    contribute_percent = {} # 멤버별 기여도 점수를 퍼센테이지로 변경한 딕셔너리
+    contribute_sum = sum(contribute.values())
+
+    if contribute_sum != 0: # 말 안하고 종료하는 경우 zero division error 때문에 처리해줌
+        for m in members:
+            contribute_percent[m] = 0 if contribute_sum == 0 else round(contribute[m] / contribute_sum * 100, 2)
+
+    r.publish('server', json.dumps({'type': 'contribute','room': roomId, 'contribute':contribute_percent}, ensure_ascii=False))
 
 def visualize(contents):
     nouns = mecab.nouns(contents)
@@ -115,7 +134,7 @@ def summarize(contents, stopwords, sentences):
             i = 0
             while(i < 3):
                 if(j == i):
-                    key_sents += (sents[i] + " ")
+                    key_sents += (sents[i] + ",")
                 i += 1
             j += 1
         result = {'type': 'summary', 'data': key_sents}
@@ -132,9 +151,6 @@ else:
 
 sub = r.pubsub()
 sub.subscribe('analysis_channel')
-chat = {}
-contribute = {}
-length = {}
 
 while True:       
     message = sub.get_message()
@@ -144,46 +160,21 @@ while True:
         if not data == 1:
             data = data.decode('utf-8')
             data = json.loads(data)
-            if (data['type'] == "analysis"):
-                r.publish('server', json.dumps(data, ensure_ascii=False))
 
-                contents = data['contents'].replace(",", " ")
-                sentences = split_sentences(contents)
-                members = data['members']
-                roomId = data['room']
+            contents = data['contents'].replace(",", " ")
+            sentences = split_sentences(contents)
+            chat = data['chat'] # 멤버별 전체string 딕셔너리
+            members = list(chat.keys())
+            roomId = data['room']
 
-                th1 = Thread(target=get_noun, args=(contents,stopwords,sentences, members, roomId))
-                th2 = Thread(target=visualize, args=(contents, ))
-                th3 = Thread(target=summarize, args=(contents,stopwords,sentences))
-                
-                th1.start()
-                th2.start()
-                th3.start()
+            th1 = Thread(target=get_noun, args=(contents,stopwords,sentences,chat,roomId))
+            th2 = Thread(target=visualize, args=(contents, ))
+            th3 = Thread(target=summarize, args=(contents,stopwords,sentences))
+            
+            th1.start()
+            th2.start()
+            th3.start()
 
-                th1.join()
-                th2.join()
-                th3.join()
-
-                sum = 0
-                con = {}
-                for m in members:
-                    if m in chat:
-                        sum += contribute[m]
-
-                for m in members:
-                    con[m] = int(contribute[m]/sum*100)
-                    del(contribute[m])
-                    del(chat[m])
-                del(length[roomId])
-
-                r.publish('server', json.dumps({'type': 'contribute','room': roomId, 'contribute': con}, ensure_ascii=False))
-
-            if (data['type'] == "chat"):
-                if data['key'] in chat:
-                    chat[data['key']].append(data['value'])
-                    contribute[data['key']] += len(data['value'])
-                    length[data['room']] += len(data['value'])
-                else: 
-                    chat[data['key']] = [data['value']]
-                    contribute[data['key']] = len(data['value'])
-                    length[data['room']] = len(data['value'])
+            th1.join()
+            th2.join()
+            th3.join()
