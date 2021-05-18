@@ -48,10 +48,16 @@ export default function Script(prop) {
         fetch("/finishedmeet-info", requestOptions)
             .then(res => res.json())
             .then(result => {
-                console.log(result);
-                setData(result.data.summary.split(','));
-                setUserData(result.contributions);
-                setContribution(result.data.contribution_values);
+                if(result.code===31){   //meet_id 잘못된 경우
+                    alert("회의 스크립트가 존재하지 않습니다. 메인 화면으로 이동합니다.");
+                    window.location.href = "/main";
+                }
+                else if(result.code ===0){
+                    console.log(result);
+                    setData(result.data.summary.split(','));
+                    setUserData(result.contributions);
+                    setContribution(result.data.contribution_values);
+                }
             })
             .catch(error => console.log('error', error))
       }, [prop]);

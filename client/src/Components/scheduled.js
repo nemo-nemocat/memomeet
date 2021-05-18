@@ -125,6 +125,10 @@ export default function Scheduled(prop) {
                     alert("회의에 입장합니다");
                     window.open(`/meeting?meet_id=${meet_id}&user_id=${user_id}&user_name=${user_name}`, 'Lets MeMoMeet');
                 }
+                else if(result.code === 31){
+                    alert("삭제된 회의입니다.");
+                    window.location.reload();
+                }
                 else if(result.code === 36){
                     alert("이미 종료된 회의입니다.");
                     window.location.reload();

@@ -548,18 +548,25 @@ app.post('/forwardmeet-delete', function (req, res) {
   })
 });
 
-//유효한 회의?
+//유효한 회의 -> 이미 종료되었거나 삭제된 회의가 아닌지
 app.post('/forwardmeet-valid', function (req, res) {
   var meet_id = req.body.meet_id;
-  var sql = 'SELECT isfinish FROM FORWARDMEET WHERE MEET_ID=?';
+  var sql = 'SELECT * FROM FORWARDMEET WHERE MEET_ID=?';
   mysqlDB.query(sql, meet_id, function (err, results) {
     if (err) return res.send({ code: 11, msg: `${err}` });
-    else {
-      if (results[0].isfinish === 1) {
-        return res.send({ code: 36, msg: "meet fail: invalid meet" });
-      }
-      else
-        return res.send({ code: 0, msg: "request success" });
+    else if(results[0]) return res.send({ code: 31, msg: "meet fail: meet_id not exist" });
+    else{
+      sql = 'SELECT isfinish FROM FORWARDMEET WHERE MEET_ID=?';
+      mysqlDB.query(sql, meet_id, function (err, results) {
+        if (err) return res.send({ code: 11, msg: `${err}` });
+        else {
+          if (results[0].isfinish === 1) {
+            return res.send({ code: 36, msg: "meet fail: invalid meet" });
+          }
+          else
+            return res.send({ code: 0, msg: "request success" });
+        }
+      })
     }
   })
 });

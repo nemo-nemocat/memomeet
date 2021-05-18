@@ -85,6 +85,13 @@ export default function ScriptTitle(prop) {
     const [user_profile] = useState(sessionStorage.getItem("user_profile"));
 
     useEffect(() => {
+
+        
+        if(sessionStorage.getItem("user_id") == null || sessionStorage.getItem("user_id")===""){
+            alert("비정상적인 접근입니다. 로그인 후 이용하세요.\n로그인 화면으로 이동합니다.");
+            window.location.href = "/";
+        }
+
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -102,7 +109,11 @@ export default function ScriptTitle(prop) {
             .then(result => {
                 setData(result.data);
             })
-            .catch(error => console.log('error', error))
+            .catch(error => {
+                console.log('error', error)
+                alert("오류가 발생하였습니다. 메인 화면으로 이동합니다.");
+                window.location.href = "/main";
+            })
         
             
         fetch("/finishedmeet-taglist", requestOptions)

@@ -39,8 +39,9 @@ body {
 }
 
 video {
-    width: 280px;
-    height: 280px;
+    /*모니터 크기에 따라 비디오 크기 변경되도록.. 다시 조정 필요*/
+    width: "15%";
+    height: "30%";
     object-fit: cover;
     transform: rotateY(180deg);
 }
