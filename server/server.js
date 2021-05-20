@@ -624,6 +624,21 @@ app.post('/finishedmeet-taglist', function (req, res) {
   })
 });
 
+//삭제되지 않은 끝난회의?
+app.post('/finishedmeet-open', function (req, res) {
+  var meet_id = req.body.meet_id;
+  var sql = 'SELECT * FROM FINISHEDMEET WHERE MEET_ID=?';
+  mysqlDB.query(sql, meet_id, function (err, results) {
+    if (err) return res.send({ code: 11, msg: `${err}` });
+    else {
+      if (!results[0]) return res.send({code:37, msg:"finishedmeet script not exists" });
+      else {
+        return res.send({ code: 0, msg: "request success"});
+      }
+    }
+  })
+});
+
 //끝난 회의 정보 
 app.post('/finishedmeet-info', function (req, res) {
   var meet_id = req.body.meet_id;
@@ -691,7 +706,8 @@ app.post('/finishedmeet-chat', function (req, res) {
   mysqlDB.query(sql, meet_id, function (err, results) {
     if (err) return res.send({ code: 11, msg: `${err}` });
     else {
-      res.send({ code: 0, msg: "request success", chat: results[0].chat });
+      if(!results[0]) return res.send({ code: 37, msg: "finishedmeet script not exists"});
+      else return res.send({ code: 0, msg: "request success", chat: results[0].chat });
     }
   })
 });
