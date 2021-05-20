@@ -146,7 +146,30 @@ export default function Finished(prop) {
       }, [prop]);
 
     const handleClickScript =(meet_id) => {
-        window.location.href=`/script?meet_id=${meet_id}`;
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({ "meet_id": meet_id});
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch("/finishedmeet-open", requestOptions)
+            .then(res => res.json())
+            .then(result => {
+                console.log(result)
+                if(result.code === 0) {
+                    window.location.href=`/script?meet_id=${meet_id}`;
+                }
+                else if(result.code === 37){
+                    alert("스크립트가 삭제되었거나, 유효하지 않은 스크립트입니다.");
+                }
+            })
+            .catch(error => console.log('error', error))
     }
 
     const handleDeleteIcon =(meet_id) => {

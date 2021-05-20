@@ -85,6 +85,12 @@ export default function ScriptTitle(prop) {
     const [user_profile] = useState(sessionStorage.getItem("user_profile"));
 
     useEffect(() => {
+        
+        if(sessionStorage.getItem("user_id") == null || sessionStorage.getItem("user_id")===""){
+            alert("비정상적인 접근입니다. 로그인 후 이용하세요.\n로그인 화면으로 이동합니다.");
+            window.location.href = "/";
+        }
+
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -100,9 +106,16 @@ export default function ScriptTitle(prop) {
         fetch("/finishedmeet-info", requestOptions)
             .then(res => res.json())
             .then(result => {
-                setData(result.data);
+                if(result.code === 0)
+                    setData(result.data);
+                else if(result.code === 37){
+                    alert("오류가 발생하였습니다. 메인 화면으로 이동합니다.");
+                    window.location.href = "/main";
+                }
             })
-            .catch(error => console.log('error', error))
+            .catch(error => {
+                console.log('error', error)
+            })
         
             
         fetch("/finishedmeet-taglist", requestOptions)
@@ -130,12 +143,16 @@ export default function ScriptTitle(prop) {
         fetch("/finishedmeet-deletetag", requestOptions)
             .then(res => res.json())
             .then(result => {
-                console.log(result)
+                if(result.code === 0){
+                    fetch("/finishedmeet-taglist", requestOptions)
+                    .then(res2 => res2.json())
+                    .then(result2 => {
+                        setTagList(result2.lists);
+                    })
+                    .catch(error => console.log('error', error))
+                }
             })
-            .catch(error => console.log('error', error))
-
-        window.location.reload();
-        
+            .catch(error => console.log('error', error))        
     };
 
     const clickAddOpen = () => {
@@ -177,11 +194,19 @@ export default function ScriptTitle(prop) {
                 .then(res => res.json())
                 .then(result => {
                     if(result.code === 0){
-                    console.log(result)
-                    window.location.reload();
+                        fetch("/finishedmeet-taglist", requestOptions)
+                        .then(res2 => res2.json())
+                        .then(result2 => {
+                            setTagList(result2.lists);
+                        })
+                        .catch(error => console.log('error', error))
+                        setAddOpen(false);
+                        setTagName('');
                     }
                     else if(result.code === 32){
                         alert("태그는 최대 5개 등록할 수 있습니다.");
+                        setAddOpen(false);
+                        setTagName('');
                     }
                 })
                 .catch(error => console.log('error', error))

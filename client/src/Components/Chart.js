@@ -2,17 +2,17 @@ import React, {useEffect, useState} from 'react';
 import { HorizontalBar } from 'react-chartjs-2';
 
 export default function Chart(prop) {
-    var tempList = [];
     const [nameList, setNameList] = useState([]);
     //const [profile, setProfile] = useState([]);
     const contributionList = prop.contribution.split(" ");
 
     useEffect(() => {
+        var tempList = [];
         prop.userData.forEach(element => {
             tempList.push(element.user_name);
         })
         setNameList(tempList);
-    }, [prop]);
+    }, [prop.userData]);
 
     const data = {
         labels: nameList,

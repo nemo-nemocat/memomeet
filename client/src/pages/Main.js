@@ -104,6 +104,10 @@ export default function InteractiveList() {
   }
   
   useEffect(() => {
+    if(user_id == null || user_id===""){
+      alert("비정상적인 접근입니다. 로그인 후 이용하세요.\n로그인 화면으로 이동합니다.");
+      window.location.href = "/";
+    }
     getGroups(user_id);
   }, [user_id]);
 
