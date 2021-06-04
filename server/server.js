@@ -163,8 +163,6 @@ io.on('connection', socket => {
         else console.log('success input meetscript');
       });
       
-      console.time('time');
-
       var msg = {'contents': contentInput, 'chat': rooms[room].chatDict, 'room': room} // members는 말한 적 있는 사람만
       pub.publish('analysis_channel', JSON.stringify(msg));
 
@@ -261,7 +259,6 @@ var inputDB = function(room){
     if(err) console.log(err);
     else {
       console.log('success input finishedmeet');
-      console.timeEnd('time');
     }
   });
 }
@@ -554,7 +551,7 @@ app.post('/forwardmeet-valid', function (req, res) {
   var sql = 'SELECT * FROM FORWARDMEET WHERE MEET_ID=?';
   mysqlDB.query(sql, meet_id, function (err, results) {
     if (err) return res.send({ code: 11, msg: `${err}` });
-    else if(results[0]) return res.send({ code: 31, msg: "meet fail: meet_id not exist" });
+    else if(!results[0]) return res.send({ code: 31, msg: "meet fail: meet_id not exist" });
     else{
       sql = 'SELECT isfinish FROM FORWARDMEET WHERE MEET_ID=?';
       mysqlDB.query(sql, meet_id, function (err, results) {
