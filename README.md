@@ -1,4 +1,4 @@
-# Memo-meet
+# MEMO-MEET
 <img src=https://user-images.githubusercontent.com/53745427/120762640-673ce900-c551-11eb-9454-960888c1face.jpg width="800">
 
 회의록 자동작성과 분석을 제공해주는 그룹형 화상회의 플랫폼을 제공합니다.
