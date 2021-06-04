@@ -57,15 +57,19 @@ npm run dev
 </pre>
 
 
-## 3. 시연 영상
-**Click URL** [MEMO-MEET 포스터 설명 및 시연 영상](https://www.youtube.com/watch?v=5eFKKNgEY80&t=9s)   
-<img src=https://user-images.githubusercontent.com/53745427/120763571-504ac680-c552-11eb-90df-4540417186d1.jpg width="100">   
+## 3. 결과물
+### 2-1. 포스터
+<p align="center"><img src=https://user-images.githubusercontent.com/53745427/120765665-678ab380-c554-11eb-9592-31716c97eb36.jpg width="800"></p>
 
-## 4. 접속 URL 
+### 2-2. 시연영상
+**Click URL** [MEMO-MEET 포스터 설명 및 시연 영상](https://www.youtube.com/watch?v=5eFKKNgEY80&t=9s)   
+<img src=https://user-images.githubusercontent.com/53745427/120763571-504ac680-c552-11eb-90df-4540417186d1.jpg width="100">
+
+### 2-3. 접속 URL
 **Click URL** [MEMO-MEET](https://memomeet.herokuapp.com/)   
 Support chrome, microsoft edge, safari browser.
 
-## 5. Contributors
+## 4. Contributors
 |  <center>Name</center> |  <center>Position</center> |  <center>Github</center> |
 |:--------:|:--------:|:--------:|
 | 김하연 | <center>STT & NLP</center> |[haayun](https://github.com/haayun)|
