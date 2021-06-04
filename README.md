@@ -65,7 +65,7 @@ npm run dev
 **Click URL** [MEMO-MEET](https://memomeet.herokuapp.com/)   
 Support chrome, microsoft edge, safari browser.
 
-# 5. Contributors
+## 5. Contributors
 |  <center>Name</center> |  <center>Position</center> |  <center>Github</center> |
 |:--------:|:--------:|:--------:|
 | 김하연 | <center>STT & NLP</center> |[haayun](https://github.com/haayun)|
