@@ -5,7 +5,7 @@
 
 ## 1. Project
 ### 1-1. 시스템 아키텍쳐
-<p align="center"><img src=https://user-images.githubusercontent.com/53828411/120753695-897d3980-c546-11eb-8877-fb0cbb6c10ae.JPG width="600"></p>
+<p align="center"><img src=https://user-images.githubusercontent.com/53828411/120753695-897d3980-c546-11eb-8877-fb0cbb6c10ae.JPG width="800"></p>
 
 ### 1-2. DB 구조
 <p align="center"><img src=https://user-images.githubusercontent.com/53828411/120754296-6dc66300-c547-11eb-812b-2a7b52cf79b9.JPG width="600"></p>
