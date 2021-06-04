@@ -61,9 +61,9 @@ npm run dev
 **Click URL** [MEMO-MEET 포스터 설명 및 시연 영상](https://www.youtube.com/watch?v=5eFKKNgEY80&t=9s)   
 <img src=https://user-images.githubusercontent.com/53745427/120763571-504ac680-c552-11eb-90df-4540417186d1.jpg width="100">   
 
-## 4. 접속 URL
-Support chrome, microsoft edge, safari browser.   
-**Click URL** [MEMO-MEET](https://memomeet.herokuapp.com/)
+## 4. 접속 URL 
+**Click URL** [MEMO-MEET](https://memomeet.herokuapp.com/)   
+Support chrome, microsoft edge, safari browser.
 
 # 5. Contributors
 |  <center>Name</center> |  <center>Position</center> |  <center>Github</center> |
